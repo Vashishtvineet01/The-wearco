@@ -8,7 +8,6 @@ out
 *.log
 .vscode
 .vercel
-prisma/dev.db
 prisma/dev.db-journal
 public/uploads/designs/*
 public/uploads/orders/*
