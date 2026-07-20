@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCart } from "@/components/CartProvider";
-import { formatINR, getProduct } from "@/lib/products";
+import { formatINR, getProduct, type ProductCategory } from "@/lib/products";
 import ProductMockup from "@/components/ProductMockup";
 
 export default function CartPage() {
@@ -18,14 +18,18 @@ export default function CartPage() {
           // Empty
         </div>
         <h1 className="mt-3 font-display text-4xl font-bold tracking-tight">
-          Your cart’s on offline mode.
+          Your cart&apos;s on offline mode.
         </h1>
         <p className="mt-3 text-ink-300">
           Pick up a drop or print your own line — your call.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <Link href="/shop" className="btn-primary">Browse drops</Link>
-          <Link href="/studio" className="btn-ghost">Open Design Studio</Link>
+          <Link href="/shop" className="btn-primary">
+            Browse drops
+          </Link>
+          <Link href="/studio" className="btn-ghost">
+            Open Design Studio
+          </Link>
         </div>
       </div>
     );
@@ -42,7 +46,7 @@ export default function CartPage() {
             {count} item{count !== 1 ? "s" : ""}
           </h1>
         </div>
-        <button onClick={clear} className="text-xs text-ink-400 hover:text-signal-coral">
+        <button type="button" onClick={clear} className="text-xs text-ink-400 hover:text-signal-coral">
           Clear cart
         </button>
       </div>
@@ -51,21 +55,22 @@ export default function CartPage() {
         <div className="space-y-3 lg:col-span-2">
           {items.map((item) => {
             const product = getProduct(item.slug);
+            const category = (item.category || product?.category || "tee") as ProductCategory;
+            const printArea = product?.printArea || { x: 30, y: 28, w: 40, h: 30 };
+            const printColor =
+              product?.colors.find((c) => c.name === item.color)?.printDefault || "#f7f7f7";
+
             return (
               <div key={item.id} className="card flex gap-4 p-4 sm:p-5">
                 <div className="h-28 w-28 shrink-0 overflow-hidden rounded-xl bg-ink-900 sm:h-36 sm:w-36">
-                  {product ? (
-                    <ProductMockup
-                      category={product.category}
-                      fabric={item.fabricHex}
-                      printArea={product.printArea}
-                      design={item.custom}
-                      printText={!item.custom ? product.name.split(" ")[0] : undefined}
-                      printColor={
-                        product.colors.find((c) => c.name === item.color)?.printDefault
-                      }
-                    />
-                  ) : null}
+                  <ProductMockup
+                    category={category}
+                    fabric={item.fabricHex}
+                    printArea={printArea}
+                    design={item.custom}
+                    printText={!item.custom ? item.name.split(" ")[0] : undefined}
+                    printColor={printColor}
+                  />
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-start justify-between gap-3">
@@ -73,11 +78,15 @@ export default function CartPage() {
                       <div className="font-display text-base font-semibold">{item.name}</div>
                       <div className="mt-1 font-mono text-[11px] uppercase tracking-[0.18em] text-ink-400">
                         {item.size} · {item.color}
-                        {item.custom?.imageDataUrl && " · custom art"}
-                        {item.custom?.text && !item.custom.imageDataUrl && ` · "${item.custom.text}"`}
+                        {(item.custom?.imageUrl || item.custom?.imageDataUrl) && " · custom art"}
+                        {item.custom?.text &&
+                          !item.custom.imageUrl &&
+                          !item.custom.imageDataUrl &&
+                          ` · "${item.custom.text}"`}
                       </div>
                     </div>
                     <button
+                      type="button"
                       onClick={() => remove(item.id)}
                       className="text-xs text-ink-400 hover:text-signal-coral"
                     >
@@ -88,6 +97,7 @@ export default function CartPage() {
                   <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
                     <div className="flex items-center rounded-full border border-white/10 bg-black/40">
                       <button
+                        type="button"
                         onClick={() => updateQty(item.id, item.qty - 1)}
                         className="px-3 py-1.5 text-ink-200"
                       >
@@ -95,15 +105,14 @@ export default function CartPage() {
                       </button>
                       <span className="min-w-7 text-center text-xs">{item.qty}</span>
                       <button
+                        type="button"
                         onClick={() => updateQty(item.id, item.qty + 1)}
                         className="px-3 py-1.5 text-ink-200"
                       >
                         +
                       </button>
                     </div>
-                    <div className="font-mono text-base">
-                      {formatINR(item.price * item.qty)}
-                    </div>
+                    <div className="font-mono text-base">{formatINR(item.price * item.qty)}</div>
                   </div>
                 </div>
               </div>

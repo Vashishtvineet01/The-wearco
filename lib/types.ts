@@ -1,10 +1,11 @@
 export type CustomDesign = {
-  // Print specifications captured from the Design Studio
   text?: string;
   textColor?: string;
   font?: string;
+  /** Server-persisted upload path, e.g. /uploads/designs/uuid.png */
+  imageUrl?: string;
+  /** Ephemeral base64 preview (never persisted to localStorage) */
   imageDataUrl?: string;
-  // Position of design on canvas (% of print area)
   posX: number;
   posY: number;
   scale: number;
@@ -12,7 +13,7 @@ export type CustomDesign = {
 };
 
 export type CartItem = {
-  id: string; // unique id per cart line
+  id: string;
   slug: string;
   name: string;
   price: number;
@@ -21,6 +22,7 @@ export type CartItem = {
   color: string;
   colorHex: string;
   fabricHex: string;
+  category?: string;
   thumbnailDataUrl?: string;
   custom?: CustomDesign;
 };

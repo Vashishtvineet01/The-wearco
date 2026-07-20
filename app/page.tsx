@@ -2,9 +2,13 @@ import Link from "next/link";
 import Marquee from "@/components/Marquee";
 import ProductCard from "@/components/ProductCard";
 import ProductMockup from "@/components/ProductMockup";
-import { products } from "@/lib/products";
+import { getActiveProducts } from "@/lib/catalog";
+import type { Product } from "@/lib/products";
 
-export default function HomePage() {
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const products = await getActiveProducts();
   const featured = products.slice(0, 4);
   const drops = Array.from(new Set(products.map((p) => p.drop)));
 
@@ -107,9 +111,7 @@ function HeroCard({
   cat: "tee" | "hoodie" | "cap";
 }) {
   return (
-    <div
-      className={`card relative ${tilt} transition hover:translate-y-[-4px] hover:rotate-0`}
-    >
+    <div className={`card relative ${tilt} transition hover:translate-y-[-4px] hover:rotate-0`}>
       <div className="absolute left-3 top-3 z-10 tag">{badge}</div>
       <ProductMockup
         category={cat}
@@ -141,7 +143,7 @@ function Stat({ label, value }: { label: string; value: string }) {
   );
 }
 
-function FeaturedProducts({ featured }: { featured: typeof products }) {
+function FeaturedProducts({ featured }: { featured: Product[] }) {
   return (
     <section className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
       <div className="mb-10 flex items-end justify-between gap-6">
@@ -262,7 +264,7 @@ function DropsTimeline({ drops }: { drops: string[] }) {
           Limited drops, monthly.
         </h2>
         <p className="mt-3 max-w-xl text-ink-200">
-          Each drop is themed, AI-curated, and capped. When it’s gone, it’s gone.
+          Each drop is themed, AI-curated, and capped. When it&apos;s gone, it&apos;s gone.
         </p>
       </div>
       <div className="grid gap-4 lg:grid-cols-3">
@@ -270,9 +272,7 @@ function DropsTimeline({ drops }: { drops: string[] }) {
           <div key={d} className="card group relative p-6 transition hover:border-white/30">
             <div className="font-mono text-xs text-ink-400">DROP / {String(i + 1).padStart(2, "0")}</div>
             <div className="mt-2 font-display text-2xl font-semibold">{d}</div>
-            <p className="mt-2 text-sm text-ink-300">
-              {dropDescription(d)}
-            </p>
+            <p className="mt-2 text-sm text-ink-300">{dropDescription(d)}</p>
             <div className="mt-6 flex items-center gap-2 text-xs">
               <span className="tag">
                 <span
@@ -322,8 +322,12 @@ function CommunitySection() {
               every drop.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <Link href="/about#community" className="btn-primary">Join the room</Link>
-              <Link href="/shop" className="btn-ghost">Find your key</Link>
+              <Link href="/about#community" className="btn-primary">
+                Join the room
+              </Link>
+              <Link href="/shop" className="btn-ghost">
+                Find your key
+              </Link>
             </div>
           </div>
 

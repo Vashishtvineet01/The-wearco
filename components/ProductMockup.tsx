@@ -60,7 +60,8 @@ const ProductMockup = forwardRef<HTMLDivElement, Props>(function ProductMockup(
     ? `translate(${design.posX}%, ${design.posY}%) scale(${design.scale}) rotate(${design.rotation}deg)`
     : undefined;
 
-  const hasDesignContent = !!(design?.imageDataUrl || design?.text || printText);
+  const designImage = design?.imageUrl || design?.imageDataUrl;
+  const hasDesignContent = !!(designImage || design?.text || printText);
 
   return (
     <div ref={ref} className={`relative aspect-square w-full ${className}`}>
@@ -102,10 +103,10 @@ const ProductMockup = forwardRef<HTMLDivElement, Props>(function ProductMockup(
             className="flex h-full w-full items-center justify-center overflow-visible"
             style={{ transform, transformOrigin: "center" }}
           >
-            {design?.imageDataUrl ? (
+            {designImage ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                src={design.imageDataUrl}
+                src={designImage}
                 alt="Custom design"
                 draggable={false}
                 style={{
@@ -127,8 +128,8 @@ const ProductMockup = forwardRef<HTMLDivElement, Props>(function ProductMockup(
                   fontSize: "clamp(14px, 3vw, 32px)",
                   maxWidth: "100%",
                   wordBreak: "break-word",
-                  position: design?.imageDataUrl ? "absolute" : "static",
-                  bottom: design?.imageDataUrl ? "-1.6em" : undefined
+                  position: designImage ? "absolute" : "static",
+                  bottom: designImage ? "-1.6em" : undefined
                 }}
               >
                 {design?.text || printText}

@@ -3,72 +3,84 @@
 > **Internet uniform for founders, creators and builders.**
 > Drops + a Design Studio where users print their own art on premium tees, hoodies and caps.
 
-A modern Next.js 14 ecommerce site, designed to feel like an AI/startup brand
-rather than a fashion store. Built around a "Founder Culture" identity:
-**Building…**, **v1.0**, **Offline Mode**, **Late Night Shipping**, etc.
-
-## Highlights
-
-- **Home** — Hero, animated marquee, drops timeline, community section.
-- **Shop** — Filter by category & drop, sort by price.
-- **Product detail** — Color/size selection, swatch previews, related products.
-- **Design Studio** (the headline feature) — Upload PNG / JPG / SVG art **or** type your own line, **drag the design directly on the garment** to position it, scale and rotate, pick fabric color and size, **download a high-res PNG mockup**, and add to cart. Custom orders are clearly marked and priced.
-- **Cart & Checkout** — Persistent cart (localStorage), shipping logic, demo checkout flow with confirmation screen.
-- **About / Manifesto** — Brand story, community perks, shipping policy.
+A Next.js 14 ecommerce app with SQLite persistence and an admin console.
 
 ## Stack
 
 - **Next.js 14** (App Router) + **TypeScript**
-- **Tailwind CSS** with a custom design system (`ink` neutrals, `signal` accents)
-- **React Context** for cart state
-- **SVG-based product mockups** — no external image assets required, fabric color updates live
+- **Prisma** + **SQLite** (`prisma/dev.db`)
+- **iron-session** admin auth
+- **Tailwind CSS** (`ink` neutrals, `signal` accents)
+- Local uploads under `public/uploads/`
 
-## Run locally
+## Setup
 
 ```bash
 cd thewearco
+cp .env.example .env
 npm install
+npm run db:push
+npm run db:seed
 npm run dev
 ```
 
-Then open http://localhost:3000.
+Open http://localhost:3000
+
+### Environment (`.env`)
+
+```
+DATABASE_URL="file:./dev.db"
+ADMIN_EMAIL="admin@thewearco.local"
+ADMIN_PASSWORD="change-me"
+SESSION_SECRET="a-32+char-random-string-change-in-prod"
+NEXT_PUBLIC_SITE_URL="http://localhost:3000"
+```
+
+## Admin
+
+- URL: http://localhost:3000/admin/login
+- Default credentials: from `ADMIN_EMAIL` / `ADMIN_PASSWORD` in `.env`
+- Manage products, orders, newsletter subscribers, design uploads, and password
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start Next.js |
+| `npm run build` | Generate Prisma client + production build |
+| `npm run db:push` | Sync Prisma schema to SQLite |
+| `npm run db:seed` | Seed catalog + admin user |
+
+## Features
+
+- **Shop** — filter by category/drop, sort by price (data from DB)
+- **Product detail** — server-rendered with SEO metadata
+- **Design Studio** — upload art (stored on disk), drag to position, add to cart
+- **Cart** — localStorage (no base64 bloat; uses `/uploads/designs/...` URLs)
+- **Checkout** — demo payment; orders saved to DB for admin
+- **Newsletter** — emails stored in SQLite
+- **Admin** — dashboard, products CRUD, orders + status, subscribers CSV, uploads gallery
+
+## Uploads
+
+- Studio designs → `public/uploads/designs/<uuid>.<ext>`
+- Order copies → `public/uploads/orders/<orderId>/`
+- Paths are stored on order line items (never raw data URLs in the DB)
 
 ## Folder structure
 
 ```
 app/
-  layout.tsx              global layout, fonts, providers
-  page.tsx                home page
-  shop/page.tsx           catalog with filtering
-  product/[slug]/page.tsx product detail
-  studio/page.tsx         the printable order tool
-  cart/page.tsx           cart with persisted state
-  checkout/page.tsx       demo checkout + confirmation
-  about/page.tsx          manifesto + community
+  page.tsx, shop/, product/, studio/, cart/, checkout/, about/
+  admin/login/          admin sign-in
+  admin/(protected)/    dashboard, products, orders, subscribers, uploads, settings
+  api/                  products, orders, newsletter, uploads, admin auth
 components/
-  Navbar.tsx Footer.tsx
-  ProductCard.tsx ProductMockup.tsx Marquee.tsx
-  NewsletterForm.tsx      shared email-capture client component
-  CartProvider.tsx
-lib/
-  products.ts             seed catalog + price formatting
-  types.ts                cart + custom design types
-  mockup.ts               canvas renderer for PNG mockup export
+lib/                    prisma, catalog, session, validators, uploads, products (seed types)
+prisma/                 schema.prisma, seed.ts, dev.db
+public/uploads/         designs + orders
 ```
-
-## Where to plug in real systems
-
-This is a self-contained front-end demo. To take it to production:
-
-1. **Products** — replace `lib/products.ts` with a CMS / database (Sanity, Shopify, Medusa, etc.).
-2. **Custom prints** — when adding a custom-design item to cart, upload the
-   `imageDataUrl` to S3/Cloudinary and store the URL on the order.
-3. **Checkout** — wire `app/checkout/page.tsx` to Razorpay / Stripe and persist orders.
-4. **QR community** — generate per-order QR codes that resolve to a Discord invite or members-only page.
 
 ## Brand voice
 
-- Identity-first, not fashion-first.
-- Quiet, premium, monospace details.
-- Speaks the language of founders, creators and freelancers.
-- Drops are themed: *Founder Energy*, *Internet Uniform*, *QR Layer*, *Studio*.
+Identity-first, not fashion-first. Quiet, premium, monospace details. Speaks founder culture: *Building…*, *v1.0*, *Offline Mode*, *Late Night Shipping*.

@@ -78,8 +78,9 @@ export async function renderMockupToDataURL(opts: {
   ctx.scale(s, s);
 
   let imgHeight = 0;
-  if (design?.imageDataUrl) {
-    const img = await loadImage(design.imageDataUrl);
+  const designSrc = design?.imageUrl || design?.imageDataUrl;
+  if (designSrc) {
+    const img = await loadImage(designSrc);
     const ar = img.width / Math.max(1, img.height);
     let dw = pw;
     let dh = pw / ar;
