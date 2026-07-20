@@ -83,12 +83,14 @@ public/uploads/         designs + orders
 
 ## Deploy (Vercel)
 
-Build seeds SQLite during `prisma db push` + `db:seed`, then copies it to `/tmp` at runtime
-(so serverless can read it). Set these env vars in the Vercel project:
+Build command is `prisma generate && next build`. A seeded `prisma/dev.db` is
+committed so the catalog loads without a separate database service.
 
+Set these env vars in the Vercel project:
+
+- `DATABASE_URL` = `file:./dev.db` (also set in vercel.json)
 - `SESSION_SECRET` — 32+ character random string
 - `ADMIN_EMAIL` / `ADMIN_PASSWORD` — admin login
 - `NEXT_PUBLIC_SITE_URL` — your production URL
 
-If the database is unavailable, the storefront falls back to the built-in seed catalog
-so the shop still loads.
+If the database is unavailable, the storefront falls back to the built-in seed catalog.
