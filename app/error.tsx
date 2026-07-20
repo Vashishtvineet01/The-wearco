@@ -13,7 +13,14 @@ export default function Error({
         // Error
       </div>
       <h1 className="mt-3 font-display text-3xl font-bold">Something broke.</h1>
-      <p className="mt-3 text-sm text-ink-300">{error.message || "Unexpected error"}</p>
+      <p className="mt-3 text-sm text-ink-300">
+        {process.env.NODE_ENV === "development"
+          ? error.message
+          : "We hit a temporary issue loading this page. Try again in a moment."}
+      </p>
+      {error.digest && (
+        <p className="mt-2 font-mono text-[10px] text-ink-500">digest: {error.digest}</p>
+      )}
       <button type="button" onClick={reset} className="btn-primary mt-8">
         Try again
       </button>

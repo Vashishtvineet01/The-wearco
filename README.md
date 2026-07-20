@@ -81,6 +81,14 @@ prisma/                 schema.prisma, seed.ts, dev.db
 public/uploads/         designs + orders
 ```
 
-## Brand voice
+## Deploy (Vercel)
 
-Identity-first, not fashion-first. Quiet, premium, monospace details. Speaks founder culture: *Building…*, *v1.0*, *Offline Mode*, *Late Night Shipping*.
+Build seeds SQLite during `prisma db push` + `db:seed`, then copies it to `/tmp` at runtime
+(so serverless can read it). Set these env vars in the Vercel project:
+
+- `SESSION_SECRET` — 32+ character random string
+- `ADMIN_EMAIL` / `ADMIN_PASSWORD` — admin login
+- `NEXT_PUBLIC_SITE_URL` — your production URL
+
+If the database is unavailable, the storefront falls back to the built-in seed catalog
+so the shop still loads.

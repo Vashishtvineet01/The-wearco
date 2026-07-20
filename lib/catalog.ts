@@ -1,5 +1,5 @@
 import { prisma } from "./prisma";
-import type { Product, ProductCategory, ProductColor } from "./products";
+import { products as seedProducts, type Product, type ProductCategory, type ProductColor } from "./products";
 
 /** Parse a DB product (with colors/sizes) into the storefront Product shape. */
 export function mapDbProduct(p: {
@@ -53,20 +53,30 @@ const include = {
 };
 
 export async function getActiveProducts(): Promise<Product[]> {
-  const rows = await prisma.product.findMany({
-    where: { active: true },
-    include,
-    orderBy: { createdAt: "asc" }
-  });
-  return rows.map(mapDbProduct);
+  try {
+    const rows = await prisma.product.findMany({
+      where: { active: true },
+      include,
+      orderBy: { createdAt: "asc" }
+    });
+    if (rows.length > 0) return rows.map(mapDbProduct);
+  } catch (e) {
+    console.error("[catalog] getActiveProducts failed, using seed catalog", e);
+  }
+  return seedProducts;
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
-  const row = await prisma.product.findFirst({
-    where: { slug, active: true },
-    include
-  });
-  return row ? mapDbProduct(row) : null;
+  try {
+    const row = await prisma.product.findFirst({
+      where: { slug, active: true },
+      include
+    });
+    if (row) return mapDbProduct(row);
+  } catch (e) {
+    console.error("[catalog] getProductBySlug failed, using seed catalog", e);
+  }
+  return seedProducts.find((p) => p.slug === slug) || null;
 }
 
 export async function getAllProductsAdmin() {
