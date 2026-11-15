@@ -8,17 +8,23 @@ export default async function AdminDashboard() {
   const startOfDay = new Date();
   startOfDay.setHours(0, 0, 0, 0);
 
-  const [ordersToday, pending, revenueAgg, subscribers, recent] = await Promise.all([
-    prisma.order.count({ where: { createdAt: { gte: startOfDay } } }),
-    prisma.order.count({ where: { status: "pending" } }),
-    prisma.order.aggregate({ _sum: { total: true } }),
-    prisma.newsletterSubscriber.count(),
-    prisma.order.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 5,
-      include: { items: true }
-    })
-  ]);
+  const [ordersToday, pending, revenueAgg, subscribers, recent, newQuotes, recentQuotes] =
+    await Promise.all([
+      prisma.order.count({ where: { createdAt: { gte: startOfDay } } }),
+      prisma.order.count({ where: { status: "pending" } }),
+      prisma.order.aggregate({ _sum: { total: true } }),
+      prisma.newsletterSubscriber.count(),
+      prisma.order.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 5,
+        include: { items: true }
+      }),
+      prisma.bulkQuote.count({ where: { status: "new" } }),
+      prisma.bulkQuote.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 5
+      })
+    ]);
 
   const revenue = revenueAgg._sum.total || 0;
 
@@ -27,9 +33,10 @@ export default async function AdminDashboard() {
       <h1 className="font-display text-3xl font-bold">Dashboard</h1>
       <p className="mt-1 text-sm text-ink-300">Store overview</p>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         <Kpi label="Orders today" value={String(ordersToday)} />
         <Kpi label="Pending orders" value={String(pending)} />
+        <Kpi label="New bulk quotes" value={String(newQuotes)} />
         <Kpi label="Total revenue" value={formatINR(revenue)} />
         <Kpi label="Subscribers" value={String(subscribers)} />
       </div>
@@ -66,16 +73,46 @@ export default async function AdminDashboard() {
         </div>
 
         <div className="card p-5">
-          <h2 className="font-display text-lg font-semibold">Quick links</h2>
-          <div className="mt-4 grid gap-2">
+          <div className="flex items-center justify-between">
+            <h2 className="font-display text-lg font-semibold">Recent bulk quotes</h2>
+            <Link href="/admin/quotes" className="text-xs text-signal-lime">
+              View all
+            </Link>
+          </div>
+          <ul className="mt-4 divide-y divide-white/5">
+            {recentQuotes.length === 0 && (
+              <li className="py-6 text-center text-sm text-ink-400">No enquiries yet</li>
+            )}
+            {recentQuotes.map((q) => (
+              <li key={q.id} className="flex items-center justify-between gap-3 py-3 text-sm">
+                <div className="min-w-0">
+                  <Link
+                    href={`/admin/quotes/${q.id}`}
+                    className="font-medium text-signal-lime"
+                  >
+                    {q.name}
+                  </Link>
+                  <div className="truncate text-xs text-ink-400">
+                    {q.productName || q.productSlug || "—"} · {q.qty} pcs
+                  </div>
+                </div>
+                <div className="shrink-0 text-right">
+                  <div className="font-mono">
+                    {q.estimatedTotal != null ? formatINR(q.estimatedTotal) : "—"}
+                  </div>
+                  <span className="font-mono text-[10px] uppercase text-ink-400">
+                    {q.status}
+                  </span>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-4 grid gap-2 border-t border-white/5 pt-4">
             <Link href="/admin/products/new" className="btn-primary justify-start">
               + New product
             </Link>
             <Link href="/admin/orders" className="btn-ghost justify-start">
               Manage orders
-            </Link>
-            <Link href="/admin/subscribers" className="btn-ghost justify-start">
-              Newsletter list
             </Link>
             <Link href="/" className="btn-ghost justify-start">
               Open storefront

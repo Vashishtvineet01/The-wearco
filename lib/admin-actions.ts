@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/session";
 import {
+  bulkQuoteAdminUpdateSchema,
   changePasswordSchema,
   orderStatusSchema,
   productFormSchema
@@ -134,6 +135,31 @@ export async function updateOrderStatusAction(id: string, status: string) {
   await prisma.order.update({ where: { id }, data: { status: parsed.data.status } });
   revalidatePath("/admin/orders");
   revalidatePath(`/admin/orders/${id}`);
+  return { ok: true };
+}
+
+export async function updateBulkQuoteAction(id: string, raw: unknown) {
+  await requireAdmin();
+  const parsed = bulkQuoteAdminUpdateSchema.safeParse(raw);
+  if (!parsed.success) return { error: "Invalid input" };
+  await prisma.bulkQuote.update({
+    where: { id },
+    data: {
+      ...(parsed.data.status ? { status: parsed.data.status } : {}),
+      ...(parsed.data.adminNotes !== undefined
+        ? { adminNotes: parsed.data.adminNotes }
+        : {})
+    }
+  });
+  revalidatePath("/admin/quotes");
+  revalidatePath(`/admin/quotes/${id}`);
+  return { ok: true };
+}
+
+export async function deleteBulkQuoteAction(id: string) {
+  await requireAdmin();
+  await prisma.bulkQuote.delete({ where: { id } });
+  revalidatePath("/admin/quotes");
   return { ok: true };
 }
 

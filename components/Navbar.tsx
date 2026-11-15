@@ -44,6 +44,7 @@ export default function Navbar() {
           <NavLink href="/studio" highlight>
             Design Studio
           </NavLink>
+          <NavLink href="/bulk">Bulk</NavLink>
           <NavLink href="/about">Community</NavLink>
         </nav>
 
@@ -84,6 +85,7 @@ export default function Navbar() {
           <div className="flex flex-col px-5 py-3">
             <MobileLink onClick={() => setOpen(false)} href="/shop">Shop</MobileLink>
             <MobileLink onClick={() => setOpen(false)} href="/studio">Design Studio</MobileLink>
+            <MobileLink onClick={() => setOpen(false)} href="/bulk">Bulk orders</MobileLink>
             <MobileLink onClick={() => setOpen(false)} href="/about">Community</MobileLink>
             <MobileLink onClick={() => setOpen(false)} href="/cart">Cart ({count})</MobileLink>
           </div>

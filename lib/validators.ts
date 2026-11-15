@@ -96,3 +96,39 @@ export const changePasswordSchema = z.object({
 export const orderStatusSchema = z.object({
   status: z.enum(["pending", "paid", "shipped", "delivered", "cancelled"])
 });
+
+export const bulkQuoteStatusSchema = z.object({
+  status: z.enum(["new", "reviewing", "quoted", "won", "lost"])
+});
+
+export const bulkQuoteSchema = z.object({
+  email: z.string().email(),
+  name: z.string().min(2).max(120),
+  company: z.string().max(160).optional().nullable(),
+  phone: z.string().max(30).optional().nullable(),
+  // productSlug is optional — buyer may describe a custom product in message
+  productSlug: z.string().max(120).optional().nullable(),
+  productName: z.string().max(200).optional().nullable(),
+  category: z
+    .enum(["tee", "hoodie", "sweatshirt", "cap", "sleeve", "mug", "badge", "poster"])
+    .optional()
+    .nullable(),
+  qty: z.number().int().positive().max(100000),
+  color: z.string().max(60).optional().nullable(),
+  size: z.string().max(60).optional().nullable(),
+  printShape: z
+    .enum(["rect", "circle", "cylinder", "full"])
+    .optional()
+    .nullable(),
+  deadline: z.string().optional().nullable(), // ISO date; coerced server-side
+  message: z.string().min(2).max(4000),
+  fileUrl: z.string().max(500).optional().nullable(),
+  estimatedUnitPrice: z.number().int().nonnegative().optional().nullable(),
+  estimatedTotal: z.number().int().nonnegative().optional().nullable(),
+  tierDiscountPercent: z.number().int().min(0).max(100).optional().nullable()
+});
+
+export const bulkQuoteAdminUpdateSchema = z.object({
+  status: z.enum(["new", "reviewing", "quoted", "won", "lost"]).optional(),
+  adminNotes: z.string().max(4000).optional().nullable()
+});

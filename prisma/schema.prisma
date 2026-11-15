@@ -101,3 +101,33 @@ model Admin {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
+
+model BulkQuote {
+  id                   String   @id @default(cuid())
+  status               String   @default("new") // new | reviewing | quoted | won | lost
+  email                String
+  name                 String
+  company              String?
+  phone                String?
+  productSlug          String?  // optional — may be "custom" if they want a bespoke product
+  productName          String?  // free-text if productSlug is null
+  category             String?
+  qty                  Int
+  color                String?
+  size                 String?
+  printShape           String?
+  deadline             DateTime?
+  message              String
+  fileUrl              String?  // artwork upload (optional)
+  // Snapshot of what the live calculator showed the customer:
+  estimatedUnitPrice   Int?     // INR per unit after discount
+  estimatedTotal       Int?     // INR total
+  tierDiscountPercent  Int?     // 0-50
+  adminNotes           String?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  @@index([status])
+  @@index([email])
+  @@index([createdAt])
+}
