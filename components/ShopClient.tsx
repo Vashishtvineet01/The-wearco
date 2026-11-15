@@ -62,16 +62,16 @@ export default function ShopClient({ products }: { products: Product[] }) {
   return (
     <>
       <div className="card mb-8 flex flex-wrap items-center gap-3 p-3">
-        <div className="flex items-center gap-1 rounded-full bg-black/40 p-1">
+        <div className="flex flex-wrap items-center gap-1 rounded-full bg-black/40 p-1">
           {TABS.map((t) => (
             <button
               key={t.id}
               type="button"
               onClick={() => onTab(t.id)}
-              className={`rounded-full px-4 py-1.5 text-xs transition ${
+              className={`relative rounded-full px-4 py-1.5 text-xs transition-all duration-300 ${
                 tab === t.id
-                  ? "bg-signal-lime text-ink-950"
-                  : "text-ink-200 hover:text-ink-50"
+                  ? "bg-gradient-aurora text-ink-950 shadow-[0_4px_18px_-6px_rgba(124,92,255,0.6)]"
+                  : "text-ink-200 hover:bg-white/5 hover:text-ink-50"
               }`}
             >
               {t.label}
@@ -107,8 +107,14 @@ export default function ShopClient({ products }: { products: Product[] }) {
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {list.map((p) => (
-          <ProductCard key={p.slug} product={p} />
+        {list.map((p, i) => (
+          <div
+            key={p.slug}
+            className="animate-fade-in-up"
+            style={{ animationDelay: `${Math.min(i, 8) * 55}ms` }}
+          >
+            <ProductCard product={p} />
+          </div>
         ))}
       </div>
 

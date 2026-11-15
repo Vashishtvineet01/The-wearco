@@ -11,29 +11,27 @@ export default function ProductCard({ product }: { product: Product }) {
   return (
     <Link
       href={`/product/${product.slug}`}
-      className="group relative block overflow-hidden rounded-2xl border border-white/[0.06] bg-gradient-to-b from-white/[0.04] to-white/[0.01] p-4 transition hover:border-white/20"
+      className="card-hover group relative block p-4"
     >
-      <div className="absolute left-4 top-4 z-10">
-        <span className="tag">{product.drop}</span>
+      <div className="absolute inset-x-4 top-4 z-10 flex items-start justify-between gap-2">
+        <span className="tag max-w-[60%] truncate">{product.drop}</span>
+        {product.customizable && (
+          <span className="tag-aurora shrink-0">Printable</span>
+        )}
       </div>
-      {product.customizable && (
-        <div className="absolute right-4 top-4 z-10">
-          <span className="tag border-signal-lime/40 bg-signal-lime/10 text-signal-lime">
-            Printable
-          </span>
-        </div>
-      )}
 
-      <div className="relative mt-2 grid place-items-center overflow-hidden rounded-xl bg-gradient-to-b from-ink-900 to-ink-950 transition group-hover:from-ink-800">
-        <ProductMockup
-          category={product.category}
-          fabric={color.fabric}
-          printArea={product.printArea}
-          printShape={product.printShape}
-          printText={product.name.split(" ")[0]}
-          printColor={color.printDefault}
-          className="max-w-[280px]"
-        />
+      <div className="relative mt-2 grid place-items-center overflow-hidden rounded-xl bg-gradient-to-b from-ink-900 to-ink-950 transition-all duration-500 group-hover:from-ink-800">
+        <div className="w-full transition-transform duration-500 ease-out group-hover:-translate-y-1 group-hover:scale-[1.03]">
+          <ProductMockup
+            category={product.category}
+            fabric={color.fabric}
+            printArea={product.printArea}
+            printShape={product.printShape}
+            printText={product.name.split(" ")[0]}
+            printColor={color.printDefault}
+            className="mx-auto max-w-[280px]"
+          />
+        </div>
       </div>
 
       <div className="mt-4 flex items-start justify-between gap-3">

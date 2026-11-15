@@ -14,14 +14,14 @@ export default async function ShopPage() {
   const products = await getActiveProducts();
 
   return (
-    <div className="mx-auto max-w-7xl px-5 py-12 lg:px-8 lg:py-20">
-      <header className="mb-10 flex flex-wrap items-end justify-between gap-6">
+    <div className="relative mx-auto max-w-7xl px-5 py-12 lg:px-8 lg:py-20">
+      <header className="mb-10 flex animate-fade-in-up flex-wrap items-end justify-between gap-6">
         <div>
           <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-lime">
             // Shop
           </div>
           <h1 className="mt-2 font-display text-4xl font-bold tracking-tight md:text-6xl">
-            All drops, all uniforms
+            All drops, <span className="gradient-text">all uniforms</span>
           </h1>
           <p className="mt-3 max-w-xl text-ink-200">
             Limited edition pieces for founders, creators, freelancers and the

@@ -1,24 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// Brand palette — mirrors the web `tailwind.config.ts`.
+/// Brand palette — mirrors the web `tailwind.config.ts` (aurora refresh).
 class AppColors {
-  // Ink scale (dark neutrals)
+  // Ink scale — warmer midnight, not pure black
   static const Color ink50 = Color(0xFFF7F7F7);
   static const Color ink100 = Color(0xFFE5E5E5);
   static const Color ink200 = Color(0xFFC2C2C2);
   static const Color ink300 = Color(0xFF9E9E9E);
   static const Color ink400 = Color(0xFF7A7A7A);
-  static const Color ink700 = Color(0xFF1F1F1F);
-  static const Color ink800 = Color(0xFF141414);
-  static const Color ink900 = Color(0xFF0A0A0A);
-  static const Color ink950 = Color(0xFF050505);
+  static const Color ink700 = Color(0xFF211F2C);
+  static const Color ink800 = Color(0xFF161423);
+  static const Color ink900 = Color(0xFF0F0D1A);
+  static const Color ink950 = Color(0xFF0B0A14);
 
-  // Signal accents
+  // Signal accents (aurora)
   static const Color signalLime = Color(0xFFD8FF36);
   static const Color signalCoral = Color(0xFFFF5C3B);
   static const Color signalViolet = Color(0xFF7C5CFF);
   static const Color signalSky = Color(0xFF7CD0FF);
+  static const Color signalPeach = Color(0xFFFF9A6B);
+  static const Color signalMint = Color(0xFF5EE3B4);
+
+  // Signature aurora gradient
+  static const LinearGradient auroraGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [signalViolet, signalCoral, signalLime],
+  );
 }
 
 ThemeData buildAppTheme() {
@@ -131,8 +140,10 @@ ThemeData buildAppTheme() {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.signalLime,
-        foregroundColor: AppColors.ink950,
+        // Note: Material ElevatedButton doesn't support gradients natively;
+        // wrap in an Ink / DecoratedBox at call site for the full aurora look.
+        backgroundColor: AppColors.signalViolet,
+        foregroundColor: AppColors.ink50,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(999),

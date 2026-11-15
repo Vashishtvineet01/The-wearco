@@ -173,20 +173,28 @@ export default function BulkClient({ products }: { products: Product[] }) {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-5 py-12 lg:px-8 lg:py-16">
-      <header className="mb-10 flex flex-wrap items-end justify-between gap-4">
+    <div className="relative mx-auto max-w-7xl px-5 py-12 lg:px-8 lg:py-16">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-40 left-[-120px] h-[520px] w-[520px] animate-drift rounded-full bg-signal-violet/15 blur-3xl"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-20 right-[-80px] h-[440px] w-[440px] animate-drift-slow rounded-full bg-signal-coral/10 blur-3xl"
+      />
+      <header className="relative mb-10 flex animate-fade-in-up flex-wrap items-end justify-between gap-4">
         <div>
           <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-lime">
             // Bulk orders
           </div>
           <h1 className="mt-2 font-display text-4xl font-bold tracking-tight md:text-6xl">
-            Kit out your team.
+            Kit out your <span className="gradient-text">team.</span>
           </h1>
           <p className="mt-3 max-w-2xl text-base text-ink-200 md:text-lg">
             Tees, hoodies, sweatshirts, caps, mugs, pins, posters — printed with
             your artwork. Volume pricing from 10 units, discounts up to{" "}
-            <span className="text-signal-lime">50%</span>. Teams, launches,
-            conferences, YC batches, Discord drops.
+            <span className="gradient-text font-semibold">50%</span>. Teams,
+            launches, conferences, YC batches, Discord drops.
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -197,7 +205,7 @@ export default function BulkClient({ products }: { products: Product[] }) {
         </div>
       </header>
 
-      <div className="grid gap-6 lg:grid-cols-12">
+      <div className="relative grid gap-6 lg:grid-cols-12">
         {/* LEFT — product + calc */}
         <section className="lg:col-span-7">
           <div className="card p-5">

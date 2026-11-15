@@ -3,10 +3,20 @@ import NewsletterForm from "./NewsletterForm";
 
 export default function Footer() {
   return (
-    <footer className="relative mt-32 border-t border-white/[0.06]">
-      <div className="mx-auto grid max-w-7xl gap-10 px-5 py-16 lg:grid-cols-4 lg:px-8">
+    <footer className="relative mt-32 overflow-hidden border-t border-white/[0.06]">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-40 left-1/2 h-[380px] w-[720px] -translate-x-1/2 rounded-full bg-signal-violet/10 blur-3xl"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-20 right-10 h-[260px] w-[260px] rounded-full bg-signal-coral/10 blur-3xl"
+      />
+      <div className="relative mx-auto grid max-w-7xl gap-10 px-5 py-16 lg:grid-cols-4 lg:px-8">
         <div>
-          <div className="font-display text-2xl font-bold tracking-tight">TheWearCo</div>
+          <div className="font-display text-2xl font-bold tracking-tight">
+            The<span className="gradient-text">Wear</span>Co
+          </div>
           <p className="mt-2 max-w-xs text-sm text-ink-300">
             Internet uniform for founders, creators and builders. Wear what you’re shipping.
           </p>

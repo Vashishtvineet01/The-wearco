@@ -281,14 +281,18 @@ export default function StudioClient({ products }: { products: Product[] }) {
   const previewSrc = imageUrl || localPreview;
 
   return (
-    <div className="mx-auto max-w-7xl px-5 py-10 lg:px-8 lg:py-14">
-      <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
+    <div className="relative mx-auto max-w-7xl px-5 py-10 lg:px-8 lg:py-14">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-32 left-1/2 h-[480px] w-[720px] -translate-x-1/2 animate-drift-slow rounded-full bg-signal-violet/10 blur-3xl"
+      />
+      <header className="relative mb-8 flex animate-fade-in-up flex-wrap items-end justify-between gap-4">
         <div>
           <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-lime">
             // Design Studio
           </div>
           <h1 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-5xl">
-            Print your own
+            Print your <span className="gradient-text">own</span>
           </h1>
           <p className="mt-2 max-w-xl text-sm text-ink-300">
             Drop your art, type your line, drag it into place — and we print it
