@@ -138,24 +138,50 @@ class _GarmentPainter extends CustomPainter {
     }
   }
 
+  /// Normalise the print label the same way the web does:
+  /// short first word stays as-is, longer first words get trimmed to 5 chars.
+  /// Prevents "Building" from wrapping to "Buildi/ng…" on small print areas.
+  String _normalise(String raw) {
+    final first =
+        raw.trim().split(RegExp(r'\s+')).first.replaceAll(RegExp(r'[….]+$'), '');
+    final short = first.length <= 7 ? first : first.substring(0, 5);
+    return short.toUpperCase();
+  }
+
   void _drawPrintText(Canvas canvas, Rect rect) {
-    final tp = TextPainter(
-      text: TextSpan(
-        text: printText!.trim(),
-        style: TextStyle(
-          color: textColor,
-          fontSize: compact ? 26 : 40,
-          fontWeight: FontWeight.w800,
-          height: 1.0,
-          fontFamily: 'SpaceGrotesk',
+    final label = _normalise(printText!);
+    final maxW = rect.width - 16;
+    // Auto-fit: start at the max font and step down until the label fits on
+    // a single line inside the print area. 18→38 in viewBox units.
+    final baseMax = compact ? 30.0 : 42.0;
+    const baseMin = 16.0;
+    double fontSize = baseMax;
+    late TextPainter tp;
+    while (fontSize >= baseMin) {
+      tp = TextPainter(
+        text: TextSpan(
+          text: label,
+          style: TextStyle(
+            color: textColor,
+            fontSize: fontSize,
+            fontWeight: FontWeight.w800,
+            height: 1.0,
+            letterSpacing: -0.4,
+            fontFamily: 'SpaceGrotesk',
+          ),
         ),
-      ),
-      textAlign: TextAlign.center,
-      textDirection: TextDirection.ltr,
-      maxLines: 2,
-      ellipsis: '…',
-    );
-    tp.layout(maxWidth: rect.width - 12);
+        textAlign: TextAlign.center,
+        textDirection: TextDirection.ltr,
+        maxLines: 1,
+        ellipsis: '…',
+      );
+      tp.layout();
+      if (tp.width <= maxW && tp.height <= rect.height - 6) break;
+      fontSize -= 2;
+    }
+    // Final layout with the chosen size, this time constrained so ellipsis
+    // kicks in if we somehow still overflow.
+    tp.layout(maxWidth: maxW);
     final offset = Offset(
       rect.left + (rect.width - tp.width) / 2,
       rect.top + (rect.height - tp.height) / 2,
@@ -170,6 +196,50 @@ class _GarmentPainter extends CustomPainter {
     } else {
       tp.paint(canvas, offset);
     }
+  }
+
+  /// Soft top-light fabric gradient — brighter at the top, darker at the hem.
+  Paint _fabricShadePaint(Rect bounds) {
+    return Paint()
+      ..shader = LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          Colors.white.withOpacity(0.10),
+          Colors.white.withOpacity(0.0),
+          Colors.black.withOpacity(0.30),
+        ],
+        stops: const [0.0, 0.55, 1.0],
+      ).createShader(bounds);
+  }
+
+  /// Side shading for sleeves / edges — darker on the outside, invisible toward the centre.
+  Paint _sideShadePaint(Rect bounds, {required bool fromLeft}) {
+    return Paint()
+      ..shader = LinearGradient(
+        begin: fromLeft ? Alignment.centerLeft : Alignment.centerRight,
+        end: fromLeft ? Alignment.centerRight : Alignment.centerLeft,
+        colors: [
+          Colors.black.withOpacity(0.32),
+          Colors.black.withOpacity(0.0),
+        ],
+      ).createShader(bounds);
+  }
+
+  /// Subtle stitching line.
+  Paint _stitchPaint() => Paint()
+    ..color = Colors.black.withOpacity(0.22)
+    ..strokeWidth = 0.8
+    ..style = PaintingStyle.stroke;
+
+  /// Small fabric label tab at the collar.
+  void _drawCollarLabel(Canvas canvas, double x, double y) {
+    final labelPaint = Paint()..color = Colors.white.withOpacity(0.35);
+    final r = RRect.fromRectAndRadius(
+      Rect.fromLTWH(x - 7, y, 14, 4),
+      const Radius.circular(1),
+    );
+    canvas.drawRRect(r, labelPaint);
   }
 
   void _drawTee(Canvas canvas, Paint fill, Paint stroke) {
@@ -189,8 +259,74 @@ class _GarmentPainter extends CustomPainter {
       ..lineTo(130, 160)
       ..lineTo(100, 170)
       ..close();
+    final bounds = path.getBounds();
     canvas.drawPath(path, fill);
+    // Fabric shading overlay (clipped to the garment).
+    canvas.save();
+    canvas.clipPath(path);
+    canvas.drawRect(bounds, _fabricShadePaint(bounds));
+    // Side shadings
+    canvas.drawRect(
+      Rect.fromLTRB(bounds.left, bounds.top, bounds.left + 80, bounds.bottom),
+      _sideShadePaint(
+        Rect.fromLTRB(bounds.left, bounds.top, bounds.left + 80, bounds.bottom),
+        fromLeft: true,
+      ),
+    );
+    canvas.drawRect(
+      Rect.fromLTRB(bounds.right - 80, bounds.top, bounds.right, bounds.bottom),
+      _sideShadePaint(
+        Rect.fromLTRB(bounds.right - 80, bounds.top, bounds.right, bounds.bottom),
+        fromLeft: false,
+      ),
+    );
+    canvas.restore();
     canvas.drawPath(path, stroke);
+    // Neck ribbing
+    final neck = Path()
+      ..moveTo(160, 90)
+      ..quadraticBezierTo(200, 115, 240, 90);
+    canvas.drawPath(
+      neck,
+      Paint()
+        ..color = Colors.black.withOpacity(0.45)
+        ..strokeWidth = 2.2
+        ..style = PaintingStyle.stroke,
+    );
+    // Shoulder stitches
+    final ss = _stitchPaint()..strokeWidth = 0.8;
+    canvas.drawPath(
+      Path()
+        ..moveTo(158, 93)
+        ..quadraticBezierTo(168, 100, 180, 102),
+      ss,
+    );
+    canvas.drawPath(
+      Path()
+        ..moveTo(242, 93)
+        ..quadraticBezierTo(232, 100, 220, 102),
+      ss,
+    );
+    // Side seam dashes (manual dashing)
+    _drawDashedLine(canvas, const Offset(138, 165), const Offset(138, 350));
+    _drawDashedLine(canvas, const Offset(262, 165), const Offset(262, 350));
+    _drawDashedLine(canvas, const Offset(135, 342), const Offset(265, 342));
+    // Collar label tab
+    _drawCollarLabel(canvas, 200, 108);
+  }
+
+  void _drawDashedLine(Canvas canvas, Offset a, Offset b,
+      {double dash = 2, double gap = 3}) {
+    final paint = _stitchPaint();
+    final total = (b - a).distance;
+    final dir = (b - a) / total;
+    double t = 0;
+    while (t < total) {
+      final start = a + dir * t;
+      final end = a + dir * (t + dash).clamp(0, total);
+      canvas.drawLine(start, end, paint);
+      t += dash + gap;
+    }
   }
 
   void _drawHoodie(Canvas canvas, Paint fill, Paint stroke) {

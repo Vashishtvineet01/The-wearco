@@ -15,6 +15,29 @@ function isDarkFabric(hex: string): boolean {
   return (r * 299 + g * 587 + b * 114) / 1000 < 180;
 }
 
+/**
+ * Build the short label we actually print on the garment mockup.
+ *
+ * Product names like "Building… Oversized Tee" overflow the print area.
+ * We want something that reads as a brand mark, not a wrapped sentence:
+ *   - 1-word names ≤ 7 chars stay as-is ("v1.0", "Late", "QR", "Blank").
+ *   - Longer first words get trimmed with no ellipsis ("Building…" → "BUILD").
+ *   - Short category tokens get a 2-letter acronym when the first word
+ *     itself is too long and has siblings ("Offline Mode Tee" → "OFL").
+ */
+function printLabelFor(product: Product): string {
+  const first = (product.name || "").split(/\s+/)[0]?.replace(/[….]+$/g, "") ?? "";
+  if (first.length <= 7) return first.toUpperCase();
+  // Keep the first 5 chars for recognisability ("BUILD", "OFFLI", "FOUND").
+  return first.slice(0, 5).toUpperCase();
+}
+
+/** Drop labels can be long ("Drop 01 — Founder Energy"). The chip only has
+ * room for ~60% of the card width, so keep the part before the em dash. */
+function shortDrop(drop: string): string {
+  return drop.split(/[—–-]/)[0].trim();
+}
+
 export default function ProductCard({ product }: { product: Product }) {
   const [color, setColor] = useState(product.colors[0]);
 
@@ -24,7 +47,9 @@ export default function ProductCard({ product }: { product: Product }) {
       className="card-hover group relative block p-4"
     >
       <div className="absolute inset-x-4 top-4 z-10 flex items-start justify-between gap-2">
-        <span className="tag max-w-[60%] truncate">{product.drop}</span>
+        <span className="tag max-w-[55%] min-w-0">
+          <span className="truncate">{shortDrop(product.drop)}</span>
+        </span>
         {product.customizable && (
           <span className="tag-aurora shrink-0">Printable</span>
         )}
@@ -38,7 +63,10 @@ export default function ProductCard({ product }: { product: Product }) {
           // (so bone/cream garments pop too).
           background: isDarkFabric(color.fabric)
             ? "linear-gradient(180deg, rgba(240,235,228,0.92) 0%, rgba(210,204,196,0.88) 100%)"
-            : "linear-gradient(180deg, rgba(25,22,42,0.9) 0%, rgba(15,13,26,0.95) 100%)"
+            : "linear-gradient(180deg, rgba(25,22,42,0.9) 0%, rgba(15,13,26,0.95) 100%)",
+          // Enable container queries so the mockup can size its print text
+          // relative to the card width instead of the viewport width.
+          containerType: "inline-size"
         }}
       >
         {/* Soft radial accent behind the mockup so it pops without a flat color block. */}
@@ -57,7 +85,7 @@ export default function ProductCard({ product }: { product: Product }) {
             fabric={color.fabric}
             printArea={product.printArea}
             printShape={product.printShape}
-            printText={product.name.split(" ")[0]}
+            printText={printLabelFor(product)}
             printColor={color.printDefault}
             className="mx-auto max-w-[280px]"
           />

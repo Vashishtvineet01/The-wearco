@@ -109,9 +109,20 @@ const ProductMockup = forwardRef<HTMLDivElement, Props>(function ProductMockup(
             <stop offset="0%" stopColor="rgba(255,255,255,0.05)" />
             <stop offset="100%" stopColor="rgba(0,0,0,0)" />
           </radialGradient>
+          {/* Soft top-light fabric shading — brighter at the shoulders, darker at the hem. */}
           <linearGradient id="fabricShade" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="rgba(255,255,255,0.08)" />
-            <stop offset="100%" stopColor="rgba(0,0,0,0.25)" />
+            <stop offset="0%" stopColor="rgba(255,255,255,0.10)" />
+            <stop offset="55%" stopColor="rgba(255,255,255,0.00)" />
+            <stop offset="100%" stopColor="rgba(0,0,0,0.30)" />
+          </linearGradient>
+          {/* Side-shading used on sleeves + body edges so the garment reads 3D. */}
+          <linearGradient id="sideShadeLeft" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(0,0,0,0.35)" />
+            <stop offset="100%" stopColor="rgba(0,0,0,0)" />
+          </linearGradient>
+          <linearGradient id="sideShadeRight" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(0,0,0,0)" />
+            <stop offset="100%" stopColor="rgba(0,0,0,0.35)" />
           </linearGradient>
           <linearGradient id="mugShade" x1="0" y1="0" x2="1" y2="0">
             <stop offset="0%" stopColor="rgba(0,0,0,0.3)" />
@@ -119,9 +130,34 @@ const ProductMockup = forwardRef<HTMLDivElement, Props>(function ProductMockup(
             <stop offset="80%" stopColor="rgba(0,0,0,0)" />
             <stop offset="100%" stopColor="rgba(0,0,0,0.3)" />
           </linearGradient>
+          {/* Woven heather texture — subtle noise that reads as cotton jersey. */}
+          <pattern
+            id="heather"
+            x="0"
+            y="0"
+            width="4"
+            height="4"
+            patternUnits="userSpaceOnUse"
+          >
+            <rect width="4" height="4" fill="rgba(255,255,255,0.00)" />
+            <circle cx="1" cy="1" r="0.35" fill="rgba(255,255,255,0.05)" />
+            <circle cx="3" cy="3" r="0.35" fill="rgba(0,0,0,0.05)" />
+          </pattern>
+          {/* Drop shadow for the garment silhouette. */}
+          <filter id="garmentShadow" x="-10%" y="-10%" width="120%" height="120%">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="4" />
+            <feOffset dx="0" dy="6" result="offsetblur" />
+            <feComponentTransfer>
+              <feFuncA type="linear" slope="0.35" />
+            </feComponentTransfer>
+            <feMerge>
+              <feMergeNode />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
         </defs>
         <rect width="400" height="400" fill="url(#bgGlow)" />
-        {renderGarment(category, fabric)}
+        <g filter="url(#garmentShadow)">{renderGarment(category, fabric)}</g>
       </svg>
 
       <div
@@ -161,16 +197,22 @@ const ProductMockup = forwardRef<HTMLDivElement, Props>(function ProductMockup(
             ) : null}
             {(design?.text || printText) && (
               <div
-                className="text-center font-display font-bold leading-none"
+                className="w-full text-center font-display font-bold leading-none"
                 style={{
                   color:
                     design?.textColor ||
                     printColor ||
                     (isLightFabric ? "#0a0a0a" : "#f7f7f7"),
                   fontFamily: design?.font || "'Space Grotesk', Inter, sans-serif",
-                  fontSize: "clamp(14px, 3vw, 32px)",
-                  maxWidth: "100%",
-                  wordBreak: "break-word",
+                  // Size relative to the CARD (container inline size), not the
+                  // viewport. 7cqi keeps the print token readable at ~8–22px
+                  // across every breakpoint without ever overflowing the print
+                  // area or wrapping to a second ugly line.
+                  fontSize: "clamp(10px, 7cqi, 22px)",
+                  letterSpacing: "-0.01em",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  textOverflow: "clip",
                   position: designImage ? "absolute" : "static",
                   bottom: designImage ? "-1.6em" : undefined
                 }}
@@ -242,101 +284,174 @@ function isLight(hex: string) {
 /* --------------------------- Garments (SVG) --------------------------- */
 
 function Tee({ fabric }: { fabric: string }) {
+  const tee =
+    "M80 110 L140 70 L160 90 Q200 110 240 90 L260 70 L320 110 L300 170 L270 160 L270 340 Q270 350 260 350 L140 350 Q130 350 130 340 L130 160 L100 170 Z";
   return (
     <g>
+      {/* Base fabric */}
+      <path d={tee} fill={fabric} stroke="rgba(0,0,0,0.4)" strokeWidth="1" />
+      {/* Heather weave texture — only shows a hint on top of the fill. */}
+      <path d={tee} fill="url(#heather)" opacity="0.7" />
+      {/* Top-down fabric shade */}
+      <path d={tee} fill="url(#fabricShade)" />
+      {/* Side shading on sleeves + body edges */}
       <path
-        d="M80 110 L140 70 L160 90 Q200 110 240 90 L260 70 L320 110 L300 170 L270 160 L270 340 Q270 350 260 350 L140 350 Q130 350 130 340 L130 160 L100 170 Z"
-        fill={fabric}
-        stroke="rgba(0,0,0,0.4)"
-        strokeWidth="1"
+        d="M80 110 L140 70 L160 90 L130 165 L100 170 Z"
+        fill="url(#sideShadeLeft)"
+        opacity="0.6"
       />
       <path
-        d="M80 110 L140 70 L160 90 Q200 110 240 90 L260 70 L320 110 L300 170 L270 160 L270 340 Q270 350 260 350 L140 350 Q130 350 130 340 L130 160 L100 170 Z"
-        fill="url(#fabricShade)"
+        d="M240 90 L260 70 L320 110 L300 170 L270 165 Z"
+        fill="url(#sideShadeRight)"
+        opacity="0.6"
       />
+      {/* Neck ribbing */}
       <path
         d="M160 90 Q200 115 240 90"
         fill="none"
-        stroke="rgba(0,0,0,0.35)"
-        strokeWidth="2"
+        stroke="rgba(0,0,0,0.45)"
+        strokeWidth="2.5"
       />
       <path
+        d="M162 92 Q200 112 238 92"
+        fill="none"
+        stroke="rgba(255,255,255,0.18)"
+        strokeWidth="0.8"
+      />
+      {/* Shoulder seams */}
+      <path
+        d="M158 93 Q168 100 180 102"
+        fill="none"
+        stroke="rgba(0,0,0,0.25)"
+        strokeWidth="0.8"
+      />
+      <path
+        d="M242 93 Q232 100 220 102"
+        fill="none"
+        stroke="rgba(0,0,0,0.25)"
+        strokeWidth="0.8"
+      />
+      {/* Side seam stitches (dashed, super subtle) */}
+      <path
         d="M138 350 L138 165"
-        stroke="rgba(255,255,255,0.04)"
-        strokeWidth="1"
+        stroke="rgba(0,0,0,0.18)"
+        strokeWidth="0.8"
         strokeDasharray="2 3"
       />
       <path
         d="M262 350 L262 165"
-        stroke="rgba(255,255,255,0.04)"
-        strokeWidth="1"
+        stroke="rgba(0,0,0,0.18)"
+        strokeWidth="0.8"
         strokeDasharray="2 3"
+      />
+      {/* Hem stitch */}
+      <path
+        d="M135 342 L265 342"
+        stroke="rgba(0,0,0,0.22)"
+        strokeWidth="0.8"
+        strokeDasharray="2 3"
+      />
+      {/* Collar label tab (brand) */}
+      <rect
+        x="193"
+        y="108"
+        width="14"
+        height="4"
+        rx="1"
+        fill="rgba(255,255,255,0.35)"
       />
     </g>
   );
 }
 
 function Hoodie({ fabric }: { fabric: string }) {
+  const body =
+    "M70 130 L130 80 Q150 60 200 60 Q250 60 270 80 L330 130 L310 200 L280 190 L280 350 Q280 360 270 360 L130 360 Q120 360 120 350 L120 190 L90 200 Z";
   return (
     <g>
-      <path
-        d="M70 130 L130 80 Q150 60 200 60 Q250 60 270 80 L330 130 L310 200 L280 190 L280 350 Q280 360 270 360 L130 360 Q120 360 120 350 L120 190 L90 200 Z"
-        fill={fabric}
-        stroke="rgba(0,0,0,0.4)"
-        strokeWidth="1"
-      />
-      <path
-        d="M70 130 L130 80 Q150 60 200 60 Q250 60 270 80 L330 130 L310 200 L280 190 L280 350 Q280 360 270 360 L130 360 Q120 360 120 350 L120 190 L90 200 Z"
-        fill="url(#fabricShade)"
-      />
+      <path d={body} fill={fabric} stroke="rgba(0,0,0,0.4)" strokeWidth="1" />
+      <path d={body} fill="url(#heather)" opacity="0.7" />
+      <path d={body} fill="url(#fabricShade)" />
+      {/* Sleeve side shading */}
+      <path d="M70 130 L130 80 L130 170 L90 200 Z" fill="url(#sideShadeLeft)" opacity="0.55" />
+      <path d="M270 80 L330 130 L310 200 L270 170 Z" fill="url(#sideShadeRight)" opacity="0.55" />
+      {/* Hood */}
       <path
         d="M150 90 Q200 40 250 90 Q230 70 200 70 Q170 70 150 90 Z"
         fill={fabric}
         stroke="rgba(0,0,0,0.4)"
       />
+      <path d="M150 90 Q200 40 250 90" fill="url(#fabricShade)" opacity="0.65" />
+      {/* Drawcord */}
+      <line x1="190" y1="100" x2="188" y2="165" stroke="rgba(255,255,255,0.55)" strokeWidth="1.5" />
+      <line x1="210" y1="100" x2="212" y2="165" stroke="rgba(255,255,255,0.55)" strokeWidth="1.5" />
+      <circle cx="188" cy="168" r="2.5" fill="#bbb" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5" />
+      <circle cx="212" cy="168" r="2.5" fill="#bbb" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5" />
+      {/* Kangaroo pocket */}
       <path
-        d="M150 90 Q200 40 250 90"
-        fill="url(#fabricShade)"
-        opacity="0.6"
-      />
-      <line x1="190" y1="100" x2="188" y2="160" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" />
-      <line x1="210" y1="100" x2="212" y2="160" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" />
-      <circle cx="188" cy="162" r="2" fill="#aaa" />
-      <circle cx="212" cy="162" r="2" fill="#aaa" />
-      <path
-        d="M150 230 L250 230 L260 290 L140 290 Z"
-        fill="none"
-        stroke="rgba(0,0,0,0.3)"
+        d="M148 232 L252 232 L262 292 L138 292 Z"
+        fill="rgba(0,0,0,0.08)"
+        stroke="rgba(0,0,0,0.35)"
         strokeWidth="1.2"
       />
+      <path
+        d="M148 232 L148 292"
+        stroke="rgba(0,0,0,0.18)"
+        strokeWidth="0.6"
+        strokeDasharray="2 2"
+      />
+      <path
+        d="M252 232 L252 292"
+        stroke="rgba(0,0,0,0.18)"
+        strokeWidth="0.6"
+        strokeDasharray="2 2"
+      />
+      {/* Hem + cuff ribbing lines */}
+      <rect x="120" y="348" width="160" height="12" fill="rgba(0,0,0,0.18)" />
+      <path d="M90 200 L120 190 L125 218 L95 226 Z" fill="rgba(0,0,0,0.2)" />
+      <path d="M310 200 L280 190 L275 218 L305 226 Z" fill="rgba(0,0,0,0.2)" />
     </g>
   );
 }
 
 function Sweatshirt({ fabric }: { fabric: string }) {
   // Like a hoodie but without the hood — crew neck, ribbed cuffs/hem
+  const body =
+    "M70 125 L130 80 Q155 65 200 65 Q245 65 270 80 L330 125 L310 195 L280 185 L280 345 Q280 355 270 355 L130 355 Q120 355 120 345 L120 185 L90 195 Z";
   return (
     <g>
-      <path
-        d="M70 125 L130 80 Q155 65 200 65 Q245 65 270 80 L330 125 L310 195 L280 185 L280 345 Q280 355 270 355 L130 355 Q120 355 120 345 L120 185 L90 195 Z"
-        fill={fabric}
-        stroke="rgba(0,0,0,0.4)"
-        strokeWidth="1"
-      />
-      <path
-        d="M70 125 L130 80 Q155 65 200 65 Q245 65 270 80 L330 125 L310 195 L280 185 L280 345 Q280 355 270 355 L130 355 Q120 355 120 345 L120 185 L90 195 Z"
-        fill="url(#fabricShade)"
-      />
+      <path d={body} fill={fabric} stroke="rgba(0,0,0,0.4)" strokeWidth="1" />
+      <path d={body} fill="url(#heather)" opacity="0.7" />
+      <path d={body} fill="url(#fabricShade)" />
+      <path d="M70 125 L130 80 L130 170 L90 195 Z" fill="url(#sideShadeLeft)" opacity="0.55" />
+      <path d="M270 80 L330 125 L310 195 L270 170 Z" fill="url(#sideShadeRight)" opacity="0.55" />
       {/* crew neck rib */}
       <path
         d="M165 95 Q200 115 235 95 Q235 85 200 85 Q165 85 165 95 Z"
-        fill="rgba(0,0,0,0.25)"
+        fill="rgba(0,0,0,0.28)"
       />
-      {/* hem rib */}
-      <rect x="120" y="340" width="160" height="15" fill="rgba(0,0,0,0.18)" />
+      <path d="M165 95 Q200 112 235 95" fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="0.8" />
+      {/* collar label tab */}
+      <rect x="193" y="105" width="14" height="4" rx="1" fill="rgba(255,255,255,0.35)" />
+      {/* hem rib with ribbed lines */}
+      <rect x="120" y="340" width="160" height="15" fill="rgba(0,0,0,0.20)" />
+      {[123, 130, 137, 144, 151, 158].map((x) => (
+        <line
+          key={x}
+          x1={x}
+          y1="342"
+          x2={x}
+          y2="353"
+          stroke="rgba(255,255,255,0.08)"
+          strokeWidth="0.6"
+        />
+      ))}
       {/* cuff ribs */}
-      <path d="M90 195 L120 185 L125 215 L95 220 Z" fill="rgba(0,0,0,0.2)" />
-      <path d="M310 195 L280 185 L275 215 L305 220 Z" fill="rgba(0,0,0,0.2)" />
+      <path d="M90 195 L120 185 L125 215 L95 220 Z" fill="rgba(0,0,0,0.22)" />
+      <path d="M310 195 L280 185 L275 215 L305 220 Z" fill="rgba(0,0,0,0.22)" />
+      {/* shoulder stitches */}
+      <path d="M158 93 Q168 100 180 102" fill="none" stroke="rgba(0,0,0,0.25)" strokeWidth="0.8" />
+      <path d="M242 93 Q232 100 220 102" fill="none" stroke="rgba(0,0,0,0.25)" strokeWidth="0.8" />
     </g>
   );
 }
