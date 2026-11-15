@@ -5,6 +5,10 @@ import '../config/env.dart';
 
 /// Shared Dio instance used by all feature-level providers.
 /// Provides sensible timeouts and a JSON content-type by default.
+///
+/// [Env.apiBaseUrl] is re-read on every request via an interceptor so that
+/// the Developer menu's "change backend URL" takes effect without having to
+/// tear down / recreate the Dio instance.
 final dioProvider = Provider<Dio>((ref) {
   final dio = Dio(
     BaseOptions(
@@ -14,6 +18,17 @@ final dioProvider = Provider<Dio>((ref) {
       contentType: 'application/json',
       headers: {
         'Accept': 'application/json',
+      },
+    ),
+  );
+
+  // Dynamic base URL — keeps requests pointed at whatever Env currently says,
+  // even if the user changed it mid-session through the Developer menu.
+  dio.interceptors.add(
+    InterceptorsWrapper(
+      onRequest: (options, handler) {
+        options.baseUrl = Env.apiBaseUrl;
+        handler.next(options);
       },
     ),
   );
