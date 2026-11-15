@@ -2,13 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'core/theme/app_theme.dart';
-import 'features/bulk/bulk_screen.dart';
-import 'features/cart/cart_screen.dart';
 import 'features/checkout/checkout_screen.dart';
 import 'features/product/product_screen.dart';
-import 'features/shop/shop_screen.dart';
+import 'features/shell/home_shell.dart';
 
 /// Root widget — wires up the router, theme and Riverpod scope.
+///
+/// Navigation model:
+///   - `HomeShell` is the persistent root with a bottom nav (Shop / Bulk
+///     / Cart / Account). Each tab routes to a stable path so deep links
+///     still work.
+///   - Product detail and checkout are pushed modally on top of the
+///     active tab.
 class TheWearCoApp extends StatelessWidget {
   const TheWearCoApp({super.key});
 
@@ -17,13 +22,21 @@ class TheWearCoApp extends StatelessWidget {
     final router = GoRouter(
       initialLocation: '/',
       routes: [
-        GoRoute(path: '/', builder: (_, __) => const ShopScreen()),
+        GoRoute(path: '/', builder: (_, __) => const HomeShell(initialIndex: 0)),
+        GoRoute(
+            path: '/bulk',
+            builder: (_, __) => const HomeShell(initialIndex: 1)),
+        GoRoute(
+            path: '/cart',
+            builder: (_, __) => const HomeShell(initialIndex: 2)),
+        GoRoute(
+            path: '/account',
+            builder: (_, __) => const HomeShell(initialIndex: 3)),
         GoRoute(
           path: '/product/:slug',
           builder: (_, state) =>
               ProductScreen(slug: state.pathParameters['slug']!),
         ),
-        GoRoute(path: '/cart', builder: (_, __) => const CartScreen()),
         GoRoute(
           path: '/checkout',
           builder: (_, __) => const CheckoutScreen(),
@@ -34,7 +47,6 @@ class TheWearCoApp extends StatelessWidget {
             orderNumber: state.uri.queryParameters['order'] ?? '',
           ),
         ),
-        GoRoute(path: '/bulk', builder: (_, __) => const BulkScreen()),
       ],
     );
 

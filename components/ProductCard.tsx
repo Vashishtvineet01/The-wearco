@@ -5,6 +5,16 @@ import { useState } from "react";
 import { formatINR, type Product } from "@/lib/products";
 import ProductMockup from "./ProductMockup";
 
+/** Perceptual-luminance check used to pick a contrasting backdrop per fabric. */
+function isDarkFabric(hex: string): boolean {
+  const c = hex.replace("#", "");
+  if (c.length !== 6) return true;
+  const r = parseInt(c.slice(0, 2), 16);
+  const g = parseInt(c.slice(2, 4), 16);
+  const b = parseInt(c.slice(4, 6), 16);
+  return (r * 299 + g * 587 + b * 114) / 1000 < 180;
+}
+
 export default function ProductCard({ product }: { product: Product }) {
   const [color, setColor] = useState(product.colors[0]);
 
@@ -20,8 +30,28 @@ export default function ProductCard({ product }: { product: Product }) {
         )}
       </div>
 
-      <div className="relative mt-2 grid place-items-center overflow-hidden rounded-xl bg-gradient-to-b from-ink-900 to-ink-950 transition-all duration-500 group-hover:from-ink-800">
-        <div className="w-full transition-transform duration-500 ease-out group-hover:-translate-y-1 group-hover:scale-[1.03]">
+      <div
+        className="relative mt-2 grid place-items-center overflow-hidden rounded-xl transition-all duration-500"
+        style={{
+          // Dynamic backdrop: a lighter cream wash behind DARK fabrics (so black/obsidian
+          // garments actually read against the page) and a soft midnight behind LIGHT fabrics
+          // (so bone/cream garments pop too).
+          background: isDarkFabric(color.fabric)
+            ? "linear-gradient(180deg, rgba(240,235,228,0.92) 0%, rgba(210,204,196,0.88) 100%)"
+            : "linear-gradient(180deg, rgba(25,22,42,0.9) 0%, rgba(15,13,26,0.95) 100%)"
+        }}
+      >
+        {/* Soft radial accent behind the mockup so it pops without a flat color block. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-70"
+          style={{
+            background: isDarkFabric(color.fabric)
+              ? "radial-gradient(60% 50% at 50% 55%, rgba(255,92,59,0.18), transparent 70%)"
+              : "radial-gradient(60% 50% at 50% 55%, rgba(124,92,255,0.22), transparent 70%)"
+          }}
+        />
+        <div className="relative w-full transition-transform duration-500 ease-out group-hover:-translate-y-1 group-hover:scale-[1.03]">
           <ProductMockup
             category={product.category}
             fabric={color.fabric}

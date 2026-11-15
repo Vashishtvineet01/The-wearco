@@ -77,6 +77,19 @@ class OrderApi {
       throw ApiException.fromDioError(e);
     }
   }
+
+  /// Fetch a previously-placed order by its public order number.
+  /// Used by the Account tab for guest order lookups.
+  Future<OrderPublic> getByNumber(String orderNumber) async {
+    try {
+      final res = await _dio.get('/orders/$orderNumber');
+      return OrderPublic.fromJson(
+        (res.data['order'] as Map).cast<String, dynamic>(),
+      );
+    } on DioException catch (e) {
+      throw ApiException.fromDioError(e);
+    }
+  }
 }
 
 final orderApiProvider = Provider<OrderApi>((ref) {

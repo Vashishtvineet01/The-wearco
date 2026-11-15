@@ -7,7 +7,7 @@ import '../../core/api/api_providers.dart';
 import '../../core/models/product.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/util/format.dart';
-import '../cart/cart_controller.dart';
+import '../../widgets/brand_mark.dart';
 import 'product_mockup.dart';
 
 const _categories = <(String, String)>[
@@ -22,7 +22,11 @@ const _categories = <(String, String)>[
 ];
 
 class ShopScreen extends ConsumerStatefulWidget {
-  const ShopScreen({super.key});
+  /// When [embedded] is true, the screen is a tab inside [HomeShell], so
+  /// the bulk/cart actions are hidden (they live in the bottom nav).
+  const ShopScreen({super.key, this.embedded = false});
+
+  final bool embedded;
 
   @override
   ConsumerState<ShopScreen> createState() => _ShopScreenState();
@@ -34,50 +38,26 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
   @override
   Widget build(BuildContext context) {
     final async = ref.watch(productsProvider);
-    final cart = ref.watch(cartProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('TheWearCo'),
-        actions: [
-          IconButton(
-            tooltip: 'Bulk orders',
-            onPressed: () => context.push('/bulk'),
-            icon: const Icon(Icons.inventory_2_outlined),
-          ),
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              IconButton(
-                tooltip: 'Cart',
-                onPressed: () => context.push('/cart'),
-                icon: const Icon(Icons.shopping_bag_outlined),
-              ),
-              if (cart.count > 0)
-                Positioned(
-                  right: 6,
-                  top: 6,
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-                    decoration: BoxDecoration(
-                      color: AppColors.signalLime,
-                      borderRadius: BorderRadius.circular(999),
-                    ),
-                    child: Text(
-                      '${cart.count}',
-                      style: const TextStyle(
-                        color: AppColors.ink950,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  ),
+        titleSpacing: 20,
+        title: const BrandMark(size: 28, showWordmark: true),
+        actions: widget.embedded
+            ? null
+            : [
+                IconButton(
+                  tooltip: 'Bulk orders',
+                  onPressed: () => context.push('/bulk'),
+                  icon: const Icon(Icons.inventory_2_outlined),
                 ),
-            ],
-          ),
-          const SizedBox(width: 4),
-        ],
+                IconButton(
+                  tooltip: 'Cart',
+                  onPressed: () => context.push('/cart'),
+                  icon: const Icon(Icons.shopping_bag_outlined),
+                ),
+                const SizedBox(width: 4),
+              ],
       ),
       body: RefreshIndicator(
         color: AppColors.signalLime,
@@ -153,20 +133,43 @@ class _ShopBody extends StatelessWidget {
               itemBuilder: (_, i) {
                 final (id, label) = _categories[i];
                 final active = id == tab;
-                return ChoiceChip(
-                  label: Text(label),
-                  selected: active,
-                  onSelected: (_) => onTab(id),
-                  selectedColor: AppColors.signalLime,
-                  backgroundColor: Colors.white10,
-                  labelStyle: TextStyle(
-                    color: active ? AppColors.ink950 : AppColors.ink100,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 12,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(999),
-                    side: const BorderSide(color: Colors.white10),
+                return GestureDetector(
+                  onTap: () => onTab(id),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 220),
+                    curve: Curves.easeOutCubic,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 10),
+                    decoration: BoxDecoration(
+                      gradient:
+                          active ? AppColors.auroraGradient : null,
+                      color: active ? null : Colors.white.withValues(alpha: 0.04),
+                      borderRadius: BorderRadius.circular(999),
+                      border: Border.all(
+                        color: active
+                            ? AppColors.signalViolet.withValues(alpha: 0.5)
+                            : Colors.white10,
+                      ),
+                      boxShadow: active
+                          ? [
+                              BoxShadow(
+                                color: AppColors.signalViolet
+                                    .withValues(alpha: 0.4),
+                                blurRadius: 14,
+                                spreadRadius: -4,
+                              ),
+                            ]
+                          : null,
+                    ),
+                    child: Text(
+                      label,
+                      style: TextStyle(
+                        color:
+                            active ? AppColors.ink950 : AppColors.ink100,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 12,
+                      ),
+                    ),
                   ),
                 );
               },

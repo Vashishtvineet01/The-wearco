@@ -5,9 +5,13 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/api/api_client.dart';
 import '../../core/theme/app_theme.dart';
+import '../../widgets/brand_mark.dart';
 
 class BulkScreen extends ConsumerStatefulWidget {
-  const BulkScreen({super.key});
+  /// When [embedded] is true, skip the back button since this is a tab.
+  const BulkScreen({super.key, this.embedded = false});
+
+  final bool embedded;
 
   @override
   ConsumerState<BulkScreen> createState() => _BulkScreenState();
@@ -63,12 +67,23 @@ class _BulkScreenState extends ConsumerState<BulkScreen> {
     if (_sent) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('Bulk orders'),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () =>
-                context.canPop() ? context.pop() : context.go('/'),
+          titleSpacing: 20,
+          title: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: const [
+              BrandMark(size: 26),
+              SizedBox(width: 10),
+              Text('Bulk orders'),
+            ],
           ),
+          automaticallyImplyLeading: !widget.embedded,
+          leading: widget.embedded
+              ? null
+              : IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () =>
+                      context.canPop() ? context.pop() : context.go('/'),
+                ),
         ),
         body: Center(
           child: Padding(
@@ -114,12 +129,23 @@ class _BulkScreenState extends ConsumerState<BulkScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Bulk orders'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () =>
-              context.canPop() ? context.pop() : context.go('/'),
+        titleSpacing: 20,
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: const [
+            BrandMark(size: 26),
+            SizedBox(width: 10),
+            Text('Bulk orders'),
+          ],
         ),
+        automaticallyImplyLeading: !widget.embedded,
+        leading: widget.embedded
+            ? null
+            : IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () =>
+                    context.canPop() ? context.pop() : context.go('/'),
+              ),
       ),
       body: Form(
         key: _form,

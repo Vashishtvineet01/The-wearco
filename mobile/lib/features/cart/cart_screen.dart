@@ -5,10 +5,15 @@ import 'package:go_router/go_router.dart';
 import '../../core/models/cart_item.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/util/format.dart';
+import '../../widgets/brand_mark.dart';
 import 'cart_controller.dart';
 
 class CartScreen extends ConsumerWidget {
-  const CartScreen({super.key});
+  /// When [embedded] is true the back button is suppressed (we're inside
+  /// [HomeShell]'s tab stack, so there's no 'back' concept).
+  const CartScreen({super.key, this.embedded = false});
+
+  final bool embedded;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -21,12 +26,23 @@ class CartScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cart'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () =>
-              context.canPop() ? context.pop() : context.go('/'),
+        titleSpacing: 20,
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: const [
+            BrandMark(size: 26),
+            SizedBox(width: 10),
+            Text('Cart'),
+          ],
         ),
+        automaticallyImplyLeading: !embedded,
+        leading: embedded
+            ? null
+            : IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () =>
+                    context.canPop() ? context.pop() : context.go('/'),
+              ),
       ),
       body: cart.items.isEmpty
           ? _Empty()
