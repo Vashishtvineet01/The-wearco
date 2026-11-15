@@ -3,7 +3,7 @@ import Marquee from "@/components/Marquee";
 import ProductCard from "@/components/ProductCard";
 import ProductMockup from "@/components/ProductMockup";
 import { getActiveProducts } from "@/lib/catalog";
-import type { Product } from "@/lib/products";
+import type { Product, ProductCategory } from "@/lib/products";
 
 export const dynamic = "force-dynamic";
 
@@ -55,8 +55,9 @@ function Hero() {
           </h1>
 
           <p className="mt-6 max-w-xl text-base text-ink-200 md:text-lg">
-            Premium tees, hoodies and caps for founders, creators and freelancers.
-            Or skip our drops entirely — open the Design Studio and print your own.
+            Tees, hoodies, sweatshirts, caps, mugs, badges and posters for
+            founders, creators and freelancers. Skip the drops entirely — open
+            the Design Studio and print your own. Bulk orders for teams.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -88,8 +89,8 @@ function Hero() {
           <div className="relative grid grid-cols-2 gap-3">
             <HeroCard fabric="#0e0e10" tagline="Building…" badge="Tee" tilt="-rotate-2" cat="tee" />
             <HeroCard fabric="#ece7dd" tagline="v1.0" badge="Hoodie" tilt="rotate-3 mt-10" cat="hoodie" />
-            <HeroCard fabric="#2a2a2d" tagline="Offline" badge="Cap" tilt="rotate-1 -mt-4" cat="cap" />
-            <HeroCard fabric="#d8ff36" tagline="Founder" badge="Tee" tilt="-rotate-3" cat="tee" />
+            <HeroCard fabric="#0e0e10" tagline="Ship It" badge="Mug" tilt="rotate-1 -mt-4" cat="mug" shape="cylinder" />
+            <HeroCard fabric="#d8ff36" tagline="v1" badge="Badge" tilt="-rotate-3" cat="badge" shape="circle" />
           </div>
         </div>
       </div>
@@ -102,13 +103,15 @@ function HeroCard({
   tagline,
   badge,
   tilt,
-  cat
+  cat,
+  shape
 }: {
   fabric: string;
   tagline: string;
   badge: string;
   tilt: string;
-  cat: "tee" | "hoodie" | "cap";
+  cat: ProductCategory;
+  shape?: "rect" | "circle" | "cylinder" | "full";
 }) {
   return (
     <div className={`card relative ${tilt} transition hover:translate-y-[-4px] hover:rotate-0`}>
@@ -116,6 +119,7 @@ function HeroCard({
       <ProductMockup
         category={cat}
         fabric={fabric}
+        printShape={shape}
         printText={tagline}
         printColor={isLight(fabric) ? "#0a0a0a" : "#f7f7f7"}
         className="max-h-[260px]"
@@ -192,7 +196,7 @@ function PrintYourOwnSection() {
             {[
               ["01", "Upload PNG, SVG, JPG — or just type text"],
               ["02", "Position, rotate, scale on the live mockup"],
-              ["03", "Choose tee, hoodie or cap + color + size"],
+              ["03", "Pick a tee, hoodie, sweatshirt, cap, mug, badge or poster"],
               ["04", "We DTG-print and ship in 5–7 days"]
             ].map(([n, t]) => (
               <li key={n} className="flex items-start gap-3">

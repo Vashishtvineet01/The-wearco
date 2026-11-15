@@ -47,7 +47,17 @@ export const productFormSchema = z.object({
   name: z.string().min(2).max(120),
   slug: z.string().min(2).max(120).regex(/^[a-z0-9-]+$/),
   tagline: z.string().min(2).max(200),
-  category: z.enum(["tee", "hoodie", "cap", "sleeve"]),
+  category: z.enum([
+    "tee",
+    "hoodie",
+    "sweatshirt",
+    "cap",
+    "sleeve",
+    "mug",
+    "badge",
+    "poster"
+  ]),
+  printShape: z.enum(["rect", "circle", "cylinder", "full"]).default("rect"),
   price: z.number().int().positive(),
   drop: z.string().min(2).max(120),
   description: z.string().min(2),

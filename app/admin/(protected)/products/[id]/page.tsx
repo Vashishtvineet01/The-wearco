@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import ProductForm from "@/components/admin/ProductForm";
 import { getProductByIdAdmin } from "@/lib/catalog";
-import type { ProductCategory } from "@/lib/products";
+import type { PrintShape, ProductCategory } from "@/lib/products";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +19,7 @@ export default async function EditProductPage({ params }: { params: { id: string
     description: product.description,
     details: JSON.parse(product.details) as string[],
     printArea: JSON.parse(product.printArea) as { x: number; y: number; w: number; h: number },
+    printShape: ((product as unknown as { printShape?: string }).printShape as PrintShape) || "rect",
     customizable: product.customizable,
     active: product.active,
     colors: product.colors.map((c) => ({

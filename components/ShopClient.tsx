@@ -4,13 +4,21 @@ import { useMemo, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import ProductCard from "@/components/ProductCard";
-import type { Product, ProductCategory } from "@/lib/products";
+import {
+  CATEGORY_PLURAL_LABELS,
+  type Product,
+  type ProductCategory
+} from "@/lib/products";
 
 const TABS: { id: ProductCategory | "all"; label: string }[] = [
   { id: "all", label: "All" },
-  { id: "tee", label: "Tees" },
-  { id: "hoodie", label: "Hoodies" },
-  { id: "cap", label: "Caps" }
+  { id: "tee", label: CATEGORY_PLURAL_LABELS.tee },
+  { id: "hoodie", label: CATEGORY_PLURAL_LABELS.hoodie },
+  { id: "sweatshirt", label: CATEGORY_PLURAL_LABELS.sweatshirt },
+  { id: "cap", label: CATEGORY_PLURAL_LABELS.cap },
+  { id: "mug", label: CATEGORY_PLURAL_LABELS.mug },
+  { id: "badge", label: CATEGORY_PLURAL_LABELS.badge },
+  { id: "poster", label: CATEGORY_PLURAL_LABELS.poster }
 ];
 
 export default function ShopClient({ products }: { products: Product[] }) {

@@ -18,6 +18,7 @@ model Product {
   description   String
   details       String
   printArea     String
+  printShape    String         @default("rect")
   customizable  Boolean        @default(true)
   active        Boolean        @default(true)
   createdAt     DateTime       @default(now())

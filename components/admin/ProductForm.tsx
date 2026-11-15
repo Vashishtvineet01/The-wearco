@@ -8,7 +8,11 @@ import {
   deleteProductAction,
   updateProductAction
 } from "@/lib/admin-actions";
-import type { ProductCategory } from "@/lib/products";
+import {
+  CATEGORY_LABELS,
+  type PrintShape,
+  type ProductCategory
+} from "@/lib/products";
 
 type ColorRow = { name: string; hex: string; fabric: string; printDefault: string };
 
@@ -22,10 +26,44 @@ type FormState = {
   description: string;
   details: string[];
   printArea: { x: number; y: number; w: number; h: number };
+  printShape: PrintShape;
   customizable: boolean;
   active: boolean;
   colors: ColorRow[];
   sizes: string[];
+};
+
+const CATEGORY_OPTIONS: ProductCategory[] = [
+  "tee",
+  "hoodie",
+  "sweatshirt",
+  "cap",
+  "sleeve",
+  "mug",
+  "badge",
+  "poster"
+];
+
+const PRINT_SHAPE_OPTIONS: { value: PrintShape; label: string }[] = [
+  { value: "rect", label: "Rectangle (tees, hoodies)" },
+  { value: "circle", label: "Circle (pins, badges)" },
+  { value: "cylinder", label: "Cylinder wrap (mugs)" },
+  { value: "full", label: "Full face (posters)" }
+];
+
+/** Suggested print area + shape for each category when the user switches. */
+const CATEGORY_DEFAULTS: Record<
+  ProductCategory,
+  { printArea: FormState["printArea"]; printShape: PrintShape; sizes: string[] }
+> = {
+  tee: { printArea: { x: 30, y: 28, w: 40, h: 30 }, printShape: "rect", sizes: ["S", "M", "L", "XL", "XXL"] },
+  hoodie: { printArea: { x: 32, y: 32, w: 36, h: 28 }, printShape: "rect", sizes: ["S", "M", "L", "XL"] },
+  sweatshirt: { printArea: { x: 30, y: 32, w: 40, h: 28 }, printShape: "rect", sizes: ["S", "M", "L", "XL", "XXL"] },
+  cap: { printArea: { x: 30, y: 35, w: 40, h: 18 }, printShape: "rect", sizes: ["One Size"] },
+  sleeve: { printArea: { x: 30, y: 28, w: 40, h: 30 }, printShape: "rect", sizes: ["S", "M", "L", "XL"] },
+  mug: { printArea: { x: 25, y: 38, w: 44, h: 28 }, printShape: "cylinder", sizes: ["330ml"] },
+  badge: { printArea: { x: 28, y: 28, w: 44, h: 44 }, printShape: "circle", sizes: ["38mm", "58mm"] },
+  poster: { printArea: { x: 14, y: 14, w: 72, h: 72 }, printShape: "full", sizes: ["A4", "A3", "A2"] }
 };
 
 const empty: FormState = {
@@ -38,6 +76,7 @@ const empty: FormState = {
   description: "",
   details: [],
   printArea: { x: 30, y: 28, w: 40, h: 30 },
+  printShape: "rect",
   customizable: true,
   active: true,
   colors: [
@@ -138,14 +177,27 @@ export default function ProductForm({
             <select
               className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
               value={form.category}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, category: e.target.value as ProductCategory }))
-              }
+              onChange={(e) => {
+                const category = e.target.value as ProductCategory;
+                const defaults = CATEGORY_DEFAULTS[category];
+                setForm((f) => ({
+                  ...f,
+                  category,
+                  // Only snap the print area + shape when the user hasn't
+                  // manually tuned them (i.e. they still match the old defaults).
+                  // For simplicity we always apply defaults on category change —
+                  // the user can tweak afterward.
+                  printArea: defaults.printArea,
+                  printShape: defaults.printShape,
+                  sizes: defaults.sizes
+                }));
+              }}
             >
-              <option value="tee">Tee</option>
-              <option value="hoodie">Hoodie</option>
-              <option value="cap">Cap</option>
-              <option value="sleeve">Sleeve</option>
+              {CATEGORY_OPTIONS.map((c) => (
+                <option key={c} value={c}>
+                  {CATEGORY_LABELS[c]}
+                </option>
+              ))}
             </select>
           </Field>
           <Field label="Price (INR)">
@@ -219,6 +271,25 @@ export default function ProductForm({
               }))
             }
           />
+        </Field>
+
+        <Field label="Print shape">
+          <select
+            className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
+            value={form.printShape}
+            onChange={(e) =>
+              setForm((f) => ({ ...f, printShape: e.target.value as PrintShape }))
+            }
+          >
+            {PRINT_SHAPE_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
+            ))}
+          </select>
+          <p className="mt-1 font-mono text-[10px] text-ink-400">
+            Controls how the design is clipped on the preview + export.
+          </p>
         </Field>
 
         <Field label="Print area (%)">
@@ -370,6 +441,7 @@ export default function ProductForm({
               category={form.category}
               fabric={previewColor.fabric}
               printArea={form.printArea}
+              printShape={form.printShape}
               printText={form.name.split(" ")[0] || "Preview"}
               printColor={previewColor.printDefault}
               showPrintArea

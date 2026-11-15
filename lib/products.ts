@@ -1,4 +1,52 @@
-export type ProductCategory = "tee" | "hoodie" | "cap" | "sleeve";
+export type ProductCategory =
+  | "tee"
+  | "hoodie"
+  | "sweatshirt"
+  | "cap"
+  | "sleeve"
+  | "mug"
+  | "badge"
+  | "poster";
+
+/**
+ * Shape of the printable region on a product.
+ * - "rect"     — rectangular print area (tees, hoodies, posters, mug wraps)
+ * - "circle"   — circular print area (enamel pins / badges)
+ * - "cylinder" — cylindrical wrap print (mugs). Visually a rectangle, but
+ *                the renderer applies a slight horizontal arc to suggest wrap.
+ * - "full"     — the entire garment face IS the print area (posters)
+ */
+export type PrintShape = "rect" | "circle" | "cylinder" | "full";
+
+/** Categories that use the standard apparel sizing selector (S/M/L/XL/XXL). */
+export const APPAREL_CATEGORIES: ProductCategory[] = [
+  "tee",
+  "hoodie",
+  "sweatshirt",
+  "sleeve"
+];
+
+export const CATEGORY_LABELS: Record<ProductCategory, string> = {
+  tee: "Tee",
+  hoodie: "Hoodie",
+  sweatshirt: "Sweatshirt",
+  cap: "Cap",
+  sleeve: "Sleeve",
+  mug: "Mug",
+  badge: "Badge",
+  poster: "Poster"
+};
+
+export const CATEGORY_PLURAL_LABELS: Record<ProductCategory, string> = {
+  tee: "Tees",
+  hoodie: "Hoodies",
+  sweatshirt: "Sweatshirts",
+  cap: "Caps",
+  sleeve: "Sleeves",
+  mug: "Mugs",
+  badge: "Badges",
+  poster: "Posters"
+};
 
 export type ProductColor = {
   name: string;
@@ -17,6 +65,8 @@ export type Product = {
   price: number; // in INR
   drop: string;
   printArea: { x: number; y: number; w: number; h: number }; // % of canvas
+  /** Defaults to "rect" if omitted (for backwards compatibility). */
+  printShape?: PrintShape;
   colors: ProductColor[];
   sizes: string[];
   description: string;

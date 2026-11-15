@@ -142,6 +142,78 @@ const products = [
       "The canvas. Open the Design Studio, drop your artwork or type your own line, and we’ll print it on a premium 240 GSM tee.",
     details: ["240 GSM combed cotton", "DTG + screen print options", "Ships in 5–7 days"],
     customizable: true
+  },
+
+  /* --- Sweatshirts --------------------------------------------------- */
+  {
+    slug: "ship-mode-sweatshirt",
+    name: "Ship Mode Crew Sweatshirt",
+    tagline: "Heavyweight. Head-down. Hands moving.",
+    category: "sweatshirt",
+    price: 2199,
+    drop: "Drop 02 — Internet Uniform",
+    printArea: { x: 30, y: 32, w: 40, h: 28 },
+    printShape: "rect",
+    colors: [baseColors.obsidian, baseColors.graphite, baseColors.bone],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    description:
+      "380 GSM brushed-fleece crew with ribbed cuffs and hem. Pairs with everything in your drawer.",
+    details: ["380 GSM brushed fleece", "Ribbed cuffs + hem", "Boxy relaxed fit"],
+    customizable: true
+  },
+
+  /* --- Mugs ---------------------------------------------------------- */
+  {
+    slug: "deploy-mug",
+    name: "Deploy Mug — 330ml",
+    tagline: "Fuel for the next commit.",
+    category: "mug",
+    price: 499,
+    drop: "Studio — Made by You",
+    printArea: { x: 25, y: 38, w: 44, h: 28 },
+    printShape: "cylinder",
+    colors: [baseColors.bone, baseColors.obsidian],
+    sizes: ["330ml"],
+    description:
+      "Ceramic 330ml mug with wrap-around print. Dishwasher-safe. Microwave-safe. Red-eye-safe.",
+    details: ["Ceramic, 330ml", "Full-wrap print", "Dishwasher + microwave safe"],
+    customizable: true
+  },
+
+  /* --- Badges / Pins ------------------------------------------------- */
+  {
+    slug: "v1-badge",
+    name: "v1.0 Enamel Pin",
+    tagline: "Small. Loud. Worn by shippers.",
+    category: "badge",
+    price: 299,
+    drop: "Drop 01 — Founder Energy",
+    printArea: { x: 28, y: 28, w: 44, h: 44 },
+    printShape: "circle",
+    colors: [baseColors.lime, baseColors.obsidian, baseColors.bone],
+    sizes: ["38mm", "58mm"],
+    description:
+      "Hard enamel pin with butterfly clutch. The quiet brag on your laptop bag.",
+    details: ["Hard enamel", "Butterfly clutch", "Nickel plating"],
+    customizable: true
+  },
+
+  /* --- Posters ------------------------------------------------------- */
+  {
+    slug: "founder-poster",
+    name: "Founder Mode Poster",
+    tagline: "Print it. Pin it. Stare at it.",
+    category: "poster",
+    price: 699,
+    drop: "Studio — Made by You",
+    printArea: { x: 14, y: 14, w: 72, h: 72 },
+    printShape: "full",
+    colors: [baseColors.bone, baseColors.obsidian],
+    sizes: ["A4", "A3", "A2"],
+    description:
+      "Giclée print on 200 GSM matte paper. Ship your own artwork or pick a drop poster — ships flat in a rigid mailer.",
+    details: ["200 GSM matte paper", "Giclée print", "Ships flat in rigid mailer"],
+    customizable: true
   }
 ];
 
@@ -156,6 +228,7 @@ async function upsertProduct(p) {
     description: p.description,
     details: JSON.stringify(p.details),
     printArea: JSON.stringify(p.printArea),
+    printShape: p.printShape || "rect",
     customizable: p.customizable,
     active: true,
     colors: {

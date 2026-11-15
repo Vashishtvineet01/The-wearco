@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { formatINR, type Product, type ProductColor } from "@/lib/products";
+import { CATEGORY_LABELS, formatINR, type Product, type ProductColor } from "@/lib/products";
 import ProductMockup from "@/components/ProductMockup";
 import { useCart } from "@/components/CartProvider";
 import type { CustomDesign } from "@/lib/types";
@@ -246,6 +246,7 @@ export default function StudioClient({ products }: { products: Product[] }) {
         category: product.category,
         fabric: color.fabric,
         printArea: product.printArea,
+        printShape: product.printShape,
         design: { ...custom, imageUrl: imageUrl || localPreview },
         size: 600
       });
@@ -266,6 +267,7 @@ export default function StudioClient({ products }: { products: Product[] }) {
         category: product.category,
         fabric: color.fabric,
         printArea: product.printArea,
+        printShape: product.printShape,
         design,
         size: 1600
       });
@@ -323,6 +325,7 @@ export default function StudioClient({ products }: { products: Product[] }) {
                     category={p.category}
                     fabric={p.colors[0].fabric}
                     printArea={p.printArea}
+                    printShape={p.printShape}
                     printText={p.name.split(" ")[0]}
                     printColor={p.colors[0].printDefault}
                   />
@@ -373,6 +376,7 @@ export default function StudioClient({ products }: { products: Product[] }) {
                 category={product.category}
                 fabric={color.fabric}
                 printArea={product.printArea}
+                printShape={product.printShape}
                 design={design}
                 showPrintArea
                 interactive
@@ -746,7 +750,7 @@ function Stat({ label, value }: { label: string; value: string }) {
 }
 
 function labelFor(c: string) {
-  return c === "tee" ? "Tee" : c === "hoodie" ? "Hoodie" : c === "cap" ? "Cap" : "Sleeve";
+  return (CATEGORY_LABELS as Record<string, string>)[c] ?? c;
 }
 
 function clamp(value: number, min: number, max: number) {

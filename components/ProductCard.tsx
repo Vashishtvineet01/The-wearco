@@ -29,6 +29,7 @@ export default function ProductCard({ product }: { product: Product }) {
           category={product.category}
           fabric={color.fabric}
           printArea={product.printArea}
+          printShape={product.printShape}
           printText={product.name.split(" ")[0]}
           printColor={color.printDefault}
           className="max-w-[280px]"

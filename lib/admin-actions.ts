@@ -30,6 +30,7 @@ export async function createProductAction(raw: unknown) {
       description: d.description,
       details: JSON.stringify(d.details),
       printArea: JSON.stringify(d.printArea),
+      printShape: d.printShape,
       customizable: d.customizable,
       active: d.active,
       colors: {
@@ -80,6 +81,7 @@ export async function updateProductAction(id: string, raw: unknown) {
       description: d.description,
       details: JSON.stringify(d.details),
       printArea: JSON.stringify(d.printArea),
+      printShape: d.printShape,
       customizable: d.customizable,
       active: d.active,
       colors: {

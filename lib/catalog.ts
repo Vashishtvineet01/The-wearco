@@ -1,5 +1,11 @@
 import { prisma } from "./prisma";
-import { products as seedProducts, type Product, type ProductCategory, type ProductColor } from "./products";
+import {
+  products as seedProducts,
+  type Product,
+  type ProductCategory,
+  type ProductColor,
+  type PrintShape
+} from "./products";
 
 /** Parse a DB product (with colors/sizes) into the storefront Product shape. */
 export function mapDbProduct(p: {
@@ -12,6 +18,8 @@ export function mapDbProduct(p: {
   description: string;
   details: string;
   printArea: string;
+  /** May be missing on older DB rows; mapper defaults it. */
+  printShape?: string | null;
   customizable: boolean;
   colors: {
     name: string;
@@ -32,6 +40,7 @@ export function mapDbProduct(p: {
     description: p.description,
     details: JSON.parse(p.details) as string[],
     printArea: JSON.parse(p.printArea) as Product["printArea"],
+    printShape: (p.printShape as PrintShape | null | undefined) || "rect",
     customizable: p.customizable,
     colors: [...p.colors]
       .sort((a, b) => a.sortOrder - b.sortOrder)

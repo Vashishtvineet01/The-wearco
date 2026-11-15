@@ -25,8 +25,13 @@ export default function Footer() {
           <ul className="space-y-2 text-sm text-ink-100">
             <li><Link href="/shop?cat=tee">Tees</Link></li>
             <li><Link href="/shop?cat=hoodie">Hoodies</Link></li>
+            <li><Link href="/shop?cat=sweatshirt">Sweatshirts</Link></li>
             <li><Link href="/shop?cat=cap">Caps</Link></li>
+            <li><Link href="/shop?cat=mug">Mugs</Link></li>
+            <li><Link href="/shop?cat=badge">Badges</Link></li>
+            <li><Link href="/shop?cat=poster">Posters</Link></li>
             <li><Link href="/studio">Print your own</Link></li>
+            <li><Link href="/bulk">Bulk orders</Link></li>
           </ul>
         </div>
 
