@@ -1,12 +1,17 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../cache/products_cache.dart';
 import '../models/cart_item.dart';
 import '../models/order.dart';
 import '../models/product.dart';
 import 'api_client.dart';
 
 /// All active products.
+///
+/// Serve-stale-while-revalidate: if the network call fails but we have a
+/// cached list, return the cached list rather than throwing — the UI will
+/// show an "offline" banner but the user can still browse.
 final productsProvider = FutureProvider<List<Product>>((ref) async {
   final dio = ref.watch(dioProvider);
   try {
@@ -14,11 +19,26 @@ final productsProvider = FutureProvider<List<Product>>((ref) async {
     final list = (res.data['products'] as List? ?? [])
         .map((p) => Product.fromJson((p as Map).cast<String, dynamic>()))
         .toList();
+    // Persist a copy so the next cold start paints instantly, and so we
+    // can fall back to it if the network dies later.
+    if (list.isNotEmpty) {
+      await ProductsCache.save(list);
+    }
     return list;
   } on DioException catch (e) {
+    final cached = await ProductsCache.load();
+    if (cached != null && cached.products.isNotEmpty) {
+      // Return cached silently; the connectivity banner handles messaging.
+      return cached.products;
+    }
     throw ApiException.fromDioError(e);
   }
 });
+
+/// A separate async stream of connectivity status — used by the shop screen
+/// to paint an "offline, showing saved data" banner on top of cached data.
+/// Updated by the shop screen after every refresh attempt.
+final backendReachableProvider = StateProvider<bool>((_) => true);
 
 /// One product by slug.
 final productBySlugProvider =

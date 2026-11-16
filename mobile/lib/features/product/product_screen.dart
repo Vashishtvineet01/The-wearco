@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/api/api_client.dart';
 import '../../core/api/api_providers.dart';
 import '../../core/models/cart_item.dart';
 import '../../core/models/product.dart';
@@ -40,7 +41,32 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
         loading: () => const Center(
           child: CircularProgressIndicator(color: AppColors.signalLime),
         ),
-        error: (err, _) => Center(child: Text('Failed to load: $err')),
+        error: (err, _) => Center(
+          child: Padding(
+            padding: const EdgeInsets.all(28),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.search_off,
+                    color: AppColors.signalCoral, size: 40),
+                const SizedBox(height: 12),
+                Text(
+                  err is ApiException
+                      ? err.message
+                      : "Can't load this product right now.",
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: 14),
+                OutlinedButton.icon(
+                  onPressed: () => ref.invalidate(productBySlugProvider(widget.slug)),
+                  icon: const Icon(Icons.refresh, size: 16),
+                  label: const Text('Retry'),
+                ),
+              ],
+            ),
+          ),
+        ),
         data: (p) => _ProductBody(
           product: p,
           colorIndex: _colorIndex,

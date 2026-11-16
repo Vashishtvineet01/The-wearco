@@ -55,8 +55,8 @@ class _BulkScreenState extends ConsumerState<BulkScreen> {
       setState(() => _sent = true);
     } on DioException catch (e) {
       setState(() => _error = ApiException.fromDioError(e).message);
-    } catch (e) {
-      setState(() => _error = 'Failed to send: $e');
+    } catch (_) {
+      setState(() => _error = "We couldn't send your enquiry just now.");
     } finally {
       if (mounted) setState(() => _submitting = false);
     }

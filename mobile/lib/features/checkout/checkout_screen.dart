@@ -79,8 +79,9 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       context.go('/checkout/success?order=${order.orderNumber}');
     } on ApiException catch (e) {
       setState(() => _error = e.message);
-    } catch (e) {
-      setState(() => _error = 'Failed to place order: $e');
+    } catch (_) {
+      setState(() => _error =
+          "We couldn't place your order. Check your connection and try again.");
     } finally {
       if (mounted) setState(() => _submitting = false);
     }

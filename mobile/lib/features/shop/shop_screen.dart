@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/api/api_client.dart';
 import '../../core/api/api_providers.dart';
+import '../../core/config/env.dart';
 import '../../core/models/product.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/util/format.dart';
@@ -289,26 +290,159 @@ class _ErrorState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final message = error is ApiException
-        ? (error as ApiException).message
-        : 'Failed to reach TheWearCo API.';
+    // Headlines + icons per failure kind. We never dump raw exception text
+    // anywhere on this screen — the user always sees a short clean phrase
+    // and the CURRENT backend URL so they can self-diagnose.
+    String headline = "Can't reach TheWearCo.";
+    String hint = "Check your connection and try again.";
+    IconData icon = Icons.cloud_off;
+    if (error is ApiException) {
+      final e = error as ApiException;
+      headline = e.message;
+      switch (e.kind) {
+        case ApiErrorKind.network:
+          icon = Icons.wifi_off;
+          hint = "Your phone can't reach the backend from this network.";
+          break;
+        case ApiErrorKind.timeout:
+          icon = Icons.hourglass_disabled;
+          hint = "The backend didn't respond within 15 seconds.";
+          break;
+        case ApiErrorKind.notFound:
+          icon = Icons.link_off;
+          hint = "This URL exists but doesn't serve /api/v1. The backend "
+              "might be an older deploy.";
+          break;
+        case ApiErrorKind.server:
+          icon = Icons.error_outline;
+          hint = "The server is up but responded with an error.";
+          break;
+        case ApiErrorKind.client:
+          icon = Icons.warning_amber_rounded;
+          hint = "The request was rejected.";
+          break;
+        case ApiErrorKind.other:
+          icon = Icons.cloud_off;
+          hint = "Something unexpected happened.";
+          break;
+      }
+    }
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32),
+        padding: const EdgeInsets.all(28),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.wifi_off, color: AppColors.signalCoral, size: 40),
-            const SizedBox(height: 12),
-            Text(message, textAlign: TextAlign.center),
-            const SizedBox(height: 4),
+            Icon(icon, color: AppColors.signalCoral, size: 44),
+            const SizedBox(height: 14),
             Text(
-              'Is the API running? Default: http://localhost:3000/api/v1',
+              headline,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              hint,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodySmall,
             ),
+            const SizedBox(height: 18),
+            // The URL the app is CURRENTLY using — makes debugging obvious.
+            Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: AppColors.ink950,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: AppColors.ink50.withValues(alpha: 0.12),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        'BACKEND',
+                        style: TextStyle(
+                          fontFamily: 'JetBrainsMono',
+                          fontSize: 9,
+                          letterSpacing: 1.5,
+                          color: AppColors.ink50.withValues(alpha: 0.5),
+                        ),
+                      ),
+                      if (Env.hasOverride) ...[
+                        const SizedBox(width: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 5, vertical: 1),
+                          decoration: BoxDecoration(
+                            color: AppColors.signalViolet.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: const Text(
+                            'OVERRIDE',
+                            style: TextStyle(
+                              fontFamily: 'JetBrainsMono',
+                              fontSize: 8,
+                              letterSpacing: 1,
+                              color: AppColors.signalViolet,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    Env.apiBaseUrl,
+                    style: const TextStyle(
+                      fontFamily: 'JetBrainsMono',
+                      fontSize: 11,
+                      color: AppColors.ink50,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             const SizedBox(height: 16),
-            ElevatedButton(onPressed: onRetry, child: const Text('Retry')),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                OutlinedButton.icon(
+                  onPressed: onRetry,
+                  icon: const Icon(Icons.refresh, size: 16),
+                  label: const Text('Retry'),
+                ),
+                const SizedBox(width: 10),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: AppColors.ink900,
+                        duration: const Duration(seconds: 4),
+                        content: Row(
+                          children: const [
+                            Icon(Icons.touch_app,
+                                color: AppColors.signalLime, size: 18),
+                            SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                'Long-press the TheWearCo logo at the top to '
+                                'change the backend URL.',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.swap_horiz, size: 16),
+                  label: const Text('Change URL'),
+                ),
+              ],
+            ),
           ],
         ),
       ),
