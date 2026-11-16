@@ -17,8 +17,8 @@ export function ToggleActiveButton({ id, active }: { id: string; active: boolean
       }
       className={`rounded-full px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider ${
         active
-          ? "bg-signal-lime/15 text-signal-lime"
-          : "bg-white/5 text-ink-400"
+          ? "bg-signal-lime/15 text-signal-limeInk"
+          : "bg-paper-100 text-paper-500"
       }`}
     >
       {active ? "Live" : "Hidden"}

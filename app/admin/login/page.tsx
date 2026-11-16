@@ -44,14 +44,14 @@ function LoginForm() {
   return (
     <div className="grid min-h-screen place-items-center px-5">
       <form onSubmit={onSubmit} className="card w-full max-w-md p-8">
-        <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-lime">
+        <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
           // Admin
         </div>
         <h1 className="mt-2 font-display text-3xl font-bold">Sign in</h1>
-        <p className="mt-2 text-sm text-ink-300">Manage products, orders and drops.</p>
+        <p className="mt-2 text-sm text-paper-600">Manage products, orders and drops.</p>
 
         <label className="mt-6 block">
-          <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-300">
+          <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.18em] text-paper-600">
             Email
           </div>
           <input
@@ -59,12 +59,12 @@ function LoginForm() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
+            className="w-full rounded-lg border border-paper-200 bg-paper-200 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
           />
         </label>
 
         <label className="mt-4 block">
-          <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-300">
+          <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.18em] text-paper-600">
             Password
           </div>
           <input
@@ -72,7 +72,7 @@ function LoginForm() {
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
+            className="w-full rounded-lg border border-paper-200 bg-paper-200 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
           />
         </label>
 

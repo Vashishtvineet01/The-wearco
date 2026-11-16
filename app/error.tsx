@@ -13,7 +13,7 @@ export default function Error({
         // Error
       </div>
       <h1 className="mt-3 font-display text-3xl font-bold">Something broke.</h1>
-      <p className="mt-3 text-sm text-ink-300">
+      <p className="mt-3 text-sm text-paper-600">
         {process.env.NODE_ENV === "development"
           ? error.message
           : "We hit a temporary issue loading this page. Try again in a moment."}

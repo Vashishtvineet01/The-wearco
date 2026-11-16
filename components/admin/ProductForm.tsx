@@ -143,7 +143,7 @@ export default function ProductForm({
       <div className="space-y-4 lg:col-span-3">
         <Field label="Name">
           <input
-            className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
+            className="w-full rounded-lg border border-paper-200 bg-paper-200 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
             value={form.name}
             onChange={(e) => {
               const name = e.target.value;
@@ -157,7 +157,7 @@ export default function ProductForm({
         </Field>
         <Field label="Slug">
           <input
-            className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 font-mono text-xs outline-none focus:border-signal-lime/40"
+            className="w-full rounded-lg border border-paper-200 bg-paper-200 px-3 py-2.5 font-mono text-xs outline-none focus:border-signal-lime/40"
             value={form.slug}
             onChange={(e) => {
               setAutoSlug(false);
@@ -167,7 +167,7 @@ export default function ProductForm({
         </Field>
         <Field label="Tagline">
           <input
-            className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
+            className="w-full rounded-lg border border-paper-200 bg-paper-200 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
             value={form.tagline}
             onChange={(e) => setForm((f) => ({ ...f, tagline: e.target.value }))}
           />
@@ -175,7 +175,7 @@ export default function ProductForm({
         <div className="grid gap-3 sm:grid-cols-3">
           <Field label="Category">
             <select
-              className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
+              className="w-full rounded-lg border border-paper-200 bg-paper-200 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
               value={form.category}
               onChange={(e) => {
                 const category = e.target.value as ProductCategory;
@@ -203,14 +203,14 @@ export default function ProductForm({
           <Field label="Price (INR)">
             <input
               type="number"
-              className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
+              className="w-full rounded-lg border border-paper-200 bg-paper-200 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
               value={form.price}
               onChange={(e) => setForm((f) => ({ ...f, price: Number(e.target.value) }))}
             />
           </Field>
           <Field label="Drop">
             <input
-              className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
+              className="w-full rounded-lg border border-paper-200 bg-paper-200 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
               value={form.drop}
               onChange={(e) => setForm((f) => ({ ...f, drop: e.target.value }))}
             />
@@ -218,7 +218,7 @@ export default function ProductForm({
         </div>
         <Field label="Description">
           <textarea
-            className="min-h-[100px] w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
+            className="min-h-[100px] w-full rounded-lg border border-paper-200 bg-paper-200 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
             value={form.description}
             onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
           />
@@ -241,7 +241,7 @@ export default function ProductForm({
           </div>
           <div className="mt-2 flex gap-2">
             <input
-              className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
+              className="w-full rounded-lg border border-paper-200 bg-paper-200 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
               value={detailInput}
               placeholder="Add detail and press Enter"
               onChange={(e) => setDetailInput(e.target.value)}
@@ -259,7 +259,7 @@ export default function ProductForm({
 
         <Field label="Sizes (comma separated)">
           <input
-            className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
+            className="w-full rounded-lg border border-paper-200 bg-paper-200 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
             value={form.sizes.join(", ")}
             onChange={(e) =>
               setForm((f) => ({
@@ -275,7 +275,7 @@ export default function ProductForm({
 
         <Field label="Print shape">
           <select
-            className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
+            className="w-full rounded-lg border border-paper-200 bg-paper-200 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
             value={form.printShape}
             onChange={(e) =>
               setForm((f) => ({ ...f, printShape: e.target.value as PrintShape }))
@@ -287,7 +287,7 @@ export default function ProductForm({
               </option>
             ))}
           </select>
-          <p className="mt-1 font-mono text-[10px] text-ink-400">
+          <p className="mt-1 font-mono text-[10px] text-paper-500">
             Controls how the design is clipped on the preview + export.
           </p>
         </Field>
@@ -296,10 +296,10 @@ export default function ProductForm({
           <div className="grid grid-cols-4 gap-2">
             {(["x", "y", "w", "h"] as const).map((k) => (
               <label key={k} className="block">
-                <span className="font-mono text-[10px] uppercase text-ink-400">{k}</span>
+                <span className="font-mono text-[10px] uppercase text-paper-500">{k}</span>
                 <input
                   type="number"
-                  className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
+                  className="mt-1 w-full rounded-lg border border-paper-200 bg-paper-200 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
                   value={form.printArea[k]}
                   onChange={(e) =>
                     setForm((f) => ({
@@ -316,9 +316,9 @@ export default function ProductForm({
         <Field label="Colors">
           <div className="space-y-3">
             {form.colors.map((c, i) => (
-              <div key={i} className="grid gap-2 rounded-xl border border-white/10 p-3 sm:grid-cols-4">
+              <div key={i} className="grid gap-2 rounded-xl border border-paper-200 p-3 sm:grid-cols-4">
                 <input
-                  className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
+                  className="w-full rounded-lg border border-paper-200 bg-paper-200 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
                   placeholder="Name"
                   value={c.name}
                   onChange={(e) => {
@@ -328,7 +328,7 @@ export default function ProductForm({
                   }}
                 />
                 <input
-                  className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
+                  className="w-full rounded-lg border border-paper-200 bg-paper-200 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
                   placeholder="Hex"
                   value={c.hex}
                   onChange={(e) => {
@@ -338,7 +338,7 @@ export default function ProductForm({
                   }}
                 />
                 <input
-                  className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
+                  className="w-full rounded-lg border border-paper-200 bg-paper-200 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
                   placeholder="Fabric"
                   value={c.fabric}
                   onChange={(e) => {
@@ -349,7 +349,7 @@ export default function ProductForm({
                 />
                 <div className="flex gap-2">
                   <input
-                    className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
+                    className="w-full rounded-lg border border-paper-200 bg-paper-200 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
                     placeholder="Print"
                     value={c.printDefault}
                     onChange={(e) => {
@@ -377,7 +377,7 @@ export default function ProductForm({
             ))}
             <button
               type="button"
-              className="text-xs text-signal-lime"
+              className="text-xs text-signal-limeInk"
               onClick={() =>
                 setForm((f) => ({
                   ...f,
@@ -433,7 +433,7 @@ export default function ProductForm({
 
       <div className="lg:col-span-2">
         <div className="card sticky top-8 p-4">
-          <div className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-400">
+          <div className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-paper-500">
             Live preview
           </div>
           {previewColor && (
@@ -456,7 +456,7 @@ export default function ProductForm({
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-300">
+      <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.18em] text-paper-600">
         {label}
       </div>
       {children}

@@ -7,7 +7,7 @@ export default function CopyUrlButton({ url }: { url: string }) {
   return (
     <button
       type="button"
-      className="shrink-0 text-xs text-signal-lime"
+      className="shrink-0 text-xs text-signal-limeInk"
       onClick={async () => {
         await navigator.clipboard.writeText(url);
         setDone(true);

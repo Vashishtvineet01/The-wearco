@@ -44,8 +44,8 @@ export default function NewsletterForm({
 
   const wrapperClass =
     variant === "centered"
-      ? "mx-auto mt-6 flex max-w-md items-center gap-2 rounded-full border border-white/10 bg-white/[0.02] p-1"
-      : "flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.02] p-1";
+      ? "mx-auto mt-6 flex max-w-md items-center gap-2 rounded-full border border-paper-200 bg-paper-50 p-1"
+      : "flex items-center gap-2 rounded-full border border-paper-200 bg-paper-50 p-1";
 
   return (
     <div>
@@ -57,7 +57,7 @@ export default function NewsletterForm({
           onChange={(e) => setEmail(e.target.value)}
           placeholder={placeholder}
           disabled={status === "loading"}
-          className="flex-1 bg-transparent px-3 py-2 text-sm text-ink-50 outline-none placeholder:text-ink-400 disabled:opacity-50"
+          className="flex-1 bg-transparent px-3 py-2 text-sm text-ink-50 outline-none placeholder:text-paper-500 disabled:opacity-50"
         />
         <button
           type="submit"

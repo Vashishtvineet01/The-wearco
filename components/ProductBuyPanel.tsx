@@ -40,7 +40,7 @@ export default function ProductBuyPanel({ product }: { product: Product }) {
           <div className="absolute right-6 top-6 z-10">
             <Link
               href={`/studio?product=${product.slug}`}
-              className="tag border-signal-lime/40 bg-signal-lime/10 text-signal-lime hover:bg-signal-lime/20"
+              className="tag border-signal-lime/40 bg-signal-lime/10 text-signal-limeInk hover:bg-signal-lime/20"
             >
               Customize this
             </Link>
@@ -79,12 +79,12 @@ export default function ProductBuyPanel({ product }: { product: Product }) {
         <h1 className="font-display text-4xl font-bold tracking-tight md:text-5xl">
           {product.name}
         </h1>
-        <p className="mt-2 text-ink-300">{product.tagline}</p>
+        <p className="mt-2 text-paper-600">{product.tagline}</p>
         <div className="mt-4 font-mono text-2xl">{formatINR(product.price)}</div>
 
         <div className="mt-8">
           <div className="mb-3 flex items-baseline justify-between">
-            <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-300">
+            <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-paper-600">
               Color · {color.name}
             </span>
           </div>
@@ -96,12 +96,12 @@ export default function ProductBuyPanel({ product }: { product: Product }) {
                 onClick={() => setColor(c)}
                 className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs transition ${
                   color.name === c.name
-                    ? "border-signal-lime bg-signal-lime/10 text-signal-lime"
-                    : "border-white/10 bg-white/[0.02] text-ink-100 hover:border-white/30"
+                    ? "border-signal-lime bg-signal-lime/10 text-signal-limeInk"
+                    : "border-paper-200 bg-paper-50 text-paper-800 hover:border-paper-400"
                 }`}
               >
                 <span
-                  className="h-3 w-3 rounded-full border border-white/20"
+                  className="h-3 w-3 rounded-full border border-paper-300"
                   style={{ backgroundColor: c.hex }}
                 />
                 {c.name}
@@ -112,10 +112,10 @@ export default function ProductBuyPanel({ product }: { product: Product }) {
 
         <div className="mt-6">
           <div className="mb-3 flex items-baseline justify-between">
-            <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-300">
+            <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-paper-600">
               Size · {size}
             </span>
-            <a href="#sizing" className="text-xs text-ink-300 hover:text-ink-100">
+            <a href="#sizing" className="text-xs text-paper-600 hover:text-paper-800">
               Size guide
             </a>
           </div>
@@ -127,8 +127,8 @@ export default function ProductBuyPanel({ product }: { product: Product }) {
                 onClick={() => setSize(s)}
                 className={`min-w-[48px] rounded-full border px-4 py-1.5 text-xs transition ${
                   size === s
-                    ? "border-signal-lime bg-signal-lime/10 text-signal-lime"
-                    : "border-white/10 bg-white/[0.02] text-ink-100 hover:border-white/30"
+                    ? "border-signal-lime bg-signal-lime/10 text-signal-limeInk"
+                    : "border-paper-200 bg-paper-50 text-paper-800 hover:border-paper-400"
                 }`}
               >
                 {s}
@@ -138,11 +138,11 @@ export default function ProductBuyPanel({ product }: { product: Product }) {
         </div>
 
         <div className="mt-8 flex items-center gap-4">
-          <div className="flex items-center rounded-full border border-white/10 bg-white/[0.02]">
+          <div className="flex items-center rounded-full border border-paper-200 bg-paper-50">
             <button
               type="button"
               onClick={() => setQty((q) => Math.max(1, q - 1))}
-              className="px-4 py-2 text-ink-200 hover:text-ink-50"
+              className="px-4 py-2 text-paper-700 hover:text-paper-900"
               aria-label="Decrease"
             >
               −
@@ -151,7 +151,7 @@ export default function ProductBuyPanel({ product }: { product: Product }) {
             <button
               type="button"
               onClick={() => setQty((q) => q + 1)}
-              className="px-4 py-2 text-ink-200 hover:text-ink-50"
+              className="px-4 py-2 text-paper-700 hover:text-paper-900"
               aria-label="Increase"
             >
               +
@@ -181,11 +181,11 @@ export default function ProductBuyPanel({ product }: { product: Product }) {
 
         <div className="mt-10 grid gap-4">
           <div className="card p-5">
-            <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-300">
+            <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-paper-600">
               Description
             </div>
-            <p className="mt-2 text-sm text-ink-100">{product.description}</p>
-            <ul className="mt-4 grid gap-2 text-sm text-ink-200">
+            <p className="mt-2 text-sm text-paper-800">{product.description}</p>
+            <ul className="mt-4 grid gap-2 text-sm text-paper-700">
               {product.details.map((d) => (
                 <li key={d} className="flex items-center gap-2">
                   <span className="h-1 w-1 rounded-full bg-signal-lime" />
@@ -196,10 +196,10 @@ export default function ProductBuyPanel({ product }: { product: Product }) {
           </div>
 
           <div className="card p-5" id="sizing">
-            <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-300">
+            <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-paper-600">
               Shipping
             </div>
-            <p className="mt-2 text-sm text-ink-100">
+            <p className="mt-2 text-sm text-paper-800">
               Free shipping over ₹1,499 across India. Average delivery in 48
               hours metro, 5–7 days for custom prints.
             </p>

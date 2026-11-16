@@ -23,7 +23,7 @@ export default async function StudioPage() {
 function StudioFallback() {
   return (
     <div className="mx-auto max-w-7xl px-5 py-32 text-center lg:px-8">
-      <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-lime">
+      <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
         // Loading studio…
       </div>
       <div className="mt-4 font-display text-3xl font-bold tracking-tight">

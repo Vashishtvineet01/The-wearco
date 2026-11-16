@@ -46,16 +46,16 @@ function Hero() {
           { color: "sky", size: 300, top: "40%", right: "20%", delay: 6, opacity: 0.25, slow: true }
         ]}
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-ink-950" />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-paper-100" />
 
       <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 py-20 lg:grid-cols-12 lg:px-8 lg:py-28">
         <div className="lg:col-span-7">
-          <div className="mb-5 inline-flex animate-fade-in-up items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 backdrop-blur">
+          <div className="mb-5 inline-flex animate-fade-in-up items-center gap-2 rounded-full border border-paper-200 bg-paper-100/60 px-3 py-1 backdrop-blur">
             <span className="relative flex h-1.5 w-1.5">
               <span className="absolute inset-0 animate-glow rounded-full bg-signal-lime" />
               <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-signal-lime" />
             </span>
-            <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-200">
+            <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-paper-700">
               Drop 03 — QR Layer is live
             </span>
           </div>
@@ -70,7 +70,7 @@ function Hero() {
           </h1>
 
           <p
-            className="mt-6 max-w-xl animate-fade-in-up text-base text-ink-200 md:text-lg"
+            className="mt-6 max-w-xl animate-fade-in-up text-base text-paper-700 md:text-lg"
             style={{ animationDelay: "240ms" }}
           >
             Tees, hoodies, sweatshirts, caps, mugs, badges and posters for
@@ -100,7 +100,7 @@ function Hero() {
           </div>
 
           <div
-            className="mt-10 flex animate-fade-in-up items-center gap-8 text-xs text-ink-300"
+            className="mt-10 flex animate-fade-in-up items-center gap-8 text-xs text-paper-600"
             style={{ animationDelay: "480ms" }}
           >
             <Stat label="Founders wearing" value="2,400+" />
@@ -173,8 +173,8 @@ function isLight(hex: string) {
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <div className="font-display text-xl font-semibold text-ink-50">{value}</div>
-      <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-400">
+      <div className="font-display text-xl font-semibold text-paper-900">{value}</div>
+      <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-paper-500">
         {label}
       </div>
     </div>
@@ -187,7 +187,7 @@ function FeaturedProducts({ featured }: { featured: Product[] }) {
       <ScrollReveal>
         <div className="mb-10 flex items-end justify-between gap-6">
           <div>
-            <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-lime">
+            <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
               // Featured
             </div>
             <h2 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-5xl">
@@ -196,7 +196,7 @@ function FeaturedProducts({ featured }: { featured: Product[] }) {
           </div>
           <Link
             href="/shop"
-            className="hidden text-sm text-ink-200 transition hover:text-signal-lime md:inline"
+            className="hidden text-sm text-paper-700 transition hover:text-signal-limeInkInk md:inline"
           >
             View all →
           </Link>
@@ -215,7 +215,7 @@ function FeaturedProducts({ featured }: { featured: Product[] }) {
 
 function PrintYourOwnSection() {
   return (
-    <section className="relative overflow-hidden border-y border-white/[0.06]">
+    <section className="relative overflow-hidden border-y border-paper-200">
       <Aurora
         blobs={[
           { color: "coral", size: 500, top: "-100px", right: "-120px", delay: 0, opacity: 0.35 },
@@ -225,7 +225,7 @@ function PrintYourOwnSection() {
 
       <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 py-20 lg:grid-cols-2 lg:px-8">
         <ScrollReveal>
-          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-lime">
+          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
             // The Design Studio
           </div>
           <h2 className="mt-2 font-display text-4xl font-bold leading-tight tracking-tight md:text-6xl">
@@ -233,12 +233,12 @@ function PrintYourOwnSection() {
             <br />
             Made in 5 minutes.
           </h2>
-          <p className="mt-5 max-w-xl text-base text-ink-200 md:text-lg">
+          <p className="mt-5 max-w-xl text-base text-paper-700 md:text-lg">
             Drop your artwork, type your line, pick the garment, position it on
             the canvas — and we print, ship and deliver. No minimums. No bullshit.
           </p>
 
-          <ul className="mt-7 grid gap-3 text-sm text-ink-100">
+          <ul className="mt-7 grid gap-3 text-sm text-paper-800">
             {[
               ["01", "Upload PNG, SVG, JPG — or just type text"],
               ["02", "Position, rotate, scale on the live mockup"],
@@ -246,7 +246,7 @@ function PrintYourOwnSection() {
               ["04", "We DTG-print and ship in 5–7 days"]
             ].map(([n, t]) => (
               <li key={n} className="flex items-start gap-3">
-                <span className="font-mono text-xs text-signal-lime">{n}</span>
+                <span className="font-mono text-xs text-signal-limeInk">{n}</span>
                 <span>{t}</span>
               </li>
             ))}
@@ -280,17 +280,17 @@ function PrintYourOwnSection() {
             </div>
             <div className="mt-4 grid grid-cols-3 gap-2 text-xs">
               <div className="card p-3 text-center">
-                <div className="font-mono text-[10px] uppercase text-ink-400">size</div>
+                <div className="font-mono text-[10px] uppercase text-paper-500">size</div>
                 <div className="mt-1 font-display font-semibold">L</div>
               </div>
               <div className="card p-3 text-center">
-                <div className="font-mono text-[10px] uppercase text-ink-400">color</div>
+                <div className="font-mono text-[10px] uppercase text-paper-500">color</div>
                 <div className="mt-1 flex justify-center">
-                  <span className="h-4 w-4 rounded-full border border-white/30 bg-ink-900" />
+                  <span className="h-4 w-4 rounded-full border border-paper-400 bg-paper-100" />
                 </div>
               </div>
               <div className="card p-3 text-center">
-                <div className="font-mono text-[10px] uppercase text-ink-400">price</div>
+                <div className="font-mono text-[10px] uppercase text-paper-500">price</div>
                 <div className="mt-1 font-display font-semibold">₹999</div>
               </div>
             </div>
@@ -306,13 +306,13 @@ function DropsTimeline({ drops }: { drops: string[] }) {
     <section className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
       <ScrollReveal>
         <div className="mb-10">
-          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-lime">
+          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
             // Drops
           </div>
           <h2 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-5xl">
             Limited drops, <span className="gradient-text">monthly.</span>
           </h2>
-          <p className="mt-3 max-w-xl text-ink-200">
+          <p className="mt-3 max-w-xl text-paper-700">
             Each drop is themed, AI-curated, and capped. When it&apos;s gone, it&apos;s gone.
           </p>
         </div>
@@ -321,11 +321,11 @@ function DropsTimeline({ drops }: { drops: string[] }) {
         {drops.map((d, i) => (
           <ScrollReveal key={d} delay={i * 120}>
             <div className="card-hover gradient-ring group relative p-6">
-              <div className="font-mono text-xs text-ink-400">
+              <div className="font-mono text-xs text-paper-500">
                 DROP / {String(i + 1).padStart(2, "0")}
               </div>
               <div className="mt-2 font-display text-2xl font-semibold">{d}</div>
-              <p className="mt-2 text-sm text-ink-300">{dropDescription(d)}</p>
+              <p className="mt-2 text-sm text-paper-600">{dropDescription(d)}</p>
               <div className="mt-6 flex items-center gap-2 text-xs">
                 <span className="tag">
                   <span
@@ -335,7 +335,7 @@ function DropsTimeline({ drops }: { drops: string[] }) {
                   />
                   {i === 2 ? "Live now" : i === 1 ? "Sold out" : "Archived"}
                 </span>
-                <Link href="/shop" className="ml-auto text-ink-200 transition hover:text-signal-lime">
+                <Link href="/shop" className="ml-auto text-paper-700 transition hover:text-signal-limeInkInk">
                   Browse →
                 </Link>
               </div>
@@ -365,13 +365,13 @@ function CommunitySection() {
             <div className="absolute -bottom-32 -left-32 h-72 w-72 animate-drift-slow rounded-full bg-signal-coral/15 blur-3xl" />
 
             <div className="relative">
-              <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-lime">
+              <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
                 // Members only
               </div>
               <h3 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-5xl">
                 Every piece is a <span className="gradient-text">key.</span>
               </h3>
-              <p className="mt-4 max-w-md text-ink-200">
+              <p className="mt-4 max-w-md text-paper-700">
                 Scan the QR on your hoodie or cap to unlock the founder Discord,
                 monthly office hours with builders we love, and early access to
                 every drop.
@@ -390,8 +390,8 @@ function CommunitySection() {
               {["Late Night Founders Discord", "Monthly office hours", "Early drops", "AI-curated playlists"].map(
                 (perk, i) => (
                   <ScrollReveal key={perk} delay={i * 80}>
-                    <div className="rounded-xl border border-white/[0.08] bg-black/40 p-4 backdrop-blur transition hover:border-signal-violet/40 hover:bg-black/50">
-                      <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-signal-lime">
+                    <div className="rounded-xl border border-paper-200 bg-paper-200 p-4 backdrop-blur transition hover:border-signal-violet/40 hover:bg-paper-200/80">
+                      <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-signal-limeInk">
                         PERK
                       </div>
                       <div className="mt-2 font-display text-base font-semibold">{perk}</div>

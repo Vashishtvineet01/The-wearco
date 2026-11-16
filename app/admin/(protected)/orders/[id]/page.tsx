@@ -30,11 +30,11 @@ export default async function AdminOrderDetailPage({
     <div>
       <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <Link href="/admin/orders" className="text-xs text-ink-400 hover:text-ink-100">
+          <Link href="/admin/orders" className="text-xs text-paper-500 hover:text-paper-800">
             ← Orders
           </Link>
           <h1 className="mt-2 font-display text-3xl font-bold">{order.orderNumber}</h1>
-          <p className="mt-1 text-sm text-ink-300">
+          <p className="mt-1 text-sm text-paper-600">
             {new Date(order.createdAt).toLocaleString("en-IN")} ·{" "}
             {order.paymentMethod.toUpperCase()}
           </p>
@@ -46,11 +46,11 @@ export default async function AdminOrderDetailPage({
         <div className="card space-y-2 p-5 lg:col-span-1">
           <h2 className="font-display text-lg font-semibold">Customer</h2>
           <p>{order.name}</p>
-          <p className="text-sm text-ink-300">{order.email}</p>
-          <p className="text-sm text-ink-300">{order.phone}</p>
-          {order.gst && <p className="text-xs text-ink-400">GST: {order.gst}</p>}
-          <div className="mt-4 border-t border-white/10 pt-4 text-sm text-ink-200">
-            <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-400">
+          <p className="text-sm text-paper-600">{order.email}</p>
+          <p className="text-sm text-paper-600">{order.phone}</p>
+          {order.gst && <p className="text-xs text-paper-500">GST: {order.gst}</p>}
+          <div className="mt-4 border-t border-paper-200 pt-4 text-sm text-paper-700">
+            <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-paper-500">
               Ship to
             </div>
             <p className="mt-2">
@@ -78,27 +78,27 @@ export default async function AdminOrderDetailPage({
               return (
                 <li
                   key={item.id}
-                  className="flex gap-4 border-b border-white/5 pb-4 last:border-0"
+                  className="flex gap-4 border-b border-paper-200 pb-4 last:border-0"
                 >
                   {img ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={img}
                       alt=""
-                      className="h-20 w-20 rounded-lg bg-ink-900 object-contain"
+                      className="h-20 w-20 rounded-lg bg-paper-100 object-contain"
                     />
                   ) : (
-                    <div className="grid h-20 w-20 place-items-center rounded-lg bg-ink-900 text-[10px] text-ink-500">
+                    <div className="grid h-20 w-20 place-items-center rounded-lg bg-paper-100 text-[10px] text-ink-500">
                       No art
                     </div>
                   )}
                   <div className="min-w-0 flex-1">
                     <div className="font-medium">{item.name}</div>
-                    <div className="font-mono text-[11px] uppercase text-ink-400">
+                    <div className="font-mono text-[11px] uppercase text-paper-500">
                       {item.size} · {item.color} · ×{item.qty}
                     </div>
                     {custom?.text && (
-                      <div className="mt-1 text-xs text-ink-300">&quot;{custom.text}&quot;</div>
+                      <div className="mt-1 text-xs text-paper-600">&quot;{custom.text}&quot;</div>
                     )}
                   </div>
                   <div className="font-mono">{formatINR(item.price * item.qty)}</div>
@@ -106,12 +106,12 @@ export default async function AdminOrderDetailPage({
               );
             })}
           </ul>
-          <div className="mt-4 space-y-1 border-t border-white/10 pt-4 text-sm">
-            <div className="flex justify-between text-ink-300">
+          <div className="mt-4 space-y-1 border-t border-paper-200 pt-4 text-sm">
+            <div className="flex justify-between text-paper-600">
               <span>Subtotal</span>
               <span>{formatINR(order.subtotal)}</span>
             </div>
-            <div className="flex justify-between text-ink-300">
+            <div className="flex justify-between text-paper-600">
               <span>Shipping</span>
               <span>{formatINR(order.shipping)}</span>
             </div>

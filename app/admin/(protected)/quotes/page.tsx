@@ -39,7 +39,7 @@ export default async function AdminQuotesPage({
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="font-display text-3xl font-bold">Bulk quotes</h1>
-          <p className="mt-1 text-sm text-ink-300">
+          <p className="mt-1 text-sm text-paper-600">
             {quotes.length} shown · {countNew} new
           </p>
         </div>
@@ -49,7 +49,7 @@ export default async function AdminQuotesPage({
         <select
           name="status"
           defaultValue={status}
-          className="rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm"
+          className="rounded-lg border border-paper-200 bg-paper-200 px-3 py-2 text-sm"
         >
           {statuses.map((s) => (
             <option key={s} value={s}>
@@ -61,7 +61,7 @@ export default async function AdminQuotesPage({
           name="q"
           defaultValue={q}
           placeholder="Search email / name / company"
-          className="min-w-[200px] flex-1 rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm"
+          className="min-w-[200px] flex-1 rounded-lg border border-paper-200 bg-paper-200 px-3 py-2 text-sm"
         />
         <button type="submit" className="btn-ghost">
           Filter
@@ -70,7 +70,7 @@ export default async function AdminQuotesPage({
 
       <div className="card mt-6 overflow-x-auto">
         <table className="w-full min-w-[900px] text-left text-sm">
-          <thead className="border-b border-white/10 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-400">
+          <thead className="border-b border-paper-200 font-mono text-[10px] uppercase tracking-[0.18em] text-paper-500">
             <tr>
               <th className="px-4 py-3">Contact</th>
               <th className="px-4 py-3">Product</th>
@@ -82,15 +82,15 @@ export default async function AdminQuotesPage({
           </thead>
           <tbody className="divide-y divide-white/5">
             {quotes.map((q) => (
-              <tr key={q.id} className="hover:bg-white/[0.02]">
+              <tr key={q.id} className="hover:bg-paper-50">
                 <td className="px-4 py-3">
                   <Link
                     href={`/admin/quotes/${q.id}`}
-                    className="font-medium text-signal-lime"
+                    className="font-medium text-signal-limeInk"
                   >
                     {q.name}
                   </Link>
-                  <div className="text-xs text-ink-400">{q.email}</div>
+                  <div className="text-xs text-paper-500">{q.email}</div>
                   {q.company && (
                     <div className="text-[11px] text-ink-500">{q.company}</div>
                   )}
@@ -98,7 +98,7 @@ export default async function AdminQuotesPage({
                 <td className="px-4 py-3">
                   <div>{q.productName || q.productSlug || "—"}</div>
                   {q.category && (
-                    <div className="font-mono text-[10px] uppercase text-ink-400">
+                    <div className="font-mono text-[10px] uppercase text-paper-500">
                       {q.category}
                     </div>
                   )}
@@ -107,7 +107,7 @@ export default async function AdminQuotesPage({
                 <td className="px-4 py-3 font-mono">
                   {q.estimatedTotal != null ? formatINR(q.estimatedTotal) : "—"}
                   {q.tierDiscountPercent ? (
-                    <div className="text-[10px] text-signal-lime">
+                    <div className="text-[10px] text-signal-limeInk">
                       -{q.tierDiscountPercent}%
                     </div>
                   ) : null}
@@ -115,14 +115,14 @@ export default async function AdminQuotesPage({
                 <td className="px-4 py-3">
                   <StatusPill status={q.status} />
                 </td>
-                <td className="px-4 py-3 text-ink-400">
+                <td className="px-4 py-3 text-paper-500">
                   {new Date(q.createdAt).toLocaleString("en-IN")}
                 </td>
               </tr>
             ))}
             {quotes.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-10 text-center text-ink-400">
+                <td colSpan={6} className="px-4 py-10 text-center text-paper-500">
                   No quotes yet
                 </td>
               </tr>
@@ -136,16 +136,16 @@ export default async function AdminQuotesPage({
 
 function StatusPill({ status }: { status: string }) {
   const map: Record<string, string> = {
-    new: "bg-signal-lime/15 text-signal-lime",
+    new: "bg-signal-lime/15 text-signal-limeInk",
     reviewing: "bg-signal-sky/15 text-signal-sky",
     quoted: "bg-signal-violet/15 text-signal-violet",
-    won: "bg-signal-lime/20 text-signal-lime",
-    lost: "bg-white/5 text-ink-400"
+    won: "bg-signal-lime/20 text-signal-limeInk",
+    lost: "bg-paper-100 text-paper-500"
   };
   return (
     <span
       className={`rounded-full px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider ${
-        map[status] || "bg-white/5 text-ink-300"
+        map[status] || "bg-paper-100 text-paper-600"
       }`}
     >
       {status}

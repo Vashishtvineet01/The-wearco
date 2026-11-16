@@ -25,7 +25,7 @@ export default function OrderStatusForm({
           void updateOrderStatusAction(id, value);
         });
       }}
-        className="rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm capitalize"
+        className="rounded-lg border border-paper-200 bg-paper-200 px-3 py-2 text-sm capitalize"
       >
         {STATUSES.map((s) => (
           <option key={s} value={s}>

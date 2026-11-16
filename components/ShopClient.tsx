@@ -62,7 +62,7 @@ export default function ShopClient({ products }: { products: Product[] }) {
   return (
     <>
       <div className="card mb-8 flex flex-wrap items-center gap-3 p-3">
-        <div className="flex flex-wrap items-center gap-1 rounded-full bg-black/40 p-1">
+        <div className="flex flex-wrap items-center gap-1 rounded-full bg-paper-200 p-1">
           {TABS.map((t) => (
             <button
               key={t.id}
@@ -71,7 +71,7 @@ export default function ShopClient({ products }: { products: Product[] }) {
               className={`relative rounded-full px-4 py-1.5 text-xs transition-all duration-300 ${
                 tab === t.id
                   ? "bg-gradient-aurora text-ink-950 shadow-[0_4px_18px_-6px_rgba(124,92,255,0.6)]"
-                  : "text-ink-200 hover:bg-white/5 hover:text-ink-50"
+                  : "text-paper-700 hover:bg-paper-100 hover:text-paper-900"
               }`}
             >
               {t.label}
@@ -82,7 +82,7 @@ export default function ShopClient({ products }: { products: Product[] }) {
         <select
           value={drop}
           onChange={(e) => setDrop(e.target.value)}
-          className="rounded-full border border-white/10 bg-black/40 px-3 py-1.5 text-xs text-ink-100 outline-none"
+          className="rounded-full border border-paper-200 bg-paper-200 px-3 py-1.5 text-xs text-paper-800 outline-none"
         >
           <option value="all">All drops</option>
           {drops.map((d) => (
@@ -92,12 +92,12 @@ export default function ShopClient({ products }: { products: Product[] }) {
           ))}
         </select>
 
-        <div className="ml-auto flex items-center gap-2 text-xs text-ink-300">
+        <div className="ml-auto flex items-center gap-2 text-xs text-paper-600">
           <span className="font-mono uppercase tracking-[0.18em]">sort</span>
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value as typeof sort)}
-            className="rounded-full border border-white/10 bg-black/40 px-3 py-1.5 text-ink-100 outline-none"
+            className="rounded-full border border-paper-200 bg-paper-200 px-3 py-1.5 text-paper-800 outline-none"
           >
             <option value="new">Newest</option>
             <option value="low">Price · Low to high</option>
@@ -119,9 +119,9 @@ export default function ShopClient({ products }: { products: Product[] }) {
       </div>
 
       {list.length === 0 && (
-        <div className="card p-10 text-center text-ink-300">
+        <div className="card p-10 text-center text-paper-600">
           Nothing here yet. Try another filter — or{" "}
-          <Link href="/studio" className="text-signal-lime">
+          <Link href="/studio" className="text-signal-limeInk">
             design your own
           </Link>
           .

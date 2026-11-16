@@ -58,12 +58,12 @@ export default function ProductCard({ product }: { product: Product }) {
       <div
         className="relative mt-2 grid place-items-center overflow-hidden rounded-xl transition-all duration-500"
         style={{
-          // Dynamic backdrop: a lighter cream wash behind DARK fabrics (so black/obsidian
-          // garments actually read against the page) and a soft midnight behind LIGHT fabrics
-          // (so bone/cream garments pop too).
+          // Light theme: LIGHT fabrics (bone, lime) get a soft midnight backdrop so
+          // the garment silhouette pops. DARK fabrics (obsidian, graphite) get a soft
+          // paper wash that still lets them read without putting black on white.
           background: isDarkFabric(color.fabric)
-            ? "linear-gradient(180deg, rgba(240,235,228,0.92) 0%, rgba(210,204,196,0.88) 100%)"
-            : "linear-gradient(180deg, rgba(25,22,42,0.9) 0%, rgba(15,13,26,0.95) 100%)",
+            ? "linear-gradient(180deg, rgba(234,234,226,0.9) 0%, rgba(214,212,201,0.9) 100%)"
+            : "linear-gradient(180deg, rgba(28,24,58,0.92) 0%, rgba(15,13,26,0.95) 100%)",
           // Enable container queries so the mockup can size its print text
           // relative to the card width instead of the viewport width.
           containerType: "inline-size"
@@ -75,8 +75,8 @@ export default function ProductCard({ product }: { product: Product }) {
           className="pointer-events-none absolute inset-0 opacity-70"
           style={{
             background: isDarkFabric(color.fabric)
-              ? "radial-gradient(60% 50% at 50% 55%, rgba(255,92,59,0.18), transparent 70%)"
-              : "radial-gradient(60% 50% at 50% 55%, rgba(124,92,255,0.22), transparent 70%)"
+              ? "radial-gradient(60% 50% at 50% 55%, rgba(124,92,255,0.15), transparent 70%)"
+              : "radial-gradient(60% 50% at 50% 55%, rgba(216,255,54,0.22), transparent 70%)"
           }}
         />
         <div className="relative w-full transition-transform duration-500 ease-out group-hover:-translate-y-1 group-hover:scale-[1.03]">
@@ -95,7 +95,7 @@ export default function ProductCard({ product }: { product: Product }) {
       <div className="mt-4 flex items-start justify-between gap-3">
         <div className="min-w-0">
           <h3 className="truncate font-display text-base font-semibold">{product.name}</h3>
-          <p className="mt-1 line-clamp-1 text-xs text-ink-300">{product.tagline}</p>
+          <p className="mt-1 line-clamp-1 text-xs text-paper-600">{product.tagline}</p>
         </div>
         <div className="shrink-0 font-mono text-sm">{formatINR(product.price)}</div>
       </div>
@@ -112,12 +112,12 @@ export default function ProductCard({ product }: { product: Product }) {
             className={`h-4 w-4 rounded-full border transition ${
               color.name === c.name
                 ? "border-white"
-                : "border-white/20 hover:border-white/50"
+                : "border-paper-300 hover:border-paper-500"
             }`}
             style={{ backgroundColor: c.hex }}
           />
         ))}
-        <span className="ml-auto font-mono text-[10px] uppercase tracking-wider text-ink-400">
+        <span className="ml-auto font-mono text-[10px] uppercase tracking-wider text-paper-500">
           {product.sizes.length} sizes
         </span>
       </div>

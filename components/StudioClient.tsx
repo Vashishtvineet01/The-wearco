@@ -288,13 +288,13 @@ export default function StudioClient({ products }: { products: Product[] }) {
       />
       <header className="relative mb-8 flex animate-fade-in-up flex-wrap items-end justify-between gap-4">
         <div>
-          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-lime">
+          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
             // Design Studio
           </div>
           <h1 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-5xl">
             Print your <span className="gradient-text">own</span>
           </h1>
-          <p className="mt-2 max-w-xl text-sm text-ink-300">
+          <p className="mt-2 max-w-xl text-sm text-paper-600">
             Drop your art, type your line, drag it into place — and we print it
             on a premium garment in 5-7 days. No minimums.
           </p>
@@ -310,7 +310,7 @@ export default function StudioClient({ products }: { products: Product[] }) {
       <div className="grid gap-6 lg:grid-cols-12">
         {/* LEFT — product picker */}
         <aside className="card studio-scroll order-2 max-h-[640px] overflow-y-auto p-3 lg:order-1 lg:col-span-3">
-          <div className="px-1 pb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-ink-300">
+          <div className="px-1 pb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-paper-600">
             01 · Garment
           </div>
           <div className="grid grid-cols-2 gap-2 lg:grid-cols-1">
@@ -321,10 +321,10 @@ export default function StudioClient({ products }: { products: Product[] }) {
                 className={`card group flex items-center gap-3 p-2 text-left transition ${
                   p.slug === product.slug
                     ? "border-signal-lime/60 bg-signal-lime/5"
-                    : "hover:border-white/30"
+                    : "hover:border-paper-400"
                 }`}
               >
-                <div className="h-16 w-16 shrink-0 overflow-hidden rounded-md bg-ink-900">
+                <div className="h-16 w-16 shrink-0 overflow-hidden rounded-md bg-paper-100">
                   <ProductMockup
                     category={p.category}
                     fabric={p.colors[0].fabric}
@@ -336,7 +336,7 @@ export default function StudioClient({ products }: { products: Product[] }) {
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="truncate font-display text-sm font-semibold">{p.name}</div>
-                  <div className="font-mono text-[10px] text-ink-400">
+                  <div className="font-mono text-[10px] text-paper-500">
                     from {formatINR(p.price)}
                   </div>
                 </div>
@@ -350,7 +350,7 @@ export default function StudioClient({ products }: { products: Product[] }) {
           <div className="card relative overflow-hidden">
             <div className="absolute left-4 top-4 z-10 flex items-center gap-2">
               <span className="tag">// preview</span>
-              <span className="tag border-signal-lime/30 bg-signal-lime/10 text-signal-lime">
+              <span className="tag border-signal-lime/30 bg-signal-lime/10 text-signal-limeInk">
                 {product.name}
               </span>
             </div>
@@ -359,7 +359,7 @@ export default function StudioClient({ products }: { products: Product[] }) {
               <button
                 onClick={handleDownload}
                 disabled={downloading}
-                className="tag border-white/20 text-ink-100 transition hover:border-signal-lime/50 hover:text-signal-lime disabled:opacity-50"
+                className="tag border-paper-300 text-paper-800 transition hover:border-signal-lime/50 hover:text-signal-limeInkInk disabled:opacity-50"
                 title="Download mockup as PNG"
               >
                 {downloading ? (
@@ -391,7 +391,7 @@ export default function StudioClient({ products }: { products: Product[] }) {
               />
             </div>
 
-            <div className="border-t border-white/[0.06] bg-black/30 px-4 py-3 backdrop-blur">
+            <div className="border-t border-paper-200 bg-paper-100/80 px-4 py-3 backdrop-blur">
               <div className="grid grid-cols-3 gap-3 text-xs">
                 <Stat label="Garment" value={labelFor(product.category)} />
                 <Stat label="Color" value={color.name} />
@@ -403,7 +403,7 @@ export default function StudioClient({ products }: { products: Product[] }) {
           {/* Position controls */}
           <div className="card mt-4 p-4">
             <div className="mb-3 flex items-center justify-between">
-              <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink-300">
+              <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-paper-600">
                 03 · Fine-tune
               </div>
               <button
@@ -413,7 +413,7 @@ export default function StudioClient({ products }: { products: Product[] }) {
                   setScale(1);
                   setRotation(0);
                 }}
-                className="text-xs text-ink-300 hover:text-signal-lime"
+                className="text-xs text-paper-600 hover:text-signal-limeInkInk"
               >
                 Reset
               </button>
@@ -424,7 +424,7 @@ export default function StudioClient({ products }: { products: Product[] }) {
               <Slider label="Scale" value={scale} min={0.4} max={1.6} step={0.05} onChange={setScale} />
               <Slider label="Rotate" value={rotation} min={-45} max={45} onChange={setRotation} suffix="°" />
             </div>
-            <p className="mt-3 font-mono text-[10px] text-ink-400">
+            <p className="mt-3 font-mono text-[10px] text-paper-500">
               tip — drag your design directly on the garment to position it.
             </p>
           </div>
@@ -440,8 +440,8 @@ export default function StudioClient({ products }: { products: Product[] }) {
                   onClick={() => setTab(t)}
                   className={`px-3 py-3 text-xs uppercase tracking-[0.18em] transition ${
                     tab === t
-                      ? "bg-signal-lime/10 text-signal-lime"
-                      : "text-ink-300 hover:text-ink-50"
+                      ? "bg-signal-lime/10 text-signal-limeInk"
+                      : "text-paper-600 hover:text-paper-900"
                   }`}
                 >
                   {t}
@@ -458,9 +458,9 @@ export default function StudioClient({ products }: { products: Product[] }) {
                       onChange={(e) => setText(e.target.value)}
                       maxLength={40}
                       placeholder="Type something legendary"
-                      className="h-20 w-full resize-none rounded-lg border border-white/10 bg-black/40 p-3 text-sm outline-none focus:border-signal-lime/40"
+                      className="h-20 w-full resize-none rounded-lg border border-paper-200 bg-paper-200 p-3 text-sm outline-none focus:border-signal-lime/40"
                     />
-                    <div className="mt-1 text-right font-mono text-[10px] text-ink-400">
+                    <div className="mt-1 text-right font-mono text-[10px] text-paper-500">
                       {text.length}/40
                     </div>
                   </Field>
@@ -474,8 +474,8 @@ export default function StudioClient({ products }: { products: Product[] }) {
                           style={{ fontFamily: f.css }}
                           className={`rounded-lg border px-3 py-2 text-xs transition ${
                             font === f.css
-                              ? "border-signal-lime bg-signal-lime/10 text-signal-lime"
-                              : "border-white/10 bg-white/[0.02] text-ink-100"
+                              ? "border-signal-lime bg-signal-lime/10 text-signal-limeInk"
+                              : "border-paper-200 bg-paper-50 text-paper-800"
                           }`}
                         >
                           {f.label}
@@ -492,7 +492,7 @@ export default function StudioClient({ products }: { products: Product[] }) {
                           onClick={() => setTextColor(c)}
                           aria-label={c}
                           className={`h-7 w-7 rounded-full border transition ${
-                            textColor === c ? "border-signal-lime" : "border-white/20"
+                            textColor === c ? "border-signal-lime" : "border-paper-300"
                           }`}
                           style={{ backgroundColor: c }}
                         />
@@ -501,7 +501,7 @@ export default function StudioClient({ products }: { products: Product[] }) {
                         type="color"
                         value={textColor}
                         onChange={(e) => setTextColor(e.target.value)}
-                        className="h-7 w-7 cursor-pointer rounded-full border border-white/10 bg-transparent"
+                        className="h-7 w-7 cursor-pointer rounded-full border border-paper-200 bg-transparent"
                         aria-label="Custom color"
                       />
                     </div>
@@ -520,7 +520,7 @@ export default function StudioClient({ products }: { products: Product[] }) {
                         if (f) void onUpload(f);
                       }}
                       onClick={() => fileRef.current?.click()}
-                      className="grid cursor-pointer place-items-center rounded-xl border border-dashed border-white/15 bg-black/40 p-6 text-center transition hover:border-signal-lime/40"
+                      className="grid cursor-pointer place-items-center rounded-xl border border-dashed border-paper-300 bg-paper-200 p-6 text-center transition hover:border-signal-lime/40"
                     >
                       {previewSrc ? (
                         <div className="relative">
@@ -530,21 +530,21 @@ export default function StudioClient({ products }: { products: Product[] }) {
                             alt="Uploaded"
                             className="max-h-32 rounded-md"
                           />
-                          <div className="mt-3 font-mono text-[10px] uppercase tracking-wider text-signal-lime">
+                          <div className="mt-3 font-mono text-[10px] uppercase tracking-wider text-signal-limeInk">
                             {uploading ? "Uploading..." : "Click to replace"}
                           </div>
                         </div>
                       ) : (
                         <>
-                          <svg viewBox="0 0 24 24" className="h-8 w-8 text-ink-300" fill="none" stroke="currentColor" strokeWidth="1.6">
+                          <svg viewBox="0 0 24 24" className="h-8 w-8 text-paper-600" fill="none" stroke="currentColor" strokeWidth="1.6">
                             <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
                             <path d="M17 8l-5-5-5 5" />
                             <path d="M12 3v12" />
                           </svg>
-                          <div className="mt-3 text-sm text-ink-100">
+                          <div className="mt-3 text-sm text-paper-800">
                             Drop PNG, JPG, SVG
                           </div>
-                          <div className="mt-1 font-mono text-[10px] text-ink-400">
+                          <div className="mt-1 font-mono text-[10px] text-paper-500">
                             up to 5 MB · transparent recommended
                           </div>
                         </>
@@ -566,7 +566,7 @@ export default function StudioClient({ products }: { products: Product[] }) {
                   {previewSrc && (
                     <button
                       onClick={clearImage}
-                      className="text-xs text-ink-300 hover:text-signal-coral"
+                      className="text-xs text-paper-600 hover:text-signal-coral"
                     >
                       Remove image
                     </button>
@@ -577,7 +577,7 @@ export default function StudioClient({ products }: { products: Product[] }) {
                       value={text}
                       onChange={(e) => setText(e.target.value)}
                       placeholder="Optional caption"
-                      className="w-full rounded-lg border border-white/10 bg-black/40 p-3 text-sm outline-none focus:border-signal-lime/40"
+                      className="w-full rounded-lg border border-paper-200 bg-paper-200 p-3 text-sm outline-none focus:border-signal-lime/40"
                     />
                   </Field>
                 </>
@@ -592,8 +592,8 @@ export default function StudioClient({ products }: { products: Product[] }) {
                         onClick={() => setText(p)}
                         className={`rounded-lg border px-3 py-2 text-left text-xs transition ${
                           text === p
-                            ? "border-signal-lime bg-signal-lime/10 text-signal-lime"
-                            : "border-white/10 bg-white/[0.02] text-ink-100 hover:border-white/30"
+                            ? "border-signal-lime bg-signal-lime/10 text-signal-limeInk"
+                            : "border-paper-200 bg-paper-50 text-paper-800 hover:border-paper-400"
                         }`}
                       >
                         {p}
@@ -615,12 +615,12 @@ export default function StudioClient({ products }: { products: Product[] }) {
                     onClick={() => setColor(c)}
                     className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs transition ${
                       color.name === c.name
-                        ? "border-signal-lime bg-signal-lime/10 text-signal-lime"
-                        : "border-white/10 bg-white/[0.02] text-ink-100"
+                        ? "border-signal-lime bg-signal-lime/10 text-signal-limeInk"
+                        : "border-paper-200 bg-paper-50 text-paper-800"
                     }`}
                   >
                     <span
-                      className="h-3 w-3 rounded-full border border-white/20"
+                      className="h-3 w-3 rounded-full border border-paper-300"
                       style={{ backgroundColor: c.hex }}
                     />
                     {c.name}
@@ -637,8 +637,8 @@ export default function StudioClient({ products }: { products: Product[] }) {
                     onClick={() => setSize(s)}
                     className={`min-w-10 rounded-full border px-3 py-1 text-xs transition ${
                       size === s
-                        ? "border-signal-lime bg-signal-lime/10 text-signal-lime"
-                        : "border-white/10 bg-white/[0.02] text-ink-100"
+                        ? "border-signal-lime bg-signal-lime/10 text-signal-limeInk"
+                        : "border-paper-200 bg-paper-50 text-paper-800"
                     }`}
                   >
                     {s}
@@ -648,15 +648,15 @@ export default function StudioClient({ products }: { products: Product[] }) {
             </Field>
 
             <Field label="Quantity">
-              <div className="flex items-center rounded-full border border-white/10 bg-black/40">
+              <div className="flex items-center rounded-full border border-paper-200 bg-paper-200">
                 <button
                   onClick={() => setQty((q) => Math.max(1, q - 1))}
-                  className="px-4 py-2 text-ink-200"
+                  className="px-4 py-2 text-paper-700"
                 >
                   -
                 </button>
                 <span className="min-w-8 text-center text-sm">{qty}</span>
-                <button onClick={() => setQty((q) => q + 1)} className="px-4 py-2 text-ink-200">
+                <button onClick={() => setQty((q) => q + 1)} className="px-4 py-2 text-paper-700">
                   +
                 </button>
               </div>
@@ -678,11 +678,11 @@ export default function StudioClient({ products }: { products: Product[] }) {
             </svg>
           </button>
 
-          <p className="mt-3 px-1 text-[11px] leading-relaxed text-ink-400">
+          <p className="mt-3 px-1 text-[11px] leading-relaxed text-paper-500">
             Custom prints are made-to-order and ship in 5-7 working days.
             Image uploads are saved to the server when you add them.
             {" "}
-            <Link href="/about" className="text-signal-lime">
+            <Link href="/about" className="text-signal-limeInk">
               Print specs -&gt;
             </Link>
           </p>
@@ -695,7 +695,7 @@ export default function StudioClient({ products }: { products: Product[] }) {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="space-y-2">
-      <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink-300">
+      <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-paper-600">
         {label}
       </div>
       {children}
@@ -723,10 +723,10 @@ function Slider({
   return (
     <label className="block">
       <div className="mb-1 flex items-baseline justify-between">
-        <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-300">
+        <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-paper-600">
           {label}
         </span>
-        <span className="font-mono text-[11px] text-ink-100">
+        <span className="font-mono text-[11px] text-paper-800">
           {Number.isInteger(value) ? value : value.toFixed(2)}
           {suffix}
         </span>
@@ -747,7 +747,7 @@ function Slider({
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-400">{label}</div>
+      <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-paper-500">{label}</div>
       <div className="mt-0.5 font-display text-sm font-semibold">{value}</div>
     </div>
   );

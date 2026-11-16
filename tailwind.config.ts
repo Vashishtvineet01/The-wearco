@@ -8,6 +8,23 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // `paper` is the new light-theme neutral scale. Used for backgrounds,
+        // cards, borders. Low numbers = brightest surfaces, high numbers = text.
+        paper: {
+          50: "#fafaf7",   // page background (clean near-white with a tiny warm tilt)
+          100: "#f4f3ee",  // elevated surfaces (cards, nav)
+          200: "#eaeae2",  // borders, dividers
+          300: "#d6d4c9",  // muted border on hover
+          400: "#a7a69b",  // muted icons
+          500: "#6f6d62",  // secondary text
+          600: "#4d4b43",  // primary body text alt
+          700: "#2e2c26",  // headings alt
+          800: "#1c1a16",
+          900: "#0f0d0a"
+        },
+        // Legacy ink scale kept for text colors + any dark-themed surface that
+        // we deliberately keep (hero highlight, mobile app, etc.). ink-50 →
+        // ink-950 goes light to dark as before.
         ink: {
           50: "#f7f7f7",
           100: "#e5e5e5",
@@ -22,9 +39,11 @@ const config: Config = {
           950: "#0b0a14"
         },
         signal: {
-          lime: "#d8ff36",
+          lime: "#d8ff36",      // bright neon — only use for backgrounds/accents on dark
+          limeInk: "#4a6b00",   // forest-lime — use when the brand accent needs to read as TEXT on paper/cream bgs
           coral: "#ff5c3b",
           violet: "#7c5cff",
+          violetInk: "#4a2bff", // deeper violet for text on cream
           sky: "#7cd0ff",
           peach: "#ff9a6b",
           mint: "#5ee3b4"

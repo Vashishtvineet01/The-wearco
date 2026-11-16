@@ -20,14 +20,14 @@ export default async function SubscribersPage() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="font-display text-3xl font-bold">Subscribers</h1>
-          <p className="mt-1 text-sm text-ink-300">{subscribers.length} emails</p>
+          <p className="mt-1 text-sm text-paper-600">{subscribers.length} emails</p>
         </div>
         <ExportCsvButton csv={csv} filename="thewearco-subscribers.csv" />
       </div>
 
       <div className="card mt-8 overflow-x-auto">
         <table className="w-full text-left text-sm">
-          <thead className="border-b border-white/10 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-400">
+          <thead className="border-b border-paper-200 font-mono text-[10px] uppercase tracking-[0.18em] text-paper-500">
             <tr>
               <th className="px-4 py-3">Email</th>
               <th className="px-4 py-3">Joined</th>
@@ -37,14 +37,14 @@ export default async function SubscribersPage() {
             {subscribers.map((s) => (
               <tr key={s.id}>
                 <td className="px-4 py-3">{s.email}</td>
-                <td className="px-4 py-3 text-ink-400">
+                <td className="px-4 py-3 text-paper-500">
                   {new Date(s.createdAt).toLocaleString("en-IN")}
                 </td>
               </tr>
             ))}
             {subscribers.length === 0 && (
               <tr>
-                <td colSpan={2} className="px-4 py-10 text-center text-ink-400">
+                <td colSpan={2} className="px-4 py-10 text-center text-paper-500">
                   No subscribers yet
                 </td>
               </tr>

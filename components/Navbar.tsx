@@ -20,7 +20,7 @@ export default function Navbar() {
     <header
       className={`sticky top-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "glass border-b border-white/[0.06]"
+          ? "glass border-b border-paper-200"
           : "border-b border-transparent bg-transparent"
       }`}
     >
@@ -35,7 +35,7 @@ export default function Navbar() {
           </span>
           <div className="leading-none">
             <div className="font-display text-lg font-bold tracking-tight">TheWearCo</div>
-            <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink-300">
+            <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-paper-600">
               Internet Uniform
             </div>
           </div>
@@ -53,13 +53,13 @@ export default function Navbar() {
         <div className="flex items-center gap-2">
           <Link
             href="/studio"
-            className="group hidden items-center gap-2 overflow-hidden rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs font-medium text-ink-50 transition md:inline-flex hover:border-white/25"
+            className="group hidden items-center gap-2 overflow-hidden rounded-full border border-paper-200 bg-paper-100/60 px-3.5 py-2 text-xs font-medium text-paper-900 transition md:inline-flex hover:border-paper-300"
           >
             <span className="relative flex h-1.5 w-1.5">
               <span className="absolute inset-0 animate-glow rounded-full bg-signal-lime" />
               <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-signal-lime" />
             </span>
-            <span className="transition-colors group-hover:text-signal-lime">
+            <span className="transition-colors group-hover:text-signal-limeInkInk">
               Print your design
             </span>
           </Link>
@@ -88,7 +88,7 @@ export default function Navbar() {
       </div>
 
       {open && (
-        <div className="border-t border-white/[0.06] bg-ink-950/95 backdrop-blur md:hidden">
+        <div className="border-t border-paper-200 bg-paper-50/95 backdrop-blur md:hidden">
           <div className="flex flex-col px-5 py-3">
             <MobileLink onClick={() => setOpen(false)} href="/shop">Shop</MobileLink>
             <MobileLink onClick={() => setOpen(false)} href="/studio">Design Studio</MobileLink>
@@ -116,8 +116,8 @@ function NavLink({
       href={href}
       className={`rounded-full px-4 py-2 text-sm transition ${
         highlight
-          ? "text-signal-lime hover:bg-signal-lime/10"
-          : "text-ink-100 hover:bg-white/[0.04]"
+          ? "text-signal-limeInk hover:bg-signal-lime/10"
+          : "text-paper-800 hover:bg-paper-100/60"
       }`}
     >
       {children}
@@ -138,7 +138,7 @@ function MobileLink({
     <Link
       href={href}
       onClick={onClick}
-      className="border-b border-white/[0.04] py-3 text-sm text-ink-100 last:border-b-0"
+      className="border-b border-paper-200 py-3 text-sm text-paper-800 last:border-b-0"
     >
       {children}
     </Link>

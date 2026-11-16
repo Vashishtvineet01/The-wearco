@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-ink-950 font-sans text-ink-50 antialiased">
+      <body className="min-h-screen bg-paper-50 font-sans text-paper-900 antialiased">
         <StoreChrome>{children}</StoreChrome>
       </body>
     </html>

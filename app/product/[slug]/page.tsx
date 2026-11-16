@@ -41,12 +41,12 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <div className="mx-auto max-w-7xl px-5 py-10 lg:px-8 lg:py-16">
-      <nav className="mb-6 font-mono text-[11px] uppercase tracking-[0.18em] text-ink-400">
-        <Link href="/shop" className="hover:text-ink-100">
+      <nav className="mb-6 font-mono text-[11px] uppercase tracking-[0.18em] text-paper-500">
+        <Link href="/shop" className="hover:text-paper-800">
           Shop
         </Link>
         <span className="mx-2">/</span>
-        <span className="text-ink-200">{product.drop}</span>
+        <span className="text-paper-700">{product.drop}</span>
       </nav>
 
       <ProductBuyPanel product={product} />

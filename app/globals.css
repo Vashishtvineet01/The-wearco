@@ -5,7 +5,14 @@
 @tailwind utilities;
 
 :root {
-  --grid: rgba(255, 255, 255, 0.035);
+  --paper-50: #fafaf7;
+  --paper-100: #f4f3ee;
+  --paper-200: #eaeae2;
+  --paper-300: #d6d4c9;
+  --paper-700: #2e2c26;
+  --paper-900: #0f0d0a;
+
+  --grid: rgba(15, 13, 10, 0.045);
   --aurora-violet: #7c5cff;
   --aurora-coral: #ff5c3b;
   --aurora-lime: #d8ff36;
@@ -14,14 +21,13 @@
 
 html,
 body {
-  background-color: #0b0a14;
-  color: #f7f7f7;
+  background-color: var(--paper-50);
+  color: var(--paper-900);
   -webkit-font-smoothing: antialiased;
 }
 
-/* A soft, deep-space base gradient under everything.
-   Anchors the palette in a warm midnight (not pure black) with
-   faint violet/coral washes at the top and corners. */
+/* Soft warm washes behind the page. Faint aurora tints at the corners
+   keep the brand identity on a bright base without introducing glare. */
 body::before {
   content: "";
   position: fixed;
@@ -29,14 +35,14 @@ body::before {
   z-index: -2;
   pointer-events: none;
   background:
-    radial-gradient(circle at 15% -10%, rgba(124, 92, 255, 0.14), transparent 55%),
-    radial-gradient(circle at 85% 0%, rgba(255, 92, 59, 0.10), transparent 55%),
-    radial-gradient(circle at 50% 110%, rgba(94, 227, 180, 0.08), transparent 55%);
+    radial-gradient(circle at 15% -10%, rgba(124, 92, 255, 0.10), transparent 55%),
+    radial-gradient(circle at 85% 0%, rgba(255, 92, 59, 0.08), transparent 55%),
+    radial-gradient(circle at 50% 110%, rgba(216, 255, 54, 0.10), transparent 55%);
 }
 
 ::selection {
   background-color: #d8ff36;
-  color: #0b0a14;
+  color: #0f0d0a;
 }
 
 /* ---------------------------------------------------------- */
@@ -46,8 +52,8 @@ body::before {
 .aurora-blob {
   position: absolute;
   pointer-events: none;
-  filter: blur(80px);
-  opacity: 0.55;
+  filter: blur(90px);
+  opacity: 0.32;
   will-change: transform;
   border-radius: 9999px;
 }
@@ -128,9 +134,9 @@ body::before {
 .shimmer {
   background: linear-gradient(
     110deg,
-    rgba(255, 255, 255, 0) 30%,
-    rgba(255, 255, 255, 0.06) 50%,
-    rgba(255, 255, 255, 0) 70%
+    rgba(15, 13, 10, 0) 30%,
+    rgba(15, 13, 10, 0.05) 50%,
+    rgba(15, 13, 10, 0) 70%
   );
   background-size: 200% 100%;
   animation: shimmer 2.4s linear infinite;
@@ -176,10 +182,10 @@ body::before {
 }
 
 .btn-ghost {
-  @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-6 py-3 font-medium text-ink-50 backdrop-blur transition hover:border-white/30 hover:bg-white/[0.06];
+  @apply inline-flex items-center justify-center gap-2 rounded-full border border-paper-300 bg-paper-50/80 px-6 py-3 font-medium text-paper-900 backdrop-blur transition hover:border-paper-700 hover:bg-paper-100;
 }
 .btn-icon {
-  @apply inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] transition hover:border-white/30 hover:bg-white/[0.08];
+  @apply inline-flex h-10 w-10 items-center justify-center rounded-full border border-paper-300 bg-paper-50 transition hover:border-paper-700 hover:bg-paper-100;
 }
 
 /* ---------------------------------------------------------- */
@@ -187,42 +193,47 @@ body::before {
 /* ---------------------------------------------------------- */
 
 .card {
-  @apply relative overflow-hidden rounded-2xl border border-white/[0.08] backdrop-blur transition-all duration-300;
+  @apply relative overflow-hidden rounded-2xl border border-paper-200 backdrop-blur transition-all duration-300;
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.04) 0%,
-    rgba(255, 255, 255, 0.01) 100%
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(250, 250, 247, 0.85) 100%
   );
+  box-shadow:
+    0 1px 2px rgba(15, 13, 10, 0.03),
+    0 1px 1px rgba(15, 13, 10, 0.02);
 }
 .card-hover {
-  @apply card hover:border-white/20;
+  @apply card hover:border-paper-300;
 }
 .card-hover:hover {
   transform: translateY(-3px);
   box-shadow:
-    0 20px 50px -20px rgba(124, 92, 255, 0.25),
-    0 10px 30px -15px rgba(255, 92, 59, 0.15);
+    0 24px 50px -24px rgba(124, 92, 255, 0.22),
+    0 12px 32px -18px rgba(255, 92, 59, 0.16),
+    0 1px 2px rgba(15, 13, 10, 0.04);
 }
 
 /* Glass surface for sticky nav / blurred panels */
 .glass {
-  background: rgba(15, 13, 26, 0.6);
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  background: rgba(250, 250, 247, 0.72);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border-bottom: 1px solid rgba(15, 13, 10, 0.06);
 }
 
-/* Tag — now with a subtle gradient border option */
+/* Tag — pill-sized chip on light surfaces */
 .tag {
-  @apply inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-black/40 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-100;
+  @apply inline-flex items-center gap-1.5 rounded-full border border-paper-300 bg-paper-100 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-paper-700;
 }
 .tag-aurora {
   @apply tag;
   background: linear-gradient(
-    rgba(124, 92, 255, 0.12),
+    rgba(124, 92, 255, 0.10),
     rgba(255, 92, 59, 0.08)
   );
-  border-color: rgba(124, 92, 255, 0.35);
-  color: #fdf4ff;
+  border-color: rgba(124, 92, 255, 0.40);
+  color: #4a2bff;
 }
 
 /* ---------------------------------------------------------- */
@@ -236,7 +247,7 @@ body::before {
 
 /* Custom scrollbar in studio */
 .studio-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
-.studio-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 8px; }
+.studio-scroll::-webkit-scrollbar-thumb { background: rgba(15, 13, 10, 0.18); border-radius: 8px; }
 .studio-scroll::-webkit-scrollbar-track { background: transparent; }
 
 /* Respect user's reduced-motion preference */

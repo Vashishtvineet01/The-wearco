@@ -36,13 +36,13 @@ export default async function AdminOrdersPage({
   return (
     <div>
       <h1 className="font-display text-3xl font-bold">Orders</h1>
-      <p className="mt-1 text-sm text-ink-300">{orders.length} shown</p>
+      <p className="mt-1 text-sm text-paper-600">{orders.length} shown</p>
 
       <form className="mt-6 flex flex-wrap gap-3">
         <select
           name="status"
           defaultValue={status}
-          className="rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm"
+          className="rounded-lg border border-paper-200 bg-paper-200 px-3 py-2 text-sm"
         >
           {statuses.map((s) => (
             <option key={s} value={s}>
@@ -54,7 +54,7 @@ export default async function AdminOrdersPage({
           name="q"
           defaultValue={q}
           placeholder="Search email / order #"
-          className="min-w-[200px] flex-1 rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm"
+          className="min-w-[200px] flex-1 rounded-lg border border-paper-200 bg-paper-200 px-3 py-2 text-sm"
         />
         <button type="submit" className="btn-ghost">
           Filter
@@ -63,7 +63,7 @@ export default async function AdminOrdersPage({
 
       <div className="card mt-6 overflow-x-auto">
         <table className="w-full min-w-[800px] text-left text-sm">
-          <thead className="border-b border-white/10 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-400">
+          <thead className="border-b border-paper-200 font-mono text-[10px] uppercase tracking-[0.18em] text-paper-500">
             <tr>
               <th className="px-4 py-3">Order</th>
               <th className="px-4 py-3">Customer</th>
@@ -75,27 +75,27 @@ export default async function AdminOrdersPage({
           </thead>
           <tbody className="divide-y divide-white/5">
             {orders.map((o) => (
-              <tr key={o.id} className="hover:bg-white/[0.02]">
+              <tr key={o.id} className="hover:bg-paper-50">
                 <td className="px-4 py-3">
-                  <Link href={`/admin/orders/${o.id}`} className="font-mono text-signal-lime">
+                  <Link href={`/admin/orders/${o.id}`} className="font-mono text-signal-limeInk">
                     {o.orderNumber}
                   </Link>
                 </td>
                 <td className="px-4 py-3">
                   <div>{o.name}</div>
-                  <div className="text-xs text-ink-400">{o.email}</div>
+                  <div className="text-xs text-paper-500">{o.email}</div>
                 </td>
                 <td className="px-4 py-3">{o.items.length}</td>
                 <td className="px-4 py-3 font-mono">{formatINR(o.total)}</td>
                 <td className="px-4 py-3 capitalize">{o.status}</td>
-                <td className="px-4 py-3 text-ink-400">
+                <td className="px-4 py-3 text-paper-500">
                   {new Date(o.createdAt).toLocaleString("en-IN")}
                 </td>
               </tr>
             ))}
             {orders.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-10 text-center text-ink-400">
+                <td colSpan={6} className="px-4 py-10 text-center text-paper-500">
                   No orders found
                 </td>
               </tr>

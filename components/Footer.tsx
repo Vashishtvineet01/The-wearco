@@ -3,7 +3,7 @@ import NewsletterForm from "./NewsletterForm";
 
 export default function Footer() {
   return (
-    <footer className="relative mt-32 overflow-hidden border-t border-white/[0.06]">
+    <footer className="relative mt-32 overflow-hidden border-t border-paper-200">
       <div
         aria-hidden
         className="pointer-events-none absolute -top-40 left-1/2 h-[380px] w-[720px] -translate-x-1/2 rounded-full bg-signal-violet/10 blur-3xl"
@@ -17,7 +17,7 @@ export default function Footer() {
           <div className="font-display text-2xl font-bold tracking-tight">
             The<span className="gradient-text">Wear</span>Co
           </div>
-          <p className="mt-2 max-w-xs text-sm text-ink-300">
+          <p className="mt-2 max-w-xs text-sm text-paper-600">
             Internet uniform for founders, creators and builders. Wear what you’re shipping.
           </p>
           <div className="mt-6 flex items-center gap-2">
@@ -29,10 +29,10 @@ export default function Footer() {
         </div>
 
         <div>
-          <div className="mb-3 font-mono text-[11px] uppercase tracking-[0.22em] text-ink-300">
+          <div className="mb-3 font-mono text-[11px] uppercase tracking-[0.22em] text-paper-600">
             Shop
           </div>
-          <ul className="space-y-2 text-sm text-ink-100">
+          <ul className="space-y-2 text-sm text-paper-800">
             <li><Link href="/shop?cat=tee">Tees</Link></li>
             <li><Link href="/shop?cat=hoodie">Hoodies</Link></li>
             <li><Link href="/shop?cat=sweatshirt">Sweatshirts</Link></li>
@@ -46,10 +46,10 @@ export default function Footer() {
         </div>
 
         <div>
-          <div className="mb-3 font-mono text-[11px] uppercase tracking-[0.22em] text-ink-300">
+          <div className="mb-3 font-mono text-[11px] uppercase tracking-[0.22em] text-paper-600">
             Company
           </div>
-          <ul className="space-y-2 text-sm text-ink-100">
+          <ul className="space-y-2 text-sm text-paper-800">
             <li><Link href="/about">Manifesto</Link></li>
             <li><Link href="/about#community">Community</Link></li>
             <li><a href="mailto:hi@thewearco.com">Contact</a></li>
@@ -58,18 +58,18 @@ export default function Footer() {
         </div>
 
         <div>
-          <div className="mb-3 font-mono text-[11px] uppercase tracking-[0.22em] text-ink-300">
+          <div className="mb-3 font-mono text-[11px] uppercase tracking-[0.22em] text-paper-600">
             Drop alerts
           </div>
-          <p className="mb-3 text-sm text-ink-300">
+          <p className="mb-3 text-sm text-paper-600">
             New drops + community invites. No spam, ever.
           </p>
           <NewsletterForm />
         </div>
       </div>
 
-      <div className="border-t border-white/[0.06]">
-        <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-3 px-5 py-6 text-xs text-ink-400 md:flex-row md:items-center lg:px-8">
+      <div className="border-t border-paper-200">
+        <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-3 px-5 py-6 text-xs text-paper-500 md:flex-row md:items-center lg:px-8">
           <div>© {new Date().getFullYear()} TheWearCo. Made by builders.</div>
           <div className="font-mono uppercase tracking-[0.2em]">
             v1.0 / shipping daily

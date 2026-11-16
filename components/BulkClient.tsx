@@ -153,11 +153,11 @@ export default function BulkClient({ products }: { products: Product[] }) {
                 <path d="M5 12l5 5L20 7" />
               </svg>
             </div>
-            <div className="mt-4 font-mono text-[11px] uppercase tracking-[0.22em] text-signal-lime">
+            <div className="mt-4 font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
               // Enquiry received
             </div>
             <h1 className="mt-2 font-display text-3xl font-bold">Got it.</h1>
-            <p className="mt-3 text-ink-300">{submitted.message}</p>
+            <p className="mt-3 text-paper-600">{submitted.message}</p>
             <div className="mt-8 flex justify-center gap-3">
               <Link href="/shop" className="btn-primary">
                 Keep browsing
@@ -184,13 +184,13 @@ export default function BulkClient({ products }: { products: Product[] }) {
       />
       <header className="relative mb-10 flex animate-fade-in-up flex-wrap items-end justify-between gap-4">
         <div>
-          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-lime">
+          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
             // Bulk orders
           </div>
           <h1 className="mt-2 font-display text-4xl font-bold tracking-tight md:text-6xl">
             Kit out your <span className="gradient-text">team.</span>
           </h1>
-          <p className="mt-3 max-w-2xl text-base text-ink-200 md:text-lg">
+          <p className="mt-3 max-w-2xl text-base text-paper-700 md:text-lg">
             Tees, hoodies, sweatshirts, caps, mugs, pins, posters — printed with
             your artwork. Volume pricing from 10 units, discounts up to{" "}
             <span className="gradient-text font-semibold">50%</span>. Teams,
@@ -210,7 +210,7 @@ export default function BulkClient({ products }: { products: Product[] }) {
         <section className="lg:col-span-7">
           <div className="card p-5">
             <div className="mb-4 flex items-center justify-between">
-              <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink-300">
+              <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-paper-600">
                 01 · Pick a product
               </div>
               {product && (
@@ -230,10 +230,10 @@ export default function BulkClient({ products }: { products: Product[] }) {
                   className={`card group flex items-center gap-3 p-2 text-left transition ${
                     product?.slug === p.slug
                       ? "border-signal-lime/60 bg-signal-lime/5"
-                      : "hover:border-white/30"
+                      : "hover:border-paper-400"
                   }`}
                 >
-                  <div className="h-14 w-14 shrink-0 overflow-hidden rounded-md bg-ink-900">
+                  <div className="h-14 w-14 shrink-0 overflow-hidden rounded-md bg-paper-100">
                     <ProductMockup
                       category={p.category}
                       fabric={p.colors[0].fabric}
@@ -247,7 +247,7 @@ export default function BulkClient({ products }: { products: Product[] }) {
                     <div className="truncate font-display text-sm font-semibold">
                       {p.name}
                     </div>
-                    <div className="font-mono text-[10px] text-ink-400">
+                    <div className="font-mono text-[10px] text-paper-500">
                       {formatINR(p.price)}
                     </div>
                   </div>
@@ -260,7 +260,7 @@ export default function BulkClient({ products }: { products: Product[] }) {
             <div className="card mt-4 overflow-hidden">
               <div className="grid gap-6 p-6 lg:grid-cols-5">
                 <div className="lg:col-span-2">
-                  <div className="overflow-hidden rounded-xl bg-ink-900">
+                  <div className="overflow-hidden rounded-xl bg-paper-100">
                     <ProductMockup
                       category={product.category}
                       fabric={product.colors[0].fabric}
@@ -273,7 +273,7 @@ export default function BulkClient({ products }: { products: Product[] }) {
                 </div>
 
                 <div className="lg:col-span-3">
-                  <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink-300">
+                  <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-paper-600">
                     02 · Quantity
                   </div>
                   <div className="mt-3 flex items-center gap-3">
@@ -294,7 +294,7 @@ export default function BulkClient({ products }: { products: Product[] }) {
                       onChange={(e) =>
                         setQty(Math.max(1, Math.min(100000, Number(e.target.value) || 1)))
                       }
-                      className="w-24 rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-right font-mono text-sm outline-none focus:border-signal-lime/40"
+                      className="w-24 rounded-lg border border-paper-200 bg-paper-200 px-3 py-2 text-right font-mono text-sm outline-none focus:border-signal-lime/40"
                     />
                   </div>
 
@@ -305,7 +305,7 @@ export default function BulkClient({ products }: { products: Product[] }) {
                   </div>
 
                   {quote.requiresQuote && (
-                    <div className="mt-4 rounded-xl border border-signal-lime/30 bg-signal-lime/5 p-3 text-xs text-signal-lime">
+                    <div className="mt-4 rounded-xl border border-signal-lime/30 bg-signal-lime/5 p-3 text-xs text-signal-limeInk">
                       Enterprise tier — send the enquiry form and our team will
                       confirm the final rate within one business day.
                     </div>
@@ -314,14 +314,14 @@ export default function BulkClient({ products }: { products: Product[] }) {
               </div>
 
               {/* Tier table */}
-              <div className="border-t border-white/[0.06] bg-black/30 p-6">
-                <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-ink-300">
+              <div className="border-t border-paper-200 bg-paper-100/80 p-6">
+                <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-paper-600">
                   Tier pricing · {CATEGORY_LABELS[product.category]}
                 </div>
-                <div className="overflow-hidden rounded-xl border border-white/10">
+                <div className="overflow-hidden rounded-xl border border-paper-200">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="bg-white/[0.03] text-ink-300">
+                      <tr className="bg-paper-100/60 text-paper-600">
                         <th className="px-4 py-2 text-left font-mono text-[10px] uppercase tracking-wider">Quantity</th>
                         <th className="px-4 py-2 text-left font-mono text-[10px] uppercase tracking-wider">Discount</th>
                         <th className="px-4 py-2 text-right font-mono text-[10px] uppercase tracking-wider">Unit price</th>
@@ -335,12 +335,12 @@ export default function BulkClient({ products }: { products: Product[] }) {
                         return (
                           <tr
                             key={t.minQty}
-                            className={active ? "bg-signal-lime/10 text-signal-lime" : "text-ink-100"}
+                            className={active ? "bg-signal-lime/10 text-signal-limeInk" : "text-paper-800"}
                           >
                             <td className="px-4 py-2 font-mono">
                               {tierLabel(tiers, i)}
                               {t.requiresQuote && (
-                                <span className="ml-2 rounded-full border border-white/10 px-2 py-0.5 text-[9px] uppercase text-ink-400">
+                                <span className="ml-2 rounded-full border border-paper-200 px-2 py-0.5 text-[9px] uppercase text-paper-500">
                                   quote
                                 </span>
                               )}
@@ -360,10 +360,10 @@ export default function BulkClient({ products }: { products: Product[] }) {
           )}
 
           <div className="card mt-4 p-5">
-            <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-ink-300">
+            <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-paper-600">
               What's included
             </div>
-            <ul className="grid gap-2 text-sm text-ink-100 sm:grid-cols-2">
+            <ul className="grid gap-2 text-sm text-paper-800 sm:grid-cols-2">
               {[
                 "Free custom artwork placement",
                 "Mockup PDF for sign-off",
@@ -385,7 +385,7 @@ export default function BulkClient({ products }: { products: Product[] }) {
         <section className="lg:col-span-5">
           <form onSubmit={onSubmit} className="card sticky top-24 p-6">
             <div className="mb-4 flex items-center justify-between">
-              <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink-300">
+              <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-paper-600">
                 03 · Send enquiry
               </div>
               <span className="tag">no commitment</span>
@@ -405,7 +405,7 @@ export default function BulkClient({ products }: { products: Product[] }) {
                     <select
                       value={color}
                       onChange={(e) => setColor(e.target.value)}
-                      className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
+                      className="w-full rounded-lg border border-paper-200 bg-paper-200 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
                     >
                       {product.colors.map((c) => (
                         <option key={c.name} value={c.name}>
@@ -418,7 +418,7 @@ export default function BulkClient({ products }: { products: Product[] }) {
                     <select
                       value={size}
                       onChange={(e) => setSize(e.target.value)}
-                      className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
+                      className="w-full rounded-lg border border-paper-200 bg-paper-200 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
                     >
                       {product.sizes.map((s) => (
                         <option key={s} value={s}>
@@ -435,7 +435,7 @@ export default function BulkClient({ products }: { products: Product[] }) {
                   type="date"
                   value={deadline}
                   onChange={(e) => setDeadline(e.target.value)}
-                  className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-sm text-ink-100 outline-none focus:border-signal-lime/40"
+                  className="w-full rounded-lg border border-paper-200 bg-paper-200 px-3 py-2.5 text-sm text-paper-800 outline-none focus:border-signal-lime/40"
                 />
               </Field>
 
@@ -445,37 +445,37 @@ export default function BulkClient({ products }: { products: Product[] }) {
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="We're a 32-person team shipping v2 at TechSparks. Need chest + sleeve print on hoodies, pantone 180C, delivered to Bengaluru by Dec 20."
-                  className="h-28 w-full resize-none rounded-lg border border-white/10 bg-black/40 p-3 text-sm outline-none focus:border-signal-lime/40"
+                  className="h-28 w-full resize-none rounded-lg border border-paper-200 bg-paper-200 p-3 text-sm outline-none focus:border-signal-lime/40"
                 />
               </Field>
 
               <Field label="Artwork (optional)">
-                <label className="flex cursor-pointer items-center justify-between gap-3 rounded-lg border border-dashed border-white/15 bg-black/40 px-3 py-3 text-xs transition hover:border-signal-lime/40">
+                <label className="flex cursor-pointer items-center justify-between gap-3 rounded-lg border border-dashed border-paper-300 bg-paper-200 px-3 py-3 text-xs transition hover:border-signal-lime/40">
                   <div>
                     {upload.status === "done" && (
                       <>
-                        <div className="text-signal-lime">✓ {upload.name}</div>
-                        <div className="font-mono text-[10px] text-ink-400">
+                        <div className="text-signal-limeInk">✓ {upload.name}</div>
+                        <div className="font-mono text-[10px] text-paper-500">
                           uploaded — click to replace
                         </div>
                       </>
                     )}
                     {upload.status === "uploading" && (
-                      <div className="text-ink-200">Uploading…</div>
+                      <div className="text-paper-700">Uploading…</div>
                     )}
                     {upload.status === "error" && (
                       <div className="text-signal-coral">{upload.message}</div>
                     )}
                     {upload.status === "idle" && (
                       <>
-                        <div className="text-ink-100">Drop PNG, SVG, PDF mockup</div>
-                        <div className="font-mono text-[10px] text-ink-400">
+                        <div className="text-paper-800">Drop PNG, SVG, PDF mockup</div>
+                        <div className="font-mono text-[10px] text-paper-500">
                           up to 5 MB — optional
                         </div>
                       </>
                     )}
                   </div>
-                  <span className="rounded-full border border-white/10 px-3 py-1 text-[10px] uppercase tracking-wider text-ink-200">
+                  <span className="rounded-full border border-paper-200 px-3 py-1 text-[10px] uppercase tracking-wider text-paper-700">
                     Upload
                   </span>
                   <input
@@ -492,13 +492,13 @@ export default function BulkClient({ products }: { products: Product[] }) {
               </Field>
 
               {quote && (
-                <div className="rounded-xl border border-white/10 bg-black/40 p-3 text-xs text-ink-200">
-                  <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-400">
+                <div className="rounded-xl border border-paper-200 bg-paper-200 p-3 text-xs text-paper-700">
+                  <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-paper-500">
                     Attached quote estimate
                   </div>
                   <div className="mt-1">
                     {product?.name} · {qty} pcs · {quote.discountPct}% off ·{" "}
-                    <span className="font-mono text-signal-lime">
+                    <span className="font-mono text-signal-limeInk">
                       {formatINR(quote.total)}
                     </span>
                   </div>
@@ -518,7 +518,7 @@ export default function BulkClient({ products }: { products: Product[] }) {
                 </svg>
               </button>
 
-              <p className="text-[11px] leading-relaxed text-ink-400">
+              <p className="text-[11px] leading-relaxed text-paper-500">
                 By sending this you&apos;re not committing to buy. We&apos;ll
                 confirm the final quote by email within 1 business day.
               </p>
@@ -533,7 +533,7 @@ export default function BulkClient({ products }: { products: Product[] }) {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-300">
+      <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.18em] text-paper-600">
         {label}
       </div>
       {children}
@@ -564,7 +564,7 @@ function Input({
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
+        className="w-full rounded-lg border border-paper-200 bg-paper-200 px-3 py-2.5 text-sm outline-none focus:border-signal-lime/40"
       />
     </Field>
   );
@@ -586,20 +586,20 @@ function Stat({
       className={`rounded-xl border p-3 ${
         highlight
           ? "border-signal-lime/40 bg-signal-lime/5"
-          : "border-white/10 bg-black/30"
+          : "border-paper-200 bg-paper-100/80"
       }`}
     >
-      <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-400">
+      <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-paper-500">
         {label}
       </div>
       <div
         className={`mt-1 font-display text-lg font-bold ${
-          highlight ? "text-signal-lime" : ""
+          highlight ? "text-signal-limeInk" : ""
         }`}
       >
         {value}
       </div>
-      {sub && <div className="font-mono text-[10px] text-ink-400">{sub}</div>}
+      {sub && <div className="font-mono text-[10px] text-paper-500">{sub}</div>}
     </div>
   );
 }

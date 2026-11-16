@@ -16,7 +16,7 @@ export default async function UploadsPage() {
   return (
     <div>
       <h1 className="font-display text-3xl font-bold">Uploads</h1>
-      <p className="mt-1 text-sm text-ink-300">
+      <p className="mt-1 text-sm text-paper-600">
         Custom designs from the studio ({files.length})
       </p>
 
@@ -26,9 +26,9 @@ export default async function UploadsPage() {
           return (
             <div key={f} className="card overflow-hidden">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={url} alt={f} className="aspect-square w-full bg-ink-900 object-contain" />
+              <img src={url} alt={f} className="aspect-square w-full bg-paper-100 object-contain" />
               <div className="flex items-center justify-between gap-2 p-3">
-                <div className="truncate font-mono text-[10px] text-ink-400">{f}</div>
+                <div className="truncate font-mono text-[10px] text-paper-500">{f}</div>
                 <CopyUrlButton url={url} />
               </div>
             </div>
@@ -37,7 +37,7 @@ export default async function UploadsPage() {
       </div>
 
       {files.length === 0 && (
-        <div className="card mt-8 p-10 text-center text-ink-400">
+        <div className="card mt-8 p-10 text-center text-paper-500">
           No design uploads yet. They appear when customers use the Design Studio.
         </div>
       )}

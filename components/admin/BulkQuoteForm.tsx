@@ -44,13 +44,13 @@ export default function BulkQuoteForm({
   return (
     <div className="card space-y-3 p-5">
       <div>
-        <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-400">
+        <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.2em] text-paper-500">
           Status
         </div>
         <select
           value={currentStatus}
           onChange={(e) => setCurrentStatus(e.target.value)}
-          className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm capitalize"
+          className="w-full rounded-lg border border-paper-200 bg-paper-200 px-3 py-2 text-sm capitalize"
         >
           {STATUSES.map((s) => (
             <option key={s} value={s}>
@@ -61,14 +61,14 @@ export default function BulkQuoteForm({
       </div>
 
       <div>
-        <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-400">
+        <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.2em] text-paper-500">
           Internal notes
         </div>
         <textarea
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           placeholder="Price confirmed, shipping to Bengaluru, needs invoice in company name…"
-          className="h-28 w-full resize-none rounded-lg border border-white/10 bg-black/40 p-3 text-sm outline-none focus:border-signal-lime/40"
+          className="h-28 w-full resize-none rounded-lg border border-paper-200 bg-paper-200 p-3 text-sm outline-none focus:border-signal-lime/40"
         />
       </div>
 

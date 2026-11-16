@@ -31,12 +31,12 @@ export default function AdminShell({
 
   return (
     <div className="min-h-screen lg:grid lg:grid-cols-[240px_1fr]">
-      <aside className="border-b border-white/[0.06] bg-ink-900/50 lg:border-b-0 lg:border-r">
+      <aside className="border-b border-paper-200 bg-paper-100/50 lg:border-b-0 lg:border-r">
         <div className="px-5 py-5">
           <Link href="/admin" className="font-display text-lg font-bold">
             TheWearCo
           </Link>
-          <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-400">
+          <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-paper-500">
             Admin console
           </div>
         </div>
@@ -50,8 +50,8 @@ export default function AdminShell({
                 href={l.href}
                 className={`rounded-lg px-3 py-2 text-sm whitespace-nowrap transition ${
                   active
-                    ? "bg-signal-lime/10 text-signal-lime"
-                    : "text-ink-200 hover:bg-white/[0.04] hover:text-ink-50"
+                    ? "bg-signal-lime/10 text-signal-limeInk"
+                    : "text-paper-700 hover:bg-paper-100/60 hover:text-paper-900"
                 }`}
               >
                 {l.label}
@@ -59,16 +59,16 @@ export default function AdminShell({
             );
           })}
         </nav>
-        <div className="hidden border-t border-white/[0.06] px-5 py-4 lg:block">
-          <div className="truncate text-xs text-ink-400">{email}</div>
+        <div className="hidden border-t border-paper-200 px-5 py-4 lg:block">
+          <div className="truncate text-xs text-paper-500">{email}</div>
           <button
             type="button"
             onClick={logout}
-            className="mt-2 text-xs text-ink-300 hover:text-signal-coral"
+            className="mt-2 text-xs text-paper-600 hover:text-signal-coral"
           >
             Sign out
           </button>
-          <Link href="/" className="mt-3 block text-xs text-signal-lime">
+          <Link href="/" className="mt-3 block text-xs text-signal-limeInk">
             ← View store
           </Link>
         </div>

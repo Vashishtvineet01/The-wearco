@@ -31,7 +31,7 @@ export default async function AdminDashboard() {
   return (
     <div>
       <h1 className="font-display text-3xl font-bold">Dashboard</h1>
-      <p className="mt-1 text-sm text-ink-300">Store overview</p>
+      <p className="mt-1 text-sm text-paper-600">Store overview</p>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         <Kpi label="Orders today" value={String(ordersToday)} />
@@ -45,21 +45,21 @@ export default async function AdminDashboard() {
         <div className="card p-5">
           <div className="flex items-center justify-between">
             <h2 className="font-display text-lg font-semibold">Recent orders</h2>
-            <Link href="/admin/orders" className="text-xs text-signal-lime">
+            <Link href="/admin/orders" className="text-xs text-signal-limeInk">
               View all
             </Link>
           </div>
           <ul className="mt-4 divide-y divide-white/5">
             {recent.length === 0 && (
-              <li className="py-6 text-center text-sm text-ink-400">No orders yet</li>
+              <li className="py-6 text-center text-sm text-paper-500">No orders yet</li>
             )}
             {recent.map((o) => (
               <li key={o.id} className="flex items-center justify-between gap-3 py-3 text-sm">
                 <div>
-                  <Link href={`/admin/orders/${o.id}`} className="font-mono text-signal-lime">
+                  <Link href={`/admin/orders/${o.id}`} className="font-mono text-signal-limeInk">
                     {o.orderNumber}
                   </Link>
-                  <div className="text-xs text-ink-400">
+                  <div className="text-xs text-paper-500">
                     {o.name} · {o.items.length} item{o.items.length !== 1 ? "s" : ""}
                   </div>
                 </div>
@@ -75,24 +75,24 @@ export default async function AdminDashboard() {
         <div className="card p-5">
           <div className="flex items-center justify-between">
             <h2 className="font-display text-lg font-semibold">Recent bulk quotes</h2>
-            <Link href="/admin/quotes" className="text-xs text-signal-lime">
+            <Link href="/admin/quotes" className="text-xs text-signal-limeInk">
               View all
             </Link>
           </div>
           <ul className="mt-4 divide-y divide-white/5">
             {recentQuotes.length === 0 && (
-              <li className="py-6 text-center text-sm text-ink-400">No enquiries yet</li>
+              <li className="py-6 text-center text-sm text-paper-500">No enquiries yet</li>
             )}
             {recentQuotes.map((q) => (
               <li key={q.id} className="flex items-center justify-between gap-3 py-3 text-sm">
                 <div className="min-w-0">
                   <Link
                     href={`/admin/quotes/${q.id}`}
-                    className="font-medium text-signal-lime"
+                    className="font-medium text-signal-limeInk"
                   >
                     {q.name}
                   </Link>
-                  <div className="truncate text-xs text-ink-400">
+                  <div className="truncate text-xs text-paper-500">
                     {q.productName || q.productSlug || "—"} · {q.qty} pcs
                   </div>
                 </div>
@@ -100,14 +100,14 @@ export default async function AdminDashboard() {
                   <div className="font-mono">
                     {q.estimatedTotal != null ? formatINR(q.estimatedTotal) : "—"}
                   </div>
-                  <span className="font-mono text-[10px] uppercase text-ink-400">
+                  <span className="font-mono text-[10px] uppercase text-paper-500">
                     {q.status}
                   </span>
                 </div>
               </li>
             ))}
           </ul>
-          <div className="mt-4 grid gap-2 border-t border-white/5 pt-4">
+          <div className="mt-4 grid gap-2 border-t border-paper-200 pt-4">
             <Link href="/admin/products/new" className="btn-primary justify-start">
               + New product
             </Link>
@@ -127,7 +127,7 @@ export default async function AdminDashboard() {
 function Kpi({ label, value }: { label: string; value: string }) {
   return (
     <div className="card p-5">
-      <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-400">{label}</div>
+      <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-paper-500">{label}</div>
       <div className="mt-2 font-display text-2xl font-bold">{value}</div>
     </div>
   );
@@ -135,6 +135,6 @@ function Kpi({ label, value }: { label: string; value: string }) {
 
 function StatusPill({ status }: { status: string }) {
   return (
-    <span className="font-mono text-[10px] uppercase tracking-wider text-ink-400">{status}</span>
+    <span className="font-mono text-[10px] uppercase tracking-wider text-paper-500">{status}</span>
   );
 }

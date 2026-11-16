@@ -14,13 +14,13 @@ export default function CartPage() {
   if (items.length === 0) {
     return (
       <div className="mx-auto max-w-3xl px-5 py-32 text-center lg:px-8">
-        <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-lime">
+        <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
           // Empty
         </div>
         <h1 className="mt-3 font-display text-4xl font-bold tracking-tight">
           Your cart&apos;s on offline mode.
         </h1>
-        <p className="mt-3 text-ink-300">
+        <p className="mt-3 text-paper-600">
           Pick up a drop or print your own line — your call.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
@@ -39,14 +39,14 @@ export default function CartPage() {
     <div className="mx-auto max-w-7xl px-5 py-12 lg:px-8 lg:py-16">
       <div className="mb-8 flex items-end justify-between">
         <div>
-          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-lime">
+          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
             // Cart
           </div>
           <h1 className="mt-2 font-display text-4xl font-bold tracking-tight md:text-5xl">
             {count} item{count !== 1 ? "s" : ""}
           </h1>
         </div>
-        <button type="button" onClick={clear} className="text-xs text-ink-400 hover:text-signal-coral">
+        <button type="button" onClick={clear} className="text-xs text-paper-500 hover:text-signal-coral">
           Clear cart
         </button>
       </div>
@@ -62,7 +62,7 @@ export default function CartPage() {
 
             return (
               <div key={item.id} className="card flex gap-4 p-4 sm:p-5">
-                <div className="h-28 w-28 shrink-0 overflow-hidden rounded-xl bg-ink-900 sm:h-36 sm:w-36">
+                <div className="h-28 w-28 shrink-0 overflow-hidden rounded-xl bg-paper-100 sm:h-36 sm:w-36">
                   <ProductMockup
                     category={category}
                     fabric={item.fabricHex}
@@ -76,7 +76,7 @@ export default function CartPage() {
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <div className="font-display text-base font-semibold">{item.name}</div>
-                      <div className="mt-1 font-mono text-[11px] uppercase tracking-[0.18em] text-ink-400">
+                      <div className="mt-1 font-mono text-[11px] uppercase tracking-[0.18em] text-paper-500">
                         {item.size} · {item.color}
                         {(item.custom?.imageUrl || item.custom?.imageDataUrl) && " · custom art"}
                         {item.custom?.text &&
@@ -88,18 +88,18 @@ export default function CartPage() {
                     <button
                       type="button"
                       onClick={() => remove(item.id)}
-                      className="text-xs text-ink-400 hover:text-signal-coral"
+                      className="text-xs text-paper-500 hover:text-signal-coral"
                     >
                       Remove
                     </button>
                   </div>
 
                   <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                    <div className="flex items-center rounded-full border border-white/10 bg-black/40">
+                    <div className="flex items-center rounded-full border border-paper-200 bg-paper-200">
                       <button
                         type="button"
                         onClick={() => updateQty(item.id, item.qty - 1)}
-                        className="px-3 py-1.5 text-ink-200"
+                        className="px-3 py-1.5 text-paper-700"
                       >
                         −
                       </button>
@@ -107,7 +107,7 @@ export default function CartPage() {
                       <button
                         type="button"
                         onClick={() => updateQty(item.id, item.qty + 1)}
-                        className="px-3 py-1.5 text-ink-200"
+                        className="px-3 py-1.5 text-paper-700"
                       >
                         +
                       </button>
@@ -121,24 +121,24 @@ export default function CartPage() {
         </div>
 
         <aside className="card sticky top-24 h-fit p-6">
-          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-300">
+          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-paper-600">
             // Order summary
           </div>
           <div className="mt-5 space-y-3 text-sm">
             <div className="flex justify-between">
-              <span className="text-ink-300">Subtotal</span>
+              <span className="text-paper-600">Subtotal</span>
               <span>{formatINR(subtotal)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-ink-300">Shipping</span>
+              <span className="text-paper-600">Shipping</span>
               <span>{shipping === 0 ? "Free" : formatINR(shipping)}</span>
             </div>
             {subtotal < 1499 && (
-              <div className="rounded-lg border border-signal-lime/20 bg-signal-lime/5 p-3 text-xs text-signal-lime">
+              <div className="rounded-lg border border-signal-lime/20 bg-signal-lime/5 p-3 text-xs text-signal-limeInk">
                 Add {formatINR(1499 - subtotal)} more for free shipping.
               </div>
             )}
-            <div className="border-t border-white/10 pt-3">
+            <div className="border-t border-paper-200 pt-3">
               <div className="flex items-baseline justify-between">
                 <span className="font-display text-base font-semibold">Total</span>
                 <span className="font-display text-2xl font-bold">{formatINR(total)}</span>
@@ -152,7 +152,7 @@ export default function CartPage() {
               <path d="M5 12h14M13 5l7 7-7 7" />
             </svg>
           </Link>
-          <Link href="/shop" className="mt-3 block text-center text-xs text-ink-300 hover:text-ink-100">
+          <Link href="/shop" className="mt-3 block text-center text-xs text-paper-600 hover:text-paper-800">
             Keep shopping
           </Link>
 
