@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../config/env.dart';
+import 'demo_adapter.dart';
 
 /// Shared Dio instance used by all feature-level providers.
 /// Provides sensible timeouts and a JSON content-type by default.
@@ -10,9 +11,13 @@ import '../config/env.dart';
 /// the Developer menu's "change backend URL" takes effect without having to
 /// tear down / recreate the Dio instance.
 final dioProvider = Provider<Dio>((ref) {
+  // Dio's BaseOptions parses the URL at construction time and rejects non-HTTP
+  // schemes. Give it a harmless stub; the real base URL is injected per-request
+  // by the interceptor below.
+  final initial = isDemo(Env.apiBaseUrl) ? 'http://demo.local' : Env.apiBaseUrl;
   final dio = Dio(
     BaseOptions(
-      baseUrl: Env.apiBaseUrl,
+      baseUrl: initial,
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 15),
       contentType: 'application/json',
@@ -22,11 +27,19 @@ final dioProvider = Provider<Dio>((ref) {
     ),
   );
 
+  // Demo-mode interceptor runs FIRST so it can short-circuit real HTTP calls.
+  // When the base URL is `demo://local`, this serves everything from bundled
+  // assets + local SharedPreferences — zero network dependency.
+  dio.interceptors.add(DemoInterceptor());
+
   // Dynamic base URL — keeps requests pointed at whatever Env currently says,
   // even if the user changed it mid-session through the Developer menu.
   dio.interceptors.add(
     InterceptorsWrapper(
       onRequest: (options, handler) {
+        // If we're in demo mode, keep baseUrl as the demo sentinel so the
+        // DemoInterceptor (which runs first) short-circuits. Otherwise point
+        // at the current real URL.
         options.baseUrl = Env.apiBaseUrl;
         handler.next(options);
       },

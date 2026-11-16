@@ -63,6 +63,31 @@ class BrandMark extends StatelessWidget {
             ),
           ),
         ],
+        // Demo-mode badge: tiny chip next to the brand that signals to
+        // testers 'nothing here gets sent to the real backend'.
+        if (Env.isDemoMode) ...[
+          const SizedBox(width: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            decoration: BoxDecoration(
+              color: AppColors.signalLime.withValues(alpha: 0.18),
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(
+                color: AppColors.signalLime.withValues(alpha: 0.5),
+              ),
+            ),
+            child: const Text(
+              'DEMO',
+              style: TextStyle(
+                fontFamily: 'JetBrainsMono',
+                fontSize: 9,
+                letterSpacing: 1.3,
+                fontWeight: FontWeight.w700,
+                color: AppColors.signalLime,
+              ),
+            ),
+          ),
+        ],
       ],
     );
 
@@ -95,12 +120,20 @@ class BrandMark extends StatelessWidget {
                 testResult = null;
               });
               try {
-                final raw = ctl.text.trim();
-                final probe = raw.endsWith('/')
-                    ? '${raw}health'
-                    : raw.contains('/api/')
-                        ? '$raw/health'
-                        : '$raw/api/v1/health';
+                final rawInput = ctl.text.trim();
+                // Demo mode always passes — it's served from bundled assets.
+                final isDemoInput = rawInput.isEmpty ||
+                    rawInput.toLowerCase().startsWith('demo') ||
+                    rawInput.toLowerCase().startsWith('offline');
+                if (isDemoInput) {
+                  setLocal(() => testResult = true);
+                  return;
+                }
+                final probe = rawInput.endsWith('/')
+                    ? '${rawInput}health'
+                    : rawInput.contains('/api/')
+                        ? '$rawInput/health'
+                        : '$rawInput/api/v1/health';
                 final uri = Uri.parse(probe);
                 final client = HttpClient()
                   ..connectionTimeout = const Duration(seconds: 6);
@@ -114,7 +147,9 @@ class BrandMark extends StatelessWidget {
               } catch (e) {
                 setLocal(() {
                   testResult = false;
-                  error = e.toString();
+                  // Keep the message short — the dialog is tight.
+                  final s = e.toString();
+                  error = s.length > 80 ? '${s.substring(0, 77)}…' : s;
                 });
               } finally {
                 setLocal(() => busy = false);
