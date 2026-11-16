@@ -124,6 +124,12 @@ class _ShopBody extends StatelessWidget {
           ),
         ),
         SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
+            child: _DesignBanner(onTap: () => context.go('/design')),
+          ),
+        ),
+        SliverToBoxAdapter(
           child: SizedBox(
             height: 44,
             child: ListView.separated(
@@ -190,7 +196,10 @@ class _ShopBody extends StatelessWidget {
           )
         else
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+            // 20px of breathing room under the last row. The bottom nav
+            // takes its own layout space (extendBody: false in HomeShell)
+            // so we don't need to pad for it here.
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
             sliver: SliverGrid(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
@@ -209,6 +218,80 @@ class _ShopBody extends StatelessWidget {
   }
 }
 
+class _DesignBanner extends StatelessWidget {
+  const _DesignBanner({required this.onTap});
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              AppColors.signalViolet.withValues(alpha: 0.22),
+              AppColors.signalCoral.withValues(alpha: 0.14),
+              AppColors.signalLime.withValues(alpha: 0.10),
+            ],
+          ),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: AppColors.signalLime.withValues(alpha: 0.35),
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                gradient: AppColors.auroraGradient,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              alignment: Alignment.center,
+              child: const Icon(
+                Icons.palette,
+                size: 22,
+                color: AppColors.ink950,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Design your own',
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium
+                        ?.copyWith(fontSize: 15),
+                  ),
+                  const SizedBox(height: 2),
+                  const Text(
+                    'Pick a garment, type your line, see a live mockup.',
+                    style: TextStyle(
+                      color: AppColors.ink200,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.chevron_right,
+                color: AppColors.ink100, size: 22),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _ProductCard extends StatelessWidget {
   const _ProductCard({required this.product});
   final Product product;
@@ -222,8 +305,8 @@ class _ProductCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.white10),
-          color: Colors.white.withOpacity(0.02),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+          color: Colors.white.withValues(alpha: 0.03),
         ),
         padding: const EdgeInsets.all(10),
         child: Column(

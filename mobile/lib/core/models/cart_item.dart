@@ -1,6 +1,9 @@
 /// Local cart line — mirrors the web `CartItem` but only the fields the
-/// mobile app needs to render + check out. Custom design is omitted in this
-/// shell (added back when the Studio port ships).
+/// mobile app needs to render + check out.
+///
+/// Optional [printText]/[printTextColor] turn a line into a custom print
+/// from the Design tab. When present the cart row shows a "CUSTOM" chip and
+/// the text that will be printed.
 class CartItem {
   const CartItem({
     required this.id,
@@ -13,6 +16,9 @@ class CartItem {
     required this.colorHex,
     required this.fabricHex,
     required this.category,
+    this.printShape = 'rect',
+    this.printText,
+    this.printTextColor,
   });
 
   final String id;
@@ -25,6 +31,11 @@ class CartItem {
   final String colorHex;
   final String fabricHex;
   final String category;
+  final String printShape;
+  final String? printText;
+  final String? printTextColor;
+
+  bool get isCustom => printText != null && printText!.trim().isNotEmpty;
 
   int get lineTotal => price * qty;
 
@@ -40,6 +51,9 @@ class CartItem {
       colorHex: colorHex,
       fabricHex: fabricHex,
       category: category,
+      printShape: printShape,
+      printText: printText,
+      printTextColor: printTextColor,
     );
   }
 
@@ -54,6 +68,9 @@ class CartItem {
         'colorHex': colorHex,
         'fabricHex': fabricHex,
         'category': category,
+        'printShape': printShape,
+        if (printText != null) 'printText': printText,
+        if (printTextColor != null) 'printTextColor': printTextColor,
       };
 
   factory CartItem.fromJson(Map<String, dynamic> json) => CartItem(
@@ -67,5 +84,8 @@ class CartItem {
         colorHex: json['colorHex'] as String,
         fabricHex: json['fabricHex'] as String,
         category: json['category'] as String,
+        printShape: (json['printShape'] as String?) ?? 'rect',
+        printText: json['printText'] as String?,
+        printTextColor: json['printTextColor'] as String?,
       );
 }

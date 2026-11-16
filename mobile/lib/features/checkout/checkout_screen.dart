@@ -151,7 +151,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
             if (_payment == 'cod')
               _summaryRow('COD fee', formatInr(49)),
             const SizedBox(height: 8),
-            Divider(color: Colors.white.withOpacity(0.06), height: 1),
+            Divider(color: Colors.white.withValues(alpha: 0.06), height: 1),
             const SizedBox(height: 10),
             Row(
               children: [
@@ -226,11 +226,13 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
             color: active
-                ? AppColors.signalLime.withOpacity(0.05)
-                : Colors.white.withOpacity(0.02),
+                ? AppColors.signalLime.withValues(alpha: 0.08)
+                : Colors.white.withValues(alpha: 0.03),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: active ? AppColors.signalLime : Colors.white10,
+              color: active
+                  ? AppColors.signalLime
+                  : Colors.white.withValues(alpha: 0.08),
             ),
           ),
           child: Row(
@@ -316,9 +318,10 @@ class CheckoutSuccessScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 14, vertical: 8),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.white10),
+                    border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.08)),
                     borderRadius: BorderRadius.circular(999),
-                    color: Colors.black.withOpacity(0.3),
+                    color: Colors.black.withValues(alpha: 0.3),
                   ),
                   child: Text(
                     orderNumber,

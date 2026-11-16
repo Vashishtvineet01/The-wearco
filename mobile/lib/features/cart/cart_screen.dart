@@ -50,7 +50,7 @@ class CartScreen extends ConsumerWidget {
               children: [
                 Expanded(
                   child: ListView.separated(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
                     itemCount: cart.items.length,
                     separatorBuilder: (_, __) => const SizedBox(height: 10),
                     itemBuilder: (_, i) {
@@ -102,12 +102,18 @@ class _CartRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final fabric = Color(parseHexColor(item.fabricHex));
+    final isLightFabric = _isLight(fabric);
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white10),
-        color: Colors.white.withOpacity(0.02),
+        border: Border.all(
+          color: item.isCustom
+              ? AppColors.signalLime.withValues(alpha: 0.4)
+              : Colors.white.withValues(alpha: 0.08),
+        ),
+        color: Colors.white.withValues(alpha: 0.03),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,15 +122,15 @@ class _CartRow extends StatelessWidget {
             width: 56,
             height: 56,
             decoration: BoxDecoration(
-              color: Color(parseHexColor(item.fabricHex)),
+              color: fabric,
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: Colors.white10),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
             ),
             alignment: Alignment.center,
             child: Text(
               item.size,
-              style: const TextStyle(
-                color: AppColors.ink950,
+              style: TextStyle(
+                color: isLightFabric ? AppColors.ink950 : AppColors.ink50,
                 fontWeight: FontWeight.w700,
                 fontSize: 12,
               ),
@@ -135,6 +141,28 @@ class _CartRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (item.isCustom)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 4),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        gradient: AppColors.auroraGradient,
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                      child: const Text(
+                        'CUSTOM',
+                        style: TextStyle(
+                          fontFamily: 'JetBrainsMono',
+                          fontSize: 8,
+                          letterSpacing: 1.5,
+                          color: AppColors.ink950,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                  ),
                 Text(
                   item.name,
                   style: Theme.of(context).textTheme.titleMedium,
@@ -201,13 +229,21 @@ class _QtyButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(6),
         decoration: BoxDecoration(
-          color: Colors.white10,
+          color: Colors.white.withValues(alpha: 0.08),
           borderRadius: BorderRadius.circular(999),
         ),
         child: Icon(icon, size: 14, color: AppColors.ink100),
       ),
     );
   }
+}
+
+bool _isLight(Color c) {
+  final r = (c.r * 255).round();
+  final g = (c.g * 255).round();
+  final b = (c.b * 255).round();
+  final yiq = (r * 299 + g * 587 + b * 114) / 1000;
+  return yiq > 160;
 }
 
 class _Summary extends StatelessWidget {
@@ -225,8 +261,10 @@ class _Summary extends StatelessWidget {
     final styleMuted = Theme.of(context).textTheme.bodyMedium;
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: const BoxDecoration(
-        border: Border(top: BorderSide(color: Colors.white10)),
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(color: Colors.white.withValues(alpha: 0.08)),
+        ),
       ),
       child: Column(
         children: [
@@ -239,7 +277,7 @@ class _Summary extends StatelessWidget {
             styleMuted,
           ),
           const SizedBox(height: 10),
-          Divider(color: Colors.white.withOpacity(0.06), height: 1),
+          Divider(color: Colors.white.withValues(alpha: 0.06), height: 1),
           const SizedBox(height: 10),
           Row(
             children: [

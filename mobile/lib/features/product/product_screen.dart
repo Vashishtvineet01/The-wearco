@@ -83,15 +83,48 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
         error: (_, __) => const SizedBox.shrink(),
         data: (p) => SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: ElevatedButton(
-              onPressed: () => _addToCart(p),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Text(
-                  'Add to cart — ${formatInr(p.price * _qty)}',
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+            child: Row(
+              children: [
+                // Secondary CTA — jumps into the Design tab with this
+                // garment's category + colour preselected.
+                if (p.customizable)
+                  SizedBox(
+                    height: 48,
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        final color = p.colors[_colorIndex];
+                        context.push(
+                          '/customize?category=${p.category}'
+                          '&fabric=${Uri.encodeComponent(color.fabric)}'
+                          '&colorName=${Uri.encodeComponent(color.name)}',
+                        );
+                      },
+                      icon: const Icon(Icons.palette_outlined, size: 18),
+                      label: const Text('Customize'),
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(
+                          color: AppColors.signalLime.withValues(alpha: 0.5),
+                        ),
+                        foregroundColor: AppColors.signalLime,
+                        padding:
+                            const EdgeInsets.symmetric(horizontal: 14),
+                      ),
+                    ),
+                  ),
+                if (p.customizable) const SizedBox(width: 10),
+                Expanded(
+                  child: SizedBox(
+                    height: 48,
+                    child: ElevatedButton(
+                      onPressed: () => _addToCart(p),
+                      child: Text(
+                        'Add to cart — ${formatInr(p.price * _qty)}',
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
         ),
@@ -175,7 +208,7 @@ class _ProductBody extends StatelessWidget {
         ),
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 4, 20, 100),
+            padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -302,11 +335,13 @@ class _ColorChip extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
           color: active
-              ? AppColors.signalLime.withOpacity(0.1)
-              : Colors.white.withOpacity(0.02),
+              ? AppColors.signalLime.withValues(alpha: 0.12)
+              : Colors.white.withValues(alpha: 0.03),
           borderRadius: BorderRadius.circular(999),
           border: Border.all(
-            color: active ? AppColors.signalLime : Colors.white10,
+            color: active
+                ? AppColors.signalLime
+                : Colors.white.withValues(alpha: 0.08),
           ),
         ),
         child: Row(
@@ -318,7 +353,8 @@ class _ColorChip extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Color(parseHexColor(color.hex)),
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.white24),
+                border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.24)),
               ),
             ),
             const SizedBox(width: 8),
@@ -347,7 +383,7 @@ class _QtyStepper extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: Colors.white10),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

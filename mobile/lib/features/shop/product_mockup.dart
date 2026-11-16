@@ -79,7 +79,7 @@ class _GarmentPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final fabricPaint = Paint()..color = fabric;
     final strokePaint = Paint()
-      ..color = Colors.black.withOpacity(0.4)
+      ..color = Colors.black.withValues(alpha: 0.4)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1;
 
@@ -205,9 +205,9 @@ class _GarmentPainter extends CustomPainter {
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         colors: [
-          Colors.white.withOpacity(0.10),
-          Colors.white.withOpacity(0.0),
-          Colors.black.withOpacity(0.30),
+          Colors.white.withValues(alpha: 0.10),
+          Colors.white.withValues(alpha: 0.0),
+          Colors.black.withValues(alpha: 0.30),
         ],
         stops: const [0.0, 0.55, 1.0],
       ).createShader(bounds);
@@ -220,21 +220,21 @@ class _GarmentPainter extends CustomPainter {
         begin: fromLeft ? Alignment.centerLeft : Alignment.centerRight,
         end: fromLeft ? Alignment.centerRight : Alignment.centerLeft,
         colors: [
-          Colors.black.withOpacity(0.32),
-          Colors.black.withOpacity(0.0),
+          Colors.black.withValues(alpha: 0.32),
+          Colors.black.withValues(alpha: 0.0),
         ],
       ).createShader(bounds);
   }
 
   /// Subtle stitching line.
   Paint _stitchPaint() => Paint()
-    ..color = Colors.black.withOpacity(0.22)
+    ..color = Colors.black.withValues(alpha: 0.22)
     ..strokeWidth = 0.8
     ..style = PaintingStyle.stroke;
 
   /// Small fabric label tab at the collar.
   void _drawCollarLabel(Canvas canvas, double x, double y) {
-    final labelPaint = Paint()..color = Colors.white.withOpacity(0.35);
+    final labelPaint = Paint()..color = Colors.white.withValues(alpha: 0.35);
     final r = RRect.fromRectAndRadius(
       Rect.fromLTWH(x - 7, y, 14, 4),
       const Radius.circular(1),
@@ -289,7 +289,7 @@ class _GarmentPainter extends CustomPainter {
     canvas.drawPath(
       neck,
       Paint()
-        ..color = Colors.black.withOpacity(0.45)
+        ..color = Colors.black.withValues(alpha: 0.45)
         ..strokeWidth = 2.2
         ..style = PaintingStyle.stroke,
     );
@@ -377,7 +377,7 @@ class _GarmentPainter extends CustomPainter {
     canvas.drawPath(path, fill);
     canvas.drawPath(path, stroke);
 
-    final hem = Paint()..color = Colors.black.withOpacity(0.18);
+    final hem = Paint()..color = Colors.black.withValues(alpha: 0.18);
     canvas.drawRect(const Rect.fromLTWH(120, 340, 160, 15), hem);
   }
 
@@ -421,7 +421,7 @@ class _GarmentPainter extends CustomPainter {
 
     // Rim darkening
     final rim = Paint()
-      ..color = Colors.black.withOpacity(0.25)
+      ..color = Colors.black.withValues(alpha: 0.25)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
     canvas.drawLine(const Offset(100, 148), const Offset(280, 148), rim);
@@ -442,7 +442,7 @@ class _GarmentPainter extends CustomPainter {
 
   void _drawPoster(Canvas canvas, Paint fill, Paint stroke) {
     // Shadow
-    final shadow = Paint()..color = Colors.black.withOpacity(0.35);
+    final shadow = Paint()..color = Colors.black.withValues(alpha: 0.35);
     canvas.drawRect(const Rect.fromLTWH(42, 42, 320, 320), shadow);
     // Paper
     canvas.drawRect(const Rect.fromLTWH(38, 38, 320, 320), fill);
