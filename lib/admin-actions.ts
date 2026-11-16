@@ -51,7 +51,7 @@ export async function createProductAction(raw: unknown) {
 
   revalidatePath("/shop");
   revalidatePath("/");
-  revalidatePath("/studio");
+  revalidatePath("/design");
   revalidatePath("/admin/products");
   return { ok: true };
 }
@@ -103,7 +103,7 @@ export async function updateProductAction(id: string, raw: unknown) {
   revalidatePath("/shop");
   revalidatePath(`/product/${d.slug}`);
   revalidatePath("/");
-  revalidatePath("/studio");
+  revalidatePath("/design");
   revalidatePath("/admin/products");
   return { ok: true };
 }

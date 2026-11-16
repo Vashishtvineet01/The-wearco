@@ -88,7 +88,7 @@ function Hero() {
                 <path d="M5 12h14M13 5l7 7-7 7" />
               </svg>
             </Link>
-            <Link href="/studio" className="btn-ghost">
+            <Link href="/design" className="btn-ghost">
               <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M12 19l7-7 3 3-7 7-3-3z" />
                 <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
@@ -253,7 +253,7 @@ function PrintYourOwnSection() {
           </ul>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/studio" className="btn-primary">
+            <Link href="/design" className="btn-primary">
               Start designing
               <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M5 12h14M13 5l7 7-7 7" />
@@ -377,7 +377,7 @@ function CommunitySection() {
                 every drop.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <Link href="/about#community" className="btn-primary">
+                <Link href="/community" className="btn-primary">
                   Join the room
                 </Link>
                 <Link href="/shop" className="btn-ghost">

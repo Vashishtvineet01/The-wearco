@@ -26,7 +26,7 @@ export default async function ShopPage() {
           <p className="mt-3 max-w-xl text-paper-700">
             Limited edition pieces for founders, creators, freelancers and the
             terminally online. Or skip the catalog and{" "}
-            <Link href="/studio" className="text-signal-limeInk underline-offset-4 hover:underline">
+            <Link href="/design" className="text-signal-limeInk underline-offset-4 hover:underline">
               print your own
             </Link>
             .

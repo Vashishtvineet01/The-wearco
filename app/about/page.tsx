@@ -28,39 +28,29 @@ export default function AboutPage() {
         </p>
         <p>
           And if our drops don’t say what you’re trying to say, you can{" "}
-          <Link href="/studio" className="text-signal-limeInk underline-offset-4 hover:underline">
+          <Link href="/design" className="text-signal-limeInk underline-offset-4 hover:underline">
             print your own
           </Link>
           . That’s the whole point.
         </p>
       </div>
 
-      <div className="mt-16 grid gap-4 md:grid-cols-3" id="community">
-        {[
-          {
-            t: "01",
-            h: "Made in India",
-            d: "All garments printed and stitched in small batches in Bengaluru and Tirupur."
-          },
-          {
-            t: "02",
-            h: "Premium fabric only",
-            d: "240–400 GSM combed cotton and brushed fleece. No fast-fashion shortcuts."
-          },
-          {
-            t: "03",
-            h: "Members-only layer",
-            d: "Every QR-tagged piece unlocks our founder Discord and monthly office hours."
-          }
-        ].map((b) => (
-          <div key={b.t} className="card p-6">
-            <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
-              // {b.t}
-            </div>
-            <div className="mt-3 font-display text-xl font-semibold">{b.h}</div>
-            <p className="mt-2 text-sm text-paper-600">{b.d}</p>
-          </div>
-        ))}
+      <div className="mt-14 rounded-2xl border border-paper-200 bg-paper-100/50 p-6 md:p-8">
+        <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
+          // Members-only layer
+        </div>
+        <h2 className="mt-3 font-display text-2xl font-bold tracking-tight md:text-3xl">
+          Every piece is a key.
+        </h2>
+        <p className="mt-3 max-w-2xl text-sm text-paper-700 md:text-base">
+          Hidden QR on every hoodie, cap and badge. Scan it to unlock the
+          founder Discord, monthly office hours and early access to every drop.
+        </p>
+        <div className="mt-5">
+          <Link href="/community" className="btn-ghost">
+            See how the community works →
+          </Link>
+        </div>
       </div>
 
       <div className="mt-16" id="shipping">

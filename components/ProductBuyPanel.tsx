@@ -39,7 +39,7 @@ export default function ProductBuyPanel({ product }: { product: Product }) {
         {product.customizable && (
           <div className="absolute right-6 top-6 z-10">
             <Link
-              href={`/studio?product=${product.slug}`}
+              href={`/design?product=${product.slug}`}
               className="tag border-signal-lime/40 bg-signal-lime/10 text-signal-limeInk hover:bg-signal-lime/20"
             >
               Customize this
@@ -167,7 +167,7 @@ export default function ProductBuyPanel({ product }: { product: Product }) {
           <div className="mt-4">
             <button
               type="button"
-              onClick={() => router.push(`/studio?product=${product.slug}`)}
+              onClick={() => router.push(`/design?product=${product.slug}`)}
               className="btn-ghost w-full"
             >
               <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">

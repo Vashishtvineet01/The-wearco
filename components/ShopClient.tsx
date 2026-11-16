@@ -121,7 +121,7 @@ export default function ShopClient({ products }: { products: Product[] }) {
       {list.length === 0 && (
         <div className="card p-10 text-center text-paper-600">
           Nothing here yet. Try another filter — or{" "}
-          <Link href="/studio" className="text-signal-limeInk">
+          <Link href="/design" className="text-signal-limeInk">
             design your own
           </Link>
           .

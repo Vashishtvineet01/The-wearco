@@ -1,16 +1,12 @@
-import type { Metadata } from "next";
-import BulkClient from "@/components/BulkClient";
-import { getActiveProducts } from "@/lib/catalog";
+import { redirect } from "next/navigation";
 
+// Force dynamic so the redirect header always re-emits (otherwise Next
+// caches the response and the Location header gets dropped on cache HITs).
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Bulk orders — TheWearCo",
-  description:
-    "Volume pricing for teams, conferences and launches. Tees, hoodies, mugs, pins, posters — printed with your artwork. From 10 units, discounts up to 50%."
-};
-
-export default async function BulkPage() {
-  const products = await getActiveProducts();
-  return <BulkClient products={products} />;
+/**
+ * /bulk is now part of /design (the "For my team" tab).
+ */
+export default function BulkRedirect() {
+  redirect("/design?view=team");
 }

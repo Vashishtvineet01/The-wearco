@@ -27,7 +27,7 @@ export default function CartPage() {
           <Link href="/shop" className="btn-primary">
             Browse drops
           </Link>
-          <Link href="/studio" className="btn-ghost">
+          <Link href="/design" className="btn-ghost">
             Open Design Studio
           </Link>
         </div>

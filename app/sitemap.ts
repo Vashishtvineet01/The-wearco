@@ -3,7 +3,7 @@ import { getActiveProducts } from "@/lib/catalog";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-  const staticRoutes = ["", "/shop", "/studio", "/about", "/cart", "/checkout"].map(
+  const staticRoutes = ["", "/shop", "/design", "/community", "/about", "/cart", "/checkout"].map(
     (path) => ({
       url: `${base}${path}`,
       lastModified: new Date(),

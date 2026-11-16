@@ -43,26 +43,14 @@ export default function Navbar() {
 
         <nav className="hidden items-center gap-1 md:flex">
           <NavLink href="/shop">Shop</NavLink>
-          <NavLink href="/studio" highlight>
-            Design Studio
+          <NavLink href="/design" highlight>
+            Design
           </NavLink>
-          <NavLink href="/bulk">Bulk</NavLink>
-          <NavLink href="/about">Community</NavLink>
+          <NavLink href="/community">Community</NavLink>
+          <NavLink href="/about">About</NavLink>
         </nav>
 
         <div className="flex items-center gap-2">
-          <Link
-            href="/studio"
-            className="group hidden items-center gap-2 overflow-hidden rounded-full border border-paper-200 bg-paper-100/60 px-3.5 py-2 text-xs font-medium text-paper-900 transition md:inline-flex hover:border-paper-300"
-          >
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="absolute inset-0 animate-glow rounded-full bg-signal-lime" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-signal-lime" />
-            </span>
-            <span className="transition-colors group-hover:text-signal-limeInkInk">
-              Print your design
-            </span>
-          </Link>
           <Link href="/cart" className="btn-icon relative" aria-label="Cart">
             <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M3 3h2l2.4 12.4a2 2 0 002 1.6h8.2a2 2 0 002-1.6L22 7H6" />
@@ -91,9 +79,9 @@ export default function Navbar() {
         <div className="border-t border-paper-200 bg-paper-50/95 backdrop-blur md:hidden">
           <div className="flex flex-col px-5 py-3">
             <MobileLink onClick={() => setOpen(false)} href="/shop">Shop</MobileLink>
-            <MobileLink onClick={() => setOpen(false)} href="/studio">Design Studio</MobileLink>
-            <MobileLink onClick={() => setOpen(false)} href="/bulk">Bulk orders</MobileLink>
-            <MobileLink onClick={() => setOpen(false)} href="/about">Community</MobileLink>
+            <MobileLink onClick={() => setOpen(false)} href="/design">Design</MobileLink>
+            <MobileLink onClick={() => setOpen(false)} href="/community">Community</MobileLink>
+            <MobileLink onClick={() => setOpen(false)} href="/about">About</MobileLink>
             <MobileLink onClick={() => setOpen(false)} href="/cart">Cart ({count})</MobileLink>
           </div>
         </div>

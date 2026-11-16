@@ -118,7 +118,7 @@ export default function CheckoutPage() {
               <Link href="/shop" className="btn-primary">
                 Continue
               </Link>
-              <Link href="/studio" className="btn-ghost">
+              <Link href="/design" className="btn-ghost">
                 Print another
               </Link>
             </div>

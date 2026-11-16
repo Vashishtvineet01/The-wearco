@@ -40,8 +40,8 @@ export default function Footer() {
             <li><Link href="/shop?cat=mug">Mugs</Link></li>
             <li><Link href="/shop?cat=badge">Badges</Link></li>
             <li><Link href="/shop?cat=poster">Posters</Link></li>
-            <li><Link href="/studio">Print your own</Link></li>
-            <li><Link href="/bulk">Bulk orders</Link></li>
+            <li><Link href="/design?view=me">Print your own</Link></li>
+            <li><Link href="/design?view=team">Bulk orders</Link></li>
           </ul>
         </div>
 
@@ -51,7 +51,7 @@ export default function Footer() {
           </div>
           <ul className="space-y-2 text-sm text-paper-800">
             <li><Link href="/about">Manifesto</Link></li>
-            <li><Link href="/about#community">Community</Link></li>
+            <li><Link href="/community">Community</Link></li>
             <li><a href="mailto:hi@thewearco.com">Contact</a></li>
             <li><Link href="/about#shipping">Shipping & returns</Link></li>
           </ul>
