@@ -1,10 +1,23 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useCart } from "./CartProvider";
 import { useEffect, useState } from "react";
 
+const NAV_ITEMS = [
+  { href: "/shop", label: "Shop" },
+  { href: "/design", label: "Design" },
+  { href: "/community", label: "Community" },
+  { href: "/about", label: "About" },
+] as const;
+
+function pathMatches(pathname: string, href: string) {
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
 export default function Navbar() {
+  const pathname = usePathname() || "/";
   const { count } = useCart();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -32,6 +45,11 @@ export default function Navbar() {
     };
   }, []);
 
+  // Close mobile drawer on route change.
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
   return (
     <header
       className={`sticky top-0 z-50 transition-all duration-300 ${
@@ -58,12 +76,15 @@ export default function Navbar() {
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex">
-          <NavLink href="/shop">Shop</NavLink>
-          <NavLink href="/design" highlight>
-            Design
-          </NavLink>
-          <NavLink href="/community">Community</NavLink>
-          <NavLink href="/about">About</NavLink>
+          {NAV_ITEMS.map((item) => (
+            <NavLink
+              key={item.href}
+              href={item.href}
+              active={pathMatches(pathname, item.href)}
+            >
+              {item.label}
+            </NavLink>
+          ))}
         </nav>
 
         <div className="flex items-center gap-2">
@@ -122,12 +143,23 @@ export default function Navbar() {
       {open && (
         <div className="border-t border-paper-200 bg-paper-50/95 backdrop-blur md:hidden">
           <div className="flex flex-col px-5 py-3">
-            <MobileLink onClick={() => setOpen(false)} href="/shop">Shop</MobileLink>
-            <MobileLink onClick={() => setOpen(false)} href="/design">Design</MobileLink>
-            <MobileLink onClick={() => setOpen(false)} href="/community">Community</MobileLink>
-            <MobileLink onClick={() => setOpen(false)} href="/about">About</MobileLink>
-            <MobileLink onClick={() => setOpen(false)} href="/cart">Cart ({count})</MobileLink>
-            <MobileLink onClick={() => setOpen(false)} href={email ? "/account" : "/login"}>
+            {NAV_ITEMS.map((item) => (
+              <MobileLink
+                key={item.href}
+                onClick={() => setOpen(false)}
+                href={item.href}
+                active={pathMatches(pathname, item.href)}
+              >
+                {item.label}
+              </MobileLink>
+            ))}
+            <MobileLink onClick={() => setOpen(false)} href="/cart">
+              Cart ({count})
+            </MobileLink>
+            <MobileLink
+              onClick={() => setOpen(false)}
+              href={email ? "/account" : "/login"}
+            >
               {email ? "Your account" : "Sign in"}
             </MobileLink>
           </div>
@@ -140,18 +172,19 @@ export default function Navbar() {
 function NavLink({
   href,
   children,
-  highlight
+  active,
 }: {
   href: string;
   children: React.ReactNode;
-  highlight?: boolean;
+  active?: boolean;
 }) {
   return (
     <Link
       href={href}
+      aria-current={active ? "page" : undefined}
       className={`rounded-full px-4 py-2 text-sm transition ${
-        highlight
-          ? "text-signal-limeInk hover:bg-signal-lime/10"
+        active
+          ? "bg-signal-lime/10 text-signal-limeInk"
           : "text-paper-800 hover:bg-paper-100/60"
       }`}
     >
@@ -163,17 +196,22 @@ function NavLink({
 function MobileLink({
   href,
   children,
-  onClick
+  onClick,
+  active,
 }: {
   href: string;
   children: React.ReactNode;
   onClick: () => void;
+  active?: boolean;
 }) {
   return (
     <Link
       href={href}
       onClick={onClick}
-      className="border-b border-paper-200 py-3 text-sm text-paper-800 last:border-b-0"
+      aria-current={active ? "page" : undefined}
+      className={`border-b border-paper-200 py-3 text-sm last:border-b-0 ${
+        active ? "font-semibold text-signal-limeInk" : "text-paper-800"
+      }`}
     >
       {children}
     </Link>

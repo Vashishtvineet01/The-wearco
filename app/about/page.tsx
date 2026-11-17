@@ -4,9 +4,9 @@ import Aurora from "@/components/Aurora";
 
 export default function AboutPage() {
   return (
-    <div className="relative mx-auto max-w-4xl px-5 py-16 lg:px-8 lg:py-24">
+    <div className="relative mx-auto max-w-4xl px-5 py-12 lg:px-8 lg:py-16">
       {/* Manifesto hero — aurora wash + sparkles so the opening line lands with force. */}
-      <section className="spotlight-ocean relative mb-14 overflow-hidden rounded-3xl border border-paper-200 bg-paper-50/40 px-6 py-14 md:px-10 md:py-20">
+      <section className="spotlight-ocean relative mb-12 overflow-hidden rounded-3xl border border-paper-200 bg-paper-50/40 px-6 py-12 md:px-10 md:py-16">
         <Aurora
           blobs={[
             { color: "violet", size: 420, top: "-140px", left: "-120px", opacity: 0.5 },

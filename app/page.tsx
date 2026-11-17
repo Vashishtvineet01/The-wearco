@@ -59,7 +59,7 @@ function Hero() {
             </span>
             <span className="h-3 w-px bg-paper-300" />
             <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-signal-violetInk">
-              Guest checkout · no account needed
+              Guest checkout · email or OTP later
             </span>
           </div>
 

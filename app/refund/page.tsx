@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import PageHero from "@/components/PageHero";
 
 export const metadata: Metadata = {
   title: "Refund & Cancellation Policy — TheWearCo",
@@ -11,16 +12,16 @@ const EFFECTIVE = "17 November 2026";
 
 export default function RefundPage() {
   return (
-    <div className="mx-auto max-w-3xl px-5 py-16 lg:px-8 lg:py-20">
-      <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
-        // Refund policy
-      </div>
-      <h1 className="mt-3 font-display text-4xl font-bold tracking-tight md:text-5xl">
-        Refund &amp; Cancellation
-      </h1>
-      <p className="mt-2 text-sm text-paper-600">Effective {EFFECTIVE}.</p>
+    <div className="mx-auto max-w-3xl px-5 py-12 lg:px-8 lg:py-16">
+      <PageHero
+        eyebrow="Refund policy"
+        title={<>Refund &amp; Cancellation</>}
+        subtitle={`Effective ${EFFECTIVE}.`}
+        spotlight="sunrise"
+        compact
+      />
 
-      <div className="prose-styles mt-10 space-y-6 text-paper-800">
+      <div className="card mt-8 space-y-6 p-6 md:p-8">
         <Section title="1. Cancellations before dispatch">
           <p>
             You can cancel a drop order any time before it has been dispatched for
@@ -91,7 +92,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   return (
     <section>
       <h2 className="font-display text-xl font-bold text-paper-900">{title}</h2>
-      <div className="mt-2 space-y-2 text-sm leading-relaxed md:text-base">{children}</div>
+      <div className="mt-2 space-y-2 text-sm leading-relaxed text-paper-800 md:text-base">{children}</div>
     </section>
   );
 }

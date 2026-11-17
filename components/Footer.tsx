@@ -54,6 +54,8 @@ export default function Footer() {
             <li><Link href="/community">Community</Link></li>
             <li><Link href="/contact">Contact</Link></li>
             <li><Link href="/track">Track an order</Link></li>
+            <li><Link href="/account">Your account</Link></li>
+            <li><Link href="/login">Sign in</Link></li>
           </ul>
         </div>
 

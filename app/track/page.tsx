@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { formatINR } from "@/lib/products";
 import BrandLoader from "@/components/BrandLoader";
+import PageHero from "@/components/PageHero";
 
 type TrackResponse = {
   ok: boolean;
@@ -93,24 +94,21 @@ function TrackInner() {
   };
 
   return (
-    <div className="mx-auto max-w-3xl px-5 py-16 lg:px-8 lg:py-20">
-      <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
-        // Track order
-      </div>
-      <h1 className="mt-3 font-display text-4xl font-bold tracking-tight md:text-5xl">
-        Where&apos;s my order?
-      </h1>
-      <p className="mt-3 max-w-xl text-paper-700">
-        Enter the order number from your confirmation email + the email you
-        placed the order with. No account needed.
-      </p>
+    <div className="mx-auto max-w-3xl px-5 py-12 lg:px-8 lg:py-16">
+      <PageHero
+        eyebrow="Track order"
+        title="Where's my order?"
+        subtitle="Enter the order number from your confirmation email + the email you placed the order with. No account needed."
+        spotlight="ocean"
+        compact
+      />
 
       <form
         onSubmit={onSubmit}
-        className="card mt-8 grid gap-3 p-5 sm:grid-cols-[1fr_1fr_auto]"
+        className="card mt-8 grid gap-4 p-6 sm:grid-cols-[1fr_1fr_auto]"
       >
         <label className="block">
-          <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.18em] text-paper-600">
+          <div className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-paper-600">
             Order number
           </div>
           <input
@@ -118,11 +116,11 @@ function TrackInner() {
             value={orderNumber}
             onChange={(e) => setOrderNumber(e.target.value)}
             placeholder="TWC-XXXX-XXXX"
-            className="w-full rounded-lg border border-paper-200 bg-paper-200 px-3 py-2.5 text-sm outline-none focus:border-signal-violetInk/40"
+            className="w-full rounded-full border border-paper-200 bg-paper-50 px-4 py-2.5 text-sm outline-none transition focus:border-signal-violetInk/50"
           />
         </label>
         <label className="block">
-          <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.18em] text-paper-600">
+          <div className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-paper-600">
             Email
           </div>
           <input
@@ -131,7 +129,7 @@ function TrackInner() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@startup.in"
-            className="w-full rounded-lg border border-paper-200 bg-paper-200 px-3 py-2.5 text-sm outline-none focus:border-signal-violetInk/40"
+            className="w-full rounded-full border border-paper-200 bg-paper-50 px-4 py-2.5 text-sm outline-none transition focus:border-signal-violetInk/50"
           />
         </label>
         <button

@@ -16,9 +16,9 @@ export const metadata: Metadata = {
  */
 export default function CommunityPage() {
   return (
-    <div className="relative mx-auto max-w-6xl px-5 pb-20 pt-10 lg:px-8 lg:pt-16">
+    <div className="relative mx-auto max-w-6xl px-5 pb-20 pt-12 lg:px-8 lg:pt-16">
       {/* Hero — wrapped in an aurora bed so the Community lands with real colour. */}
-      <section className="spotlight-sunrise relative overflow-hidden rounded-3xl border border-paper-200 bg-paper-50/40 px-6 py-14 text-center md:px-10 md:py-20">
+      <section className="spotlight-sunrise relative overflow-hidden rounded-3xl border border-paper-200 bg-paper-50/40 px-6 py-12 text-center md:px-10 md:py-16">
         <Aurora
           blobs={[
             { color: "coral", size: 440, top: "-160px", left: "-120px", opacity: 0.5 },

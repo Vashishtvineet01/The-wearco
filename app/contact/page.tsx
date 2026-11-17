@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Aurora from "@/components/Aurora";
+import PageHero from "@/components/PageHero";
 
 export const metadata: Metadata = {
   title: "Contact — TheWearCo",
@@ -10,28 +10,18 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="relative mx-auto max-w-5xl px-5 py-16 lg:px-8 lg:py-20">
-      <section className="spotlight-violet relative overflow-hidden rounded-3xl border border-paper-200 bg-paper-50/40 px-6 py-14 text-center md:px-10 md:py-20">
-        <Aurora
-          blobs={[
-            { color: "violet", size: 420, top: "-140px", left: "-120px", opacity: 0.5 },
-            { color: "coral", size: 360, top: "-60px", right: "-80px", delay: 3, opacity: 0.42 },
-            { color: "lime", size: 320, bottom: "-140px", left: "32%", delay: 6, opacity: 0.38, slow: true },
-          ]}
-        />
-        <div className="relative">
-          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
-            // Contact
-          </div>
-          <h1 className="mt-3 font-display text-4xl font-bold tracking-tight md:text-6xl">
+    <div className="relative mx-auto max-w-5xl px-5 py-12 lg:px-8 lg:py-16">
+      <PageHero
+        eyebrow="Contact"
+        title={
+          <>
             Say <span className="gradient-text">hi.</span>
-          </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-paper-700">
-            Orders, bulk quotes, press, collabs, hiring — the whole team reads
-            everything that lands in the inbox. We reply within one business day.
-          </p>
-        </div>
-      </section>
+          </>
+        }
+        subtitle="Orders, bulk quotes, press, collabs, hiring — the whole team reads everything that lands in the inbox. We reply within one business day."
+        spotlight="violet"
+        center
+      />
 
       <div className="mt-10 grid gap-4 md:grid-cols-3">
         <Channel

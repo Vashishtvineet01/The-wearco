@@ -112,7 +112,7 @@ export default async function AccountPage() {
                   <li key={o.id}>
                     <Link
                       href={`/track?order=${encodeURIComponent(o.orderNumber)}&email=${encodeURIComponent(email)}`}
-                      className="card group block p-4 transition hover:border-paper-400"
+                      className="card group block p-5 transition hover:border-paper-400 hover:shadow-[0_12px_40px_-24px_rgba(124,92,255,0.45)]"
                     >
                       <div className="flex flex-wrap items-start justify-between gap-3">
                         <div className="min-w-0">
@@ -147,9 +147,17 @@ export default async function AccountPage() {
               })}
             </ul>
           ) : (
-            <div className="card p-10 text-center text-sm text-paper-600">
-              When you place an order, it&apos;ll show up here — including any you
-              placed as a guest with this email in the past.
+            <div className="card border-dashed p-10 text-center">
+              <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-signal-limeInk">
+                // Empty shelf
+              </div>
+              <p className="mx-auto mt-3 max-w-sm text-sm text-paper-600">
+                When you place an order, it&apos;ll show up here — including any you
+                placed as a guest with this email in the past.
+              </p>
+              <Link href="/shop" className="btn-primary mt-5 inline-flex">
+                Browse drops
+              </Link>
             </div>
           )}
         </div>

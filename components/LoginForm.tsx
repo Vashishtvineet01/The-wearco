@@ -103,8 +103,8 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="relative mx-auto max-w-lg px-5 py-16 lg:px-8 lg:py-24">
-      <section className="spotlight-violet relative overflow-hidden rounded-3xl border border-paper-200 bg-paper-50/40 p-8 md:p-12">
+    <div className="relative mx-auto max-w-lg px-5 py-10 sm:py-16 lg:px-8 lg:py-20">
+      <section className="spotlight-violet relative overflow-hidden rounded-3xl border border-paper-200 bg-paper-50/40 p-6 sm:p-8 md:p-12">
         <Aurora
           blobs={[
             {
@@ -138,7 +138,7 @@ export default function LoginForm() {
             <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
               // {mode === "signup" ? "Create account" : "Sign in"}
             </div>
-            <h1 className="mt-3 font-display text-3xl font-bold tracking-tight md:text-4xl">
+            <h1 className="mt-3 font-display text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl">
               {mode === "signup" ? (
                 <>
                   Join <span className="gradient-text">TheWearCo.</span>
@@ -149,14 +149,14 @@ export default function LoginForm() {
                 </>
               )}
             </h1>
-            <p className="mx-auto mt-3 max-w-md text-paper-700">
+            <p className="mx-auto mt-3 max-w-md text-sm text-paper-700 sm:text-base">
               Use your email and password, or get a one-time code. No magic
               links.
             </p>
           </div>
 
           {/* Mode: sign in / create */}
-          <div className="mx-auto mt-6 flex max-w-md rounded-full border border-paper-200 bg-paper-100/80 p-1">
+          <div className="mx-auto mt-5 flex max-w-md rounded-full border border-paper-200 bg-paper-100/80 p-1 sm:mt-6">
             {(
               [
                 ["signin", "Sign in"],
@@ -371,7 +371,7 @@ export default function LoginForm() {
 }
 
 const inputClass =
-  "w-full rounded-full border border-paper-200 bg-paper-50 px-5 py-3 text-sm outline-none transition focus:border-signal-violetInk/50";
+  "w-full rounded-full border border-paper-200 bg-paper-50 px-4 py-2.5 text-sm outline-none transition focus:border-signal-violetInk/50 sm:px-5 sm:py-3";
 
 function Field({
   label,

@@ -458,17 +458,28 @@ export default function CheckoutClient({
 
   return (
     <div className="mx-auto max-w-7xl px-5 py-12 lg:px-8 lg:py-16">
-      <div className="mb-8 flex items-end justify-between">
+      <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div>
           <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
             // Checkout
           </div>
           <h1 className="mt-2 font-display text-4xl font-bold tracking-tight md:text-5xl">
-            Final layer
+            Final <span className="gradient-text">layer.</span>
           </h1>
-          {prefill.isLoggedIn && (
+          {prefill.isLoggedIn ? (
             <p className="mt-2 text-sm text-paper-600">
               Signed in as {prefill.email} — we prefilled your last details.
+            </p>
+          ) : (
+            <p className="mt-2 text-sm text-paper-600">
+              Guest checkout is fine —{" "}
+              <Link
+                href="/login?next=/checkout"
+                className="text-signal-violetInk underline underline-offset-2"
+              >
+                sign in
+              </Link>{" "}
+              only if you want orders saved.
             </p>
           )}
         </div>
@@ -476,7 +487,7 @@ export default function CheckoutClient({
       </div>
 
       <form onSubmit={onPlaceOrder} className="grid gap-8 lg:grid-cols-3">
-        <div className="space-y-4 lg:col-span-2">
+        <div className="space-y-5 lg:col-span-2">
           <div className="card p-6">
             <SectionTitle index="01" title="Contact" />
             <div className="grid gap-3 sm:grid-cols-2">

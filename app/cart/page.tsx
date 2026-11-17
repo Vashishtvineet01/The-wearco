@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCart } from "@/components/CartProvider";
 import { formatINR, getProduct, type ProductCategory } from "@/lib/products";
 import ProductMockup from "@/components/ProductMockup";
+import PageHero from "@/components/PageHero";
 
 export default function CartPage() {
   const { items, remove, updateQty, subtotal, count, clear } = useCart();
@@ -13,31 +14,34 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="mx-auto max-w-3xl px-5 py-32 text-center lg:px-8">
-        <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
-          // Empty
-        </div>
-        <h1 className="mt-3 font-display text-4xl font-bold tracking-tight">
-          Your cart&apos;s on offline mode.
-        </h1>
-        <p className="mt-3 text-paper-600">
-          Pick up a drop or print your own line — your call.
-        </p>
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <Link href="/shop" className="btn-primary">
-            Browse drops
-          </Link>
-          <Link href="/design" className="btn-ghost">
-            Open Design Studio
-          </Link>
-        </div>
+      <div className="mx-auto max-w-3xl px-5 py-12 lg:px-8 lg:py-20">
+        <PageHero
+          eyebrow="Empty"
+          title={
+            <>
+              Your cart&apos;s on <span className="gradient-text">offline mode.</span>
+            </>
+          }
+          subtitle="Pick up a drop or print your own line — your call."
+          spotlight="violet"
+          center
+        >
+          <div className="flex flex-wrap justify-center gap-3">
+            <Link href="/shop" className="btn-primary">
+              Browse drops
+            </Link>
+            <Link href="/design" className="btn-ghost">
+              Open Design Studio
+            </Link>
+          </div>
+        </PageHero>
       </div>
     );
   }
 
   return (
     <div className="mx-auto max-w-7xl px-5 py-12 lg:px-8 lg:py-16">
-      <div className="mb-8 flex items-end justify-between">
+      <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div>
           <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
             // Cart
@@ -46,7 +50,11 @@ export default function CartPage() {
             {count} item{count !== 1 ? "s" : ""}
           </h1>
         </div>
-        <button type="button" onClick={clear} className="text-xs text-paper-500 hover:text-signal-coral">
+        <button
+          type="button"
+          onClick={clear}
+          className="text-xs text-paper-500 transition hover:text-signal-coral"
+        >
           Clear cart
         </button>
       </div>
@@ -95,7 +103,7 @@ export default function CartPage() {
                   </div>
 
                   <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                    <div className="flex items-center rounded-full border border-paper-200 bg-paper-200">
+                    <div className="flex items-center rounded-full border border-paper-200 bg-paper-100">
                       <button
                         type="button"
                         onClick={() => updateQty(item.id, item.qty - 1)}
@@ -134,7 +142,7 @@ export default function CartPage() {
               <span>{shipping === 0 ? "Free" : formatINR(shipping)}</span>
             </div>
             {subtotal < 1499 && (
-              <div className="rounded-lg border border-signal-lime/20 bg-signal-lime/5 p-3 text-xs text-signal-limeInk">
+              <div className="rounded-2xl border border-signal-lime/20 bg-signal-lime/5 p-3 text-xs text-signal-limeInk">
                 Add {formatINR(1499 - subtotal)} more for free shipping.
               </div>
             )}
@@ -157,9 +165,9 @@ export default function CartPage() {
           </Link>
 
           <div className="mt-6 grid grid-cols-3 gap-2 text-center">
-            <div className="card p-2 text-[10px]">Secure</div>
-            <div className="card p-2 text-[10px]">7-day returns</div>
-            <div className="card p-2 text-[10px]">India shipping</div>
+            <div className="rounded-xl border border-paper-200 bg-paper-100/60 p-2 text-[10px]">Secure</div>
+            <div className="rounded-xl border border-paper-200 bg-paper-100/60 p-2 text-[10px]">7-day returns</div>
+            <div className="rounded-xl border border-paper-200 bg-paper-100/60 p-2 text-[10px]">India shipping</div>
           </div>
         </aside>
       </div>
