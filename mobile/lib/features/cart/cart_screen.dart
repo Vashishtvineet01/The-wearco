@@ -25,6 +25,7 @@ class CartScreen extends ConsumerWidget {
     final total = cart.subtotal + shipping;
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         titleSpacing: 20,
         title: Row(

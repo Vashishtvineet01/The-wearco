@@ -66,6 +66,7 @@ class _BulkScreenState extends ConsumerState<BulkScreen> {
   Widget build(BuildContext context) {
     if (_sent) {
       return Scaffold(
+        backgroundColor: Colors.transparent,
         appBar: AppBar(
           titleSpacing: 20,
           title: Row(
@@ -128,6 +129,7 @@ class _BulkScreenState extends ConsumerState<BulkScreen> {
     }
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         titleSpacing: 20,
         title: Row(

@@ -65,6 +65,7 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         title: Row(
           mainAxisSize: MainAxisSize.min,

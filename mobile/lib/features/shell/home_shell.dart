@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_theme.dart';
+import '../../widgets/aurora_backdrop.dart';
 import '../account/account_screen.dart';
 import '../bulk/bulk_screen.dart';
 import '../cart/cart_controller.dart';
@@ -44,12 +45,29 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     AccountScreen(),
   ];
 
+  // Per-tab aurora palette so each screen has its own colour mood,
+  // matching the way the web rotates spotlight-violet / sunrise / ocean.
+  static const _palettes = <AuroraPalette>[
+    AuroraPalette.sunrise, // Shop
+    AuroraPalette.violet,  // Design
+    AuroraPalette.mint,    // Bulk
+    AuroraPalette.ocean,   // Cart
+    AuroraPalette.sunrise, // Account
+  ];
+
   @override
   Widget build(BuildContext context) {
     final cart = ref.watch(cartProvider);
 
     return Scaffold(
-      body: IndexedStack(index: _index, children: _screens),
+      // Transparent so AuroraBackdrop shows through — the shell owns the
+      // page wash, each tab's Scaffold is also transparent so the backdrop
+      // bleeds under the entire content.
+      backgroundColor: Colors.transparent,
+      body: AuroraBackdrop(
+        palette: _palettes[_index],
+        child: IndexedStack(index: _index, children: _screens),
+      ),
       bottomNavigationBar: _BottomBar(
         index: _index,
         cartCount: cart.count,
@@ -73,11 +91,18 @@ class _BottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: AppColors.ink950,
+      decoration: const BoxDecoration(
+        color: AppColors.paper50,
         border: Border(
-          top: BorderSide(color: Colors.white.withValues(alpha: 0.06)),
+          top: BorderSide(color: AppColors.paper200),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Color(0x14000000),
+            blurRadius: 20,
+            offset: Offset(0, -4),
+          ),
+        ],
       ),
       child: SafeArea(
         top: false,

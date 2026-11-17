@@ -7,6 +7,7 @@ import '../../core/api/api_providers.dart';
 import '../../core/config/env.dart';
 import '../../core/models/product.dart';
 import '../../core/theme/app_theme.dart';
+import '../../widgets/brand_loader.dart';
 import '../../core/util/format.dart';
 import '../../widgets/brand_mark.dart';
 import 'product_mockup.dart';
@@ -41,6 +42,7 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
     final async = ref.watch(productsProvider);
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         titleSpacing: 20,
         title: const BrandMark(size: 28, showWordmark: true),
@@ -64,8 +66,10 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
         color: AppColors.signalLime,
         onRefresh: () async => ref.refresh(productsProvider.future),
         child: async.when(
-          loading: () =>
-              const Center(child: CircularProgressIndicator(color: AppColors.signalLime)),
+          loading: () => const BrandLoader(
+            eyebrow: 'Loading shop',
+            title: 'Fetching the drops.',
+          ),
           error: (err, _) => _ErrorState(error: err, onRetry: () => ref.invalidate(productsProvider)),
           data: (products) => _ShopBody(
             products: products,

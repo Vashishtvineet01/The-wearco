@@ -7,6 +7,7 @@ import '../../core/api/api_providers.dart';
 import '../../core/models/cart_item.dart';
 import '../../core/models/product.dart';
 import '../../core/theme/app_theme.dart';
+import '../../widgets/brand_loader.dart';
 import '../../core/util/format.dart';
 import '../cart/cart_controller.dart';
 import '../shop/product_mockup.dart';
@@ -38,8 +39,9 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
         ),
       ),
       body: async.when(
-        loading: () => const Center(
-          child: CircularProgressIndicator(color: AppColors.signalLime),
+        loading: () => const BrandLoader(
+          eyebrow: 'Loading product',
+          title: 'Threading the mockup.',
         ),
         error: (err, _) => Center(
           child: Padding(

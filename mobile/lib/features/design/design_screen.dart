@@ -166,6 +166,7 @@ class _DesignScreenState extends ConsumerState<DesignScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         titleSpacing: 20,
         title: Row(
