@@ -59,7 +59,7 @@ function Hero() {
             </span>
             <span className="h-3 w-px bg-paper-300" />
             <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-signal-violetInk">
-              2,400+ shipping
+              Guest checkout · no account needed
             </span>
           </div>
 
@@ -67,18 +67,24 @@ function Hero() {
             className="animate-fade-in-up font-display text-5xl font-bold leading-[0.95] tracking-tight md:text-7xl lg:text-[88px]"
             style={{ animationDelay: "120ms" }}
           >
-            Internet uniform <br />
-            for the people <br />
-            <span className="gradient-text">building it themselves.</span>
+            TheWearCo
+            <br />
+            <span className="gradient-text">Internet uniform.</span>
           </h1>
 
           <p
             className="mt-6 max-w-xl animate-fade-in-up text-base text-paper-700 md:text-lg"
             style={{ animationDelay: "240ms" }}
           >
-            Tees, hoodies, sweatshirts, caps, mugs, badges and posters for
-            founders, creators and freelancers. Skip the drops entirely — open
-            the Design Studio and print your own. Bulk orders for teams.
+            Premium tees, hoodies and caps for founders and builders — or open
+            the Design Studio and print your own line in 5–7 days. No minimums.
+          </p>
+
+          <p
+            className="mt-3 animate-fade-in-up font-mono text-[11px] uppercase tracking-[0.18em] text-paper-500"
+            style={{ animationDelay: "300ms" }}
+          >
+            Worn by 2,400+ founders · Free shipping over ₹1,499
           </p>
 
           <div
@@ -98,7 +104,7 @@ function Hero() {
                 <path d="M2 2l7.586 7.586" />
                 <circle cx="11" cy="11" r="2" />
               </svg>
-              Open Design Studio
+              Design your own
             </Link>
           </div>
 

@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { formatINR } from "@/lib/products";
+import BrandLoader from "@/components/BrandLoader";
 
 type TrackResponse = {
   ok: boolean;
@@ -40,7 +41,11 @@ type TrackResponse = {
 
 export default function TrackPage() {
   return (
-    <Suspense fallback={<div className="p-10 text-center text-paper-600">Loading…</div>}>
+    <Suspense
+      fallback={
+        <BrandLoader eyebrow="Track order" title="Looking up your shipment." />
+      }
+    >
       <TrackInner />
     </Suspense>
   );

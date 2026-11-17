@@ -45,7 +45,7 @@ export default function ContactPage() {
           eyebrow="// Bulk & Teams"
           title="hi@thewearco.com"
           sub="For 10+ pieces, launches, conferences and co-branded drops. We quote in 1 business day."
-          href="/design?view=team"
+          href="/bulk"
           cta="Request a quote →"
         />
         <Channel
@@ -87,6 +87,9 @@ export default function ContactPage() {
             </Link>
             .
           </p>
+          <Link href="/track" className="btn-ghost mt-4 inline-flex">
+            Track an order →
+          </Link>
         </div>
       </div>
     </div>
