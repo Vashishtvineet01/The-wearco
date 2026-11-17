@@ -461,6 +461,16 @@ body::after {
   background: transparent;
 }
 
+/* Shimmer sweep used by <BrandLoader> skeleton tiles. */
+@keyframes shimmer-sweep {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(120%);
+  }
+}
+
 /* Respect user's reduced-motion preference */
 @media (prefers-reduced-motion: reduce) {
   *,
