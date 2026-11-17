@@ -53,7 +53,7 @@ model ProductSize {
 model Order {
   id          String      @id @default(cuid())
   orderNumber String      @unique
-  status      String      @default("pending")
+  status      String      @default("pending") // pending | confirmed | shipped | delivered | cancelled
   email       String
   name        String
   phone       String
@@ -63,6 +63,17 @@ model Order {
   total       Int
   address     String
   paymentMethod String    @default("upi")
+
+  // Razorpay bookkeeping — set once the hosted checkout handshake succeeds.
+  // Order rows are created before the gateway is called, so these stay null
+  // for COD orders and for abandoned-pay rows we still want to keep around
+  // for analytics.
+  razorpayOrderId   String?  @unique
+  razorpayPaymentId String?
+  razorpaySignature String?
+  paymentStatus     String   @default("pending") // pending | paid | failed | refunded
+  paidAt            DateTime?
+
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   items       OrderItem[]
@@ -70,6 +81,7 @@ model Order {
   @@index([status])
   @@index([email])
   @@index([createdAt])
+  @@index([paymentStatus])
 }
 
 model OrderItem {

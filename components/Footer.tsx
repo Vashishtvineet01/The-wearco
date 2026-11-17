@@ -52,8 +52,8 @@ export default function Footer() {
           <ul className="space-y-2 text-sm text-paper-800">
             <li><Link href="/about">Manifesto</Link></li>
             <li><Link href="/community">Community</Link></li>
-            <li><a href="mailto:hi@thewearco.com">Contact</a></li>
-            <li><Link href="/about#shipping">Shipping & returns</Link></li>
+            <li><Link href="/contact">Contact</Link></li>
+            <li><Link href="/track">Track an order</Link></li>
           </ul>
         </div>
 
@@ -71,6 +71,13 @@ export default function Footer() {
       <div className="border-t border-paper-200">
         <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-3 px-5 py-6 text-xs text-paper-500 md:flex-row md:items-center lg:px-8">
           <div>© {new Date().getFullYear()} TheWearCo. Made by builders.</div>
+          <nav className="flex flex-wrap items-center gap-4" aria-label="Policies">
+            <Link href="/privacy" className="hover:text-paper-800">Privacy</Link>
+            <Link href="/terms" className="hover:text-paper-800">Terms</Link>
+            <Link href="/refund" className="hover:text-paper-800">Refunds</Link>
+            <Link href="/shipping" className="hover:text-paper-800">Shipping</Link>
+            <Link href="/contact" className="hover:text-paper-800">Contact</Link>
+          </nav>
           <div className="font-mono uppercase tracking-[0.2em]">
             v1.0 / shipping daily
           </div>

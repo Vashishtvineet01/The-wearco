@@ -4,6 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/components/CartProvider";
 import { formatINR } from "@/lib/products";
+import RazorpayScript, {
+  type RazorpayHandlerResponse,
+} from "@/components/RazorpayScript";
 
 type PayMethod = "upi" | "card" | "cod";
 
@@ -46,7 +49,8 @@ export default function CheckoutPage() {
     setSubmitting(true);
     setError("");
     try {
-      const res = await fetch("/api/orders", {
+      // 1) Create the DB order (+ a matching Razorpay order if paying online).
+      const res = await fetch("/api/payments/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -72,20 +76,84 @@ export default function CheckoutPage() {
                   posX: i.custom.posX,
                   posY: i.custom.posY,
                   scale: i.custom.scale,
-                  rotation: i.custom.rotation
+                  rotation: i.custom.rotation,
                 }
-              : undefined
-          }))
-        })
+              : undefined,
+          })),
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Order failed");
-      setOrderId(data.orderNumber);
-      setStep("done");
-      clear();
+
+      // 2a) COD / demo → skip gateway, jump straight to success.
+      if (data.mode === "cod" || data.mode === "demo") {
+        setOrderId(data.orderNumber);
+        setStep("done");
+        clear();
+        return;
+      }
+
+      // 2b) Razorpay → open the hosted checkout widget.
+      if (data.mode === "razorpay" && data.razorpay) {
+        const rzp = data.razorpay as {
+          orderId: string;
+          amount: number;
+          currency: string;
+          keyId: string;
+        };
+
+        if (typeof window === "undefined" || !window.Razorpay) {
+          throw new Error(
+            "Payment gateway still loading — please try again in a moment."
+          );
+        }
+
+        const checkout = new window.Razorpay({
+          key: rzp.keyId,
+          amount: rzp.amount,
+          currency: rzp.currency,
+          order_id: rzp.orderId,
+          name: "TheWearCo",
+          description: `Order ${data.orderNumber}`,
+          prefill: { name, email, contact: phone },
+          notes: { orderNumber: data.orderNumber },
+          theme: { color: "#7c5cff" },
+          handler: async (r: RazorpayHandlerResponse) => {
+            try {
+              const v = await fetch("/api/payments/verify", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(r),
+              });
+              const vd = await v.json();
+              if (!v.ok) throw new Error(vd.error || "Verification failed");
+              setOrderId(data.orderNumber);
+              setStep("done");
+              clear();
+            } catch (err) {
+              setError(
+                err instanceof Error
+                  ? err.message
+                  : "Payment taken but verification failed. Our team will reconcile it."
+              );
+            } finally {
+              setSubmitting(false);
+            }
+          },
+          modal: {
+            ondismiss: () => {
+              setSubmitting(false);
+              setError("Payment cancelled — your order is saved as pending.");
+            },
+          },
+        });
+        checkout.open();
+        return;
+      }
+
+      throw new Error("Unexpected response from payment API");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Order failed");
-    } finally {
       setSubmitting(false);
     }
   };
@@ -192,8 +260,9 @@ export default function CheckoutPage() {
               />
             </div>
             <p className="mt-3 text-[11px] text-paper-500">
-              Demo checkout — orders are saved to the admin panel. No real payment is processed.
+              Payments processed by Razorpay (UPI, cards, netbanking). COD adds a ₹49 handling fee.
             </p>
+            <RazorpayScript />
           </div>
         </div>
 
