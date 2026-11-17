@@ -8,12 +8,28 @@ export default function Navbar() {
   const { count } = useCart();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [email, setEmail] = useState<string | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/auth/me")
+      .then((r) => r.json())
+      .then((d: { email?: string | null }) => {
+        if (!cancelled) setEmail(d.email ?? null);
+      })
+      .catch(() => {
+        if (!cancelled) setEmail(null);
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (
@@ -51,6 +67,34 @@ export default function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2">
+          {email ? (
+            <Link
+              href="/account"
+              className="relative grid h-9 w-9 place-items-center overflow-hidden rounded-full text-sm font-bold text-ink-950 shadow-[0_4px_16px_-4px_rgba(124,92,255,0.5)]"
+              aria-label={`Account · ${email}`}
+              title={email}
+            >
+              <span
+                className="absolute inset-0 bg-gradient-aurora"
+                style={{ backgroundSize: "200% 200%" }}
+              />
+              <span className="relative uppercase">
+                {email.charAt(0)}
+              </span>
+            </Link>
+          ) : (
+            <Link
+              href="/login"
+              className="btn-icon"
+              aria-label="Sign in"
+              title="Sign in"
+            >
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4 21a8 8 0 0116 0" />
+              </svg>
+            </Link>
+          )}
           <Link href="/cart" className="btn-icon relative" aria-label="Cart">
             <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M3 3h2l2.4 12.4a2 2 0 002 1.6h8.2a2 2 0 002-1.6L22 7H6" />
@@ -83,6 +127,9 @@ export default function Navbar() {
             <MobileLink onClick={() => setOpen(false)} href="/community">Community</MobileLink>
             <MobileLink onClick={() => setOpen(false)} href="/about">About</MobileLink>
             <MobileLink onClick={() => setOpen(false)} href="/cart">Cart ({count})</MobileLink>
+            <MobileLink onClick={() => setOpen(false)} href={email ? "/account" : "/login"}>
+              {email ? "Your account" : "Sign in"}
+            </MobileLink>
           </div>
         </div>
       )}
