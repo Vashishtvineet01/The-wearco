@@ -19,6 +19,12 @@ class CartItem {
     this.printShape = 'rect',
     this.printText,
     this.printTextColor,
+    this.printFontFamily,
+    this.printImageUrl,
+    this.printPosX = 0,
+    this.printPosY = 0,
+    this.printScale = 1,
+    this.printRotation = 0,
   });
 
   final String id;
@@ -35,7 +41,23 @@ class CartItem {
   final String? printText;
   final String? printTextColor;
 
-  bool get isCustom => printText != null && printText!.trim().isNotEmpty;
+  /// One of 'display', 'mono', 'sans' — mirrors web `FONTS` in StudioClient.
+  final String? printFontFamily;
+
+  /// Server path returned by `/api/uploads/design` (or null if the Studio
+  /// line is text-only / the upload failed in demo mode).
+  final String? printImageUrl;
+
+  /// Transforms applied to the text + image overlay. -50..50 for pos, 0.4..1.6
+  /// for scale, -45..45 for rotation — kept identical to web ranges.
+  final double printPosX;
+  final double printPosY;
+  final double printScale;
+  final double printRotation;
+
+  bool get isCustom =>
+      (printText != null && printText!.trim().isNotEmpty) ||
+      (printImageUrl != null && printImageUrl!.isNotEmpty);
 
   int get lineTotal => price * qty;
 
@@ -54,6 +76,12 @@ class CartItem {
       printShape: printShape,
       printText: printText,
       printTextColor: printTextColor,
+      printFontFamily: printFontFamily,
+      printImageUrl: printImageUrl,
+      printPosX: printPosX,
+      printPosY: printPosY,
+      printScale: printScale,
+      printRotation: printRotation,
     );
   }
 
@@ -71,6 +99,12 @@ class CartItem {
         'printShape': printShape,
         if (printText != null) 'printText': printText,
         if (printTextColor != null) 'printTextColor': printTextColor,
+        if (printFontFamily != null) 'printFontFamily': printFontFamily,
+        if (printImageUrl != null) 'printImageUrl': printImageUrl,
+        if (printPosX != 0) 'printPosX': printPosX,
+        if (printPosY != 0) 'printPosY': printPosY,
+        if (printScale != 1) 'printScale': printScale,
+        if (printRotation != 0) 'printRotation': printRotation,
       };
 
   factory CartItem.fromJson(Map<String, dynamic> json) => CartItem(
@@ -87,5 +121,11 @@ class CartItem {
         printShape: (json['printShape'] as String?) ?? 'rect',
         printText: json['printText'] as String?,
         printTextColor: json['printTextColor'] as String?,
+        printFontFamily: json['printFontFamily'] as String?,
+        printImageUrl: json['printImageUrl'] as String?,
+        printPosX: (json['printPosX'] as num?)?.toDouble() ?? 0,
+        printPosY: (json['printPosY'] as num?)?.toDouble() ?? 0,
+        printScale: (json['printScale'] as num?)?.toDouble() ?? 1,
+        printRotation: (json['printRotation'] as num?)?.toDouble() ?? 0,
       );
 }

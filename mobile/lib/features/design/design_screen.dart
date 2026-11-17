@@ -1,8 +1,19 @@
+import 'dart:io';
+import 'dart:ui' as ui;
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
+import '../../core/api/api_client.dart';
+import '../../core/config/env.dart';
 import '../../core/models/cart_item.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/util/format.dart';
@@ -53,7 +64,31 @@ class _DesignScreenState extends ConsumerState<DesignScreen> {
   final _textCtl = TextEditingController(text: 'BUILD');
   int _qty = 1;
 
+  // ── Studio controls (match web StudioClient.tsx) ──
+  _StudioTab _studioTab = _StudioTab.text;
+  _FontOption _font = _fonts.first;
+
+  /// Bytes for instant preview after `image_picker` returns; cleared once
+  /// we have a server-side `_imageUrl` (so uploads persist across sessions).
+  Uint8List? _imageBytes;
+  String? _imageFileName;
+
+  /// Server path returned by POST /api/uploads/design. Null in demo mode.
+  String? _imageUrl;
+  _UploadState _uploadState = _UploadState.idle;
+
+  double _posX = 0; // -50..50 %
+  double _posY = 0; // -50..50 %
+  double _scale = 1; // 0.4..1.6
+  double _rotation = 0; // -45..45 deg
+
+  /// Boundary wrapper around the mockup — lets us snapshot it to PNG and
+  /// hand off to share_plus.
+  final GlobalKey _mockupKey = GlobalKey();
+  bool _sharing = false;
+
   static const int _customFee = 100;
+  static const int _imageAddOn = 200; // matches web (customPrice + 200)
 
   @override
   void dispose() {
@@ -80,8 +115,135 @@ class _DesignScreenState extends ConsumerState<DesignScreen> {
     return null;
   }
 
-  int get _unitPrice => _garment.price + _customFee;
+  int get _unitPrice =>
+      _garment.price + _customFee + (_hasImage ? _imageAddOn : 0);
   int get _lineTotal => _unitPrice * _qty;
+
+  bool get _hasImage => _imageBytes != null || _imageUrl != null;
+
+  bool get _hasText => _textCtl.text.trim().isNotEmpty;
+
+  // ─────────────────────────── Image upload ────────────────────────────
+  Future<void> _pickAndUploadImage({required ImageSource source}) async {
+    try {
+      final picker = ImagePicker();
+      final XFile? picked = await picker.pickImage(
+        source: source,
+        maxWidth: 2400,
+        maxHeight: 2400,
+        imageQuality: 92,
+      );
+      if (picked == null) return;
+
+      final bytes = await picked.readAsBytes();
+      if (bytes.lengthInBytes > 5 * 1024 * 1024) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Image must be under 5 MB.')),
+        );
+        return;
+      }
+
+      setState(() {
+        _imageBytes = bytes;
+        _imageFileName = picked.name;
+        _imageUrl = null;
+        _studioTab = _StudioTab.image;
+        _uploadState = _UploadState.uploading;
+      });
+
+      // Skip server upload in demo mode — keep the local bytes so the
+      // mockup still renders and the cart line still looks right.
+      if (Env.isDemoMode) {
+        setState(() => _uploadState = _UploadState.done);
+        return;
+      }
+
+      final dio = ref.read(dioProvider);
+      final form = FormData.fromMap({
+        'file': MultipartFile.fromBytes(
+          bytes,
+          filename: picked.name,
+        ),
+      });
+      final res = await dio.post<Map<String, dynamic>>(
+        '/api/uploads/design',
+        data: form,
+      );
+      final url = (res.data?['url'] as String?) ?? '';
+      if (url.isEmpty) throw Exception('Upload returned no URL');
+      if (!mounted) return;
+      setState(() {
+        _imageUrl = url;
+        _uploadState = _UploadState.done;
+      });
+    } on DioException catch (e) {
+      final msg = ApiException.fromDioError(e).message;
+      if (!mounted) return;
+      setState(() => _uploadState = _UploadState.error);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Upload failed — $msg (kept local preview).')),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _uploadState = _UploadState.error);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Upload failed — $e')),
+      );
+    }
+  }
+
+  void _clearImage() {
+    setState(() {
+      _imageBytes = null;
+      _imageFileName = null;
+      _imageUrl = null;
+      _uploadState = _UploadState.idle;
+    });
+  }
+
+  void _resetTransforms() {
+    setState(() {
+      _posX = 0;
+      _posY = 0;
+      _scale = 1;
+      _rotation = 0;
+    });
+  }
+
+  // ─────────────────────────── PNG share ──────────────────────────────
+  Future<void> _sharePngMockup() async {
+    if (_sharing) return;
+    setState(() => _sharing = true);
+    try {
+      final boundary = _mockupKey.currentContext?.findRenderObject()
+          as RenderRepaintBoundary?;
+      if (boundary == null) throw Exception('Preview not ready');
+      final image = await boundary.toImage(pixelRatio: 3);
+      final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      if (byteData == null) throw Exception('PNG encode failed');
+      final bytes = byteData.buffer.asUint8List();
+
+      final dir = await getTemporaryDirectory();
+      final slug = (_sanitizedText.isEmpty ? 'design' : _sanitizedText)
+          .toLowerCase()
+          .replaceAll(RegExp(r'[^a-z0-9]+'), '-');
+      final file = File('${dir.path}/thewearco-$slug.png');
+      await file.writeAsBytes(bytes, flush: true);
+
+      await Share.shareXFiles(
+        [XFile(file.path, mimeType: 'image/png')],
+        text: 'My ${_garment.label} mockup — TheWearCo',
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Couldn't share mockup — $e")),
+      );
+    } finally {
+      if (mounted) setState(() => _sharing = false);
+    }
+  }
 
   void _setGarment(_GarmentOption g) {
     setState(() {
@@ -123,19 +285,32 @@ class _DesignScreenState extends ConsumerState<DesignScreen> {
   Future<void> _addToCart() async {
     HapticFeedback.mediumImpact();
     final text = _textCtl.text.trim();
-    if (text.isEmpty) {
+    // A line needs at least one of: text or image. Mirrors web contract.
+    if (text.isEmpty && !_hasImage) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Type something to print first.')),
+        const SnackBar(
+            content: Text('Add some text or upload artwork first.')),
       );
       return;
     }
+    if (_uploadState == _UploadState.uploading) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Hold on — artwork is still uploading.')),
+      );
+      return;
+    }
+
     final printHex = _resolvePrintColorHex();
     final slug = 'custom-${_garment.category}-'
         '${DateTime.now().millisecondsSinceEpoch}';
+    final displayName = text.isNotEmpty
+        ? 'Custom ${_garment.label} · "${text.toUpperCase()}"'
+        : 'Custom ${_garment.label} · artwork';
     final item = CartItem(
       id: slug,
       slug: slug,
-      name: 'Custom ${_garment.label} · "${text.toUpperCase()}"',
+      name: displayName,
       price: _unitPrice,
       qty: _qty,
       size: _size.isEmpty ? 'OS' : _size,
@@ -144,8 +319,14 @@ class _DesignScreenState extends ConsumerState<DesignScreen> {
       fabricHex: _fabric.fabricHex,
       category: _garment.category,
       printShape: _garment.printShape,
-      printText: text.toUpperCase(),
-      printTextColor: printHex,
+      printText: text.isNotEmpty ? text.toUpperCase() : null,
+      printTextColor: text.isNotEmpty ? printHex : null,
+      printFontFamily: _font.id,
+      printImageUrl: _imageUrl, // null if demo mode / local-only
+      printPosX: _posX,
+      printPosY: _posY,
+      printScale: _scale,
+      printRotation: _rotation,
     );
     ref.read(cartProvider.notifier).add(item);
     if (!mounted) return;
@@ -199,11 +380,27 @@ class _DesignScreenState extends ConsumerState<DesignScreen> {
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: 18),
-          _MockupPreview(
+          _DesignCanvas(
+            boundaryKey: _mockupKey,
             garment: _garment,
             fabric: _fabric,
-            printText: _sanitizedText,
+            printText: _hasText ? _sanitizedText : null,
             printColorHex: _resolvePrintColorHex(),
+            font: _font,
+            imageBytes: _imageBytes,
+            imageNetworkUrl: _imageUrl,
+            posX: _posX,
+            posY: _posY,
+            scale: _scale,
+            rotation: _rotation,
+            onPosDelta: (dx, dy) {
+              setState(() {
+                _posX = (_posX + dx).clamp(-50, 50);
+                _posY = (_posY + dy).clamp(-50, 50);
+              });
+            },
+            onShare: _sharing ? null : _sharePngMockup,
+            sharing: _sharing,
           ),
           const SizedBox(height: 20),
           _SectionLabel('01 · Garment'),
@@ -220,25 +417,81 @@ class _DesignScreenState extends ConsumerState<DesignScreen> {
             onSelect: (f) => setState(() => _fabric = f),
           ),
           const SizedBox(height: 22),
-          _SectionLabel('03 · Print text'),
+          _SectionLabel('03 · Design'),
           const SizedBox(height: 8),
-          TextField(
-            controller: _textCtl,
-            maxLength: 14,
-            textCapitalization: TextCapitalization.characters,
-            onChanged: (_) => setState(() {}),
-            decoration: const InputDecoration(
-              hintText: 'BUILD',
-              counterText: '',
-              helperText: '2–14 characters reads best on a chest print.',
-            ),
-            style: const TextStyle(
-              fontFamily: 'JetBrainsMono',
-              fontSize: 16,
-              letterSpacing: 2,
-              fontWeight: FontWeight.w700,
-            ),
+          _StudioTabBar(
+            selected: _studioTab,
+            onSelect: (t) => setState(() => _studioTab = t),
           ),
+          const SizedBox(height: 12),
+          if (_studioTab == _StudioTab.text) ...[
+            TextField(
+              controller: _textCtl,
+              maxLength: 14,
+              textCapitalization: TextCapitalization.characters,
+              onChanged: (_) => setState(() {}),
+              decoration: const InputDecoration(
+                hintText: 'BUILD',
+                counterText: '',
+                helperText: '2–14 characters reads best on a chest print.',
+              ),
+              style: GoogleFonts.getFont(
+                _font.googleFamily,
+                fontSize: 16,
+                letterSpacing: 2,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 14),
+            _FontPickerRow(
+              selected: _font,
+              onSelect: (f) => setState(() => _font = f),
+            ),
+          ] else if (_studioTab == _StudioTab.image) ...[
+            _ImagePickerCard(
+              bytes: _imageBytes,
+              fileName: _imageFileName,
+              state: _uploadState,
+              onPickGallery: () =>
+                  _pickAndUploadImage(source: ImageSource.gallery),
+              onPickCamera: () =>
+                  _pickAndUploadImage(source: ImageSource.camera),
+              onClear: _clearImage,
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'Transparent PNGs work best. Add a caption below if you want '
+              'text under your art.',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: _textCtl,
+              maxLength: 14,
+              textCapitalization: TextCapitalization.characters,
+              onChanged: (_) => setState(() {}),
+              decoration: const InputDecoration(
+                hintText: 'Optional caption',
+                counterText: '',
+              ),
+              style: GoogleFonts.getFont(
+                _font.googleFamily,
+                fontSize: 14,
+                letterSpacing: 2,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ] else ...[
+            _PresetLinesGrid(
+              current: _textCtl.text,
+              onPick: (line) => setState(() {
+                _textCtl.text = line;
+                _textCtl.selection = TextSelection.collapsed(
+                  offset: _textCtl.text.length,
+                );
+              }),
+            ),
+          ],
           const SizedBox(height: 22),
           _SectionLabel('04 · Print colour'),
           const SizedBox(height: 8),
@@ -246,9 +499,23 @@ class _DesignScreenState extends ConsumerState<DesignScreen> {
             selected: _print,
             onSelect: (c) => setState(() => _print = c),
           ),
+          const SizedBox(height: 22),
+          _SectionLabel('05 · Fine-tune'),
+          const SizedBox(height: 8),
+          _FineTuneCard(
+            posX: _posX,
+            posY: _posY,
+            scale: _scale,
+            rotation: _rotation,
+            onPosX: (v) => setState(() => _posX = v),
+            onPosY: (v) => setState(() => _posY = v),
+            onScale: (v) => setState(() => _scale = v),
+            onRotation: (v) => setState(() => _rotation = v),
+            onReset: _resetTransforms,
+          ),
           if (_garment.sizes.isNotEmpty) ...[
             const SizedBox(height: 22),
-            _SectionLabel('05 · Size'),
+            _SectionLabel('06 · Size'),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
@@ -269,13 +536,13 @@ class _DesignScreenState extends ConsumerState<DesignScreen> {
             ),
           ],
           const SizedBox(height: 22),
-          _SectionLabel('${_garment.sizes.isNotEmpty ? '06' : '05'} · Quantity'),
+          _SectionLabel('${_garment.sizes.isNotEmpty ? '07' : '06'} · Quantity'),
           const SizedBox(height: 8),
           _QtyStepper(qty: _qty, onQty: (q) => setState(() => _qty = q)),
           const SizedBox(height: 26),
           _PriceBreakdown(
             base: _garment.price,
-            fee: _customFee,
+            fee: _customFee + (_hasImage ? _imageAddOn : 0),
             qty: _qty,
             total: _lineTotal,
           ),
@@ -311,6 +578,42 @@ class _DesignScreenState extends ConsumerState<DesignScreen> {
 }
 
 // ---------------------------------------------------------------- Catalog --
+
+enum _StudioTab {
+  text('Text'),
+  image('Image'),
+  preset('Presets');
+
+  const _StudioTab(this.label);
+  final String label;
+}
+
+enum _UploadState { idle, uploading, done, error }
+
+class _FontOption {
+  const _FontOption({
+    required this.id,
+    required this.label,
+    required this.googleFamily,
+  });
+
+  /// Stored in the cart line as `printFontFamily`, matches web FONTS[].id.
+  final String id;
+
+  /// User-facing label shown in the picker chip.
+  final String label;
+
+  /// Font family name used by `GoogleFonts.getFont(...)`.
+  final String googleFamily;
+}
+
+/// Mirrors the web `FONTS` list in `StudioClient.tsx`. Keep ids identical so
+/// an order placed from either surface prints with the same typeface.
+const _fonts = <_FontOption>[
+  _FontOption(id: 'display', label: 'Display', googleFamily: 'Space Grotesk'),
+  _FontOption(id: 'mono', label: 'Mono', googleFamily: 'JetBrains Mono'),
+  _FontOption(id: 'sans', label: 'Sans', googleFamily: 'Inter'),
+];
 
 class _GarmentOption {
   const _GarmentOption({
@@ -451,21 +754,51 @@ class _SectionLabel extends StatelessWidget {
       );
 }
 
-class _MockupPreview extends StatelessWidget {
-  const _MockupPreview({
+/// Live design preview. Stacks the garment painter underneath a Positioned
+/// overlay (clipped to the print area) that renders the uploaded image +
+/// typed text with the user's current transforms. The user can drag the
+/// overlay directly to reposition — maps to `posX`/`posY` the same way the
+/// web Studio does.
+class _DesignCanvas extends StatelessWidget {
+  const _DesignCanvas({
+    required this.boundaryKey,
     required this.garment,
     required this.fabric,
     required this.printText,
     required this.printColorHex,
+    required this.font,
+    required this.imageBytes,
+    required this.imageNetworkUrl,
+    required this.posX,
+    required this.posY,
+    required this.scale,
+    required this.rotation,
+    required this.onPosDelta,
+    required this.onShare,
+    required this.sharing,
   });
 
+  final GlobalKey boundaryKey;
   final _GarmentOption garment;
   final _FabricOption fabric;
-  final String printText;
+  final String? printText;
   final String printColorHex;
+  final _FontOption font;
+  final Uint8List? imageBytes;
+  final String? imageNetworkUrl;
+  final double posX;
+  final double posY;
+  final double scale;
+  final double rotation;
+  final void Function(double dxPercent, double dyPercent) onPosDelta;
+  final VoidCallback? onShare;
+  final bool sharing;
 
   @override
   Widget build(BuildContext context) {
+    final area = MobileProductMockup.printAreaFor(garment.category);
+    final textColor = Color(parseHexColor(printColorHex));
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(20),
       child: Container(
@@ -476,40 +809,740 @@ class _MockupPreview extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(20),
         ),
-        child: Stack(
-          children: [
-            MobileProductMockup(
-              category: garment.category,
-              fabricHex: fabric.fabricHex,
-              printShape: garment.printShape,
-              printText: printText,
-              printTextColor: printColorHex,
+        child: AspectRatio(
+          aspectRatio: 1,
+          child: RepaintBoundary(
+            key: boundaryKey,
+            child: LayoutBuilder(
+              builder: (ctx, c) {
+                final w = c.maxWidth;
+                final h = c.maxHeight;
+                final rect = Rect.fromLTWH(
+                  area.left * w,
+                  area.top * h,
+                  area.width * w,
+                  area.height * h,
+                );
+                return Stack(
+                  children: [
+                    // Garment base — no text, we render it in the overlay so
+                    // fonts + transforms + image composite behave consistently.
+                    MobileProductMockup(
+                      category: garment.category,
+                      fabricHex: fabric.fabricHex,
+                      printShape: garment.printShape,
+                      printText: null,
+                    ),
+
+                    // Print-area overlay: clipped to the printable shape, with
+                    // image + text stacked and the user's transforms applied.
+                    Positioned.fromRect(
+                      rect: rect,
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onPanUpdate: (d) {
+                          // Convert drag in px → % of print rect.
+                          onPosDelta(
+                            (d.delta.dx / rect.width) * 100,
+                            (d.delta.dy / rect.height) * 100,
+                          );
+                        },
+                        child: ClipPath(
+                          clipper: _PrintAreaClipper(
+                            shape: garment.printShape,
+                          ),
+                          child: Center(
+                            child: Transform.translate(
+                              offset: Offset(
+                                (posX / 100) * rect.width,
+                                (posY / 100) * rect.height,
+                              ),
+                              child: Transform.rotate(
+                                angle: rotation * 3.1415926 / 180,
+                                child: Transform.scale(
+                                  scale: scale,
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      if (imageBytes != null)
+                                        Image.memory(
+                                          imageBytes!,
+                                          fit: BoxFit.contain,
+                                          width: rect.width,
+                                          height: rect.height,
+                                        )
+                                      else if (imageNetworkUrl != null &&
+                                          imageNetworkUrl!.isNotEmpty)
+                                        Image.network(
+                                          _resolveNetworkUrl(imageNetworkUrl!),
+                                          fit: BoxFit.contain,
+                                          width: rect.width,
+                                          height: rect.height,
+                                          errorBuilder: (_, __, ___) =>
+                                              const SizedBox.shrink(),
+                                        ),
+                                      if (printText != null)
+                                        _OverlayText(
+                                          text: printText!,
+                                          color: textColor,
+                                          font: font,
+                                          maxWidth: rect.width - 8,
+                                          maxHeight: rect.height - 4,
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    // "LIVE PREVIEW" chip.
+                    Positioned(
+                      top: 12,
+                      left: 12,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          gradient: AppColors.auroraGradient,
+                          borderRadius: BorderRadius.circular(999),
+                        ),
+                        child: const Text(
+                          'LIVE PREVIEW',
+                          style: TextStyle(
+                            fontFamily: 'JetBrainsMono',
+                            fontSize: 9,
+                            letterSpacing: 1.5,
+                            color: AppColors.ink950,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    // Share-PNG button.
+                    Positioned(
+                      top: 10,
+                      right: 10,
+                      child: Material(
+                        color: Colors.black.withValues(alpha: 0.35),
+                        shape: const StadiumBorder(),
+                        child: InkWell(
+                          customBorder: const StadiumBorder(),
+                          onTap: onShare,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 6,
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (sharing)
+                                  const SizedBox(
+                                    width: 12,
+                                    height: 12,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 1.6,
+                                      color: AppColors.signalLime,
+                                    ),
+                                  )
+                                else
+                                  const Icon(
+                                    Icons.ios_share,
+                                    size: 14,
+                                    color: AppColors.signalLime,
+                                  ),
+                                const SizedBox(width: 6),
+                                const Text(
+                                  'PNG',
+                                  style: TextStyle(
+                                    color: AppColors.signalLime,
+                                    fontFamily: 'JetBrainsMono',
+                                    fontSize: 10,
+                                    letterSpacing: 1.5,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    // Subtle print-area outline so drag target is discoverable.
+                    Positioned.fromRect(
+                      rect: rect,
+                      child: IgnorePointer(
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: AppColors.signalLime
+                                  .withValues(alpha: 0.28),
+                              width: 1,
+                            ),
+                            borderRadius: garment.printShape == 'rect' ||
+                                    garment.printShape == 'full'
+                                ? BorderRadius.circular(4)
+                                : null,
+                            shape: garment.printShape == 'circle'
+                                ? BoxShape.circle
+                                : BoxShape.rectangle,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
-            Positioned(
-              top: 12,
-              left: 12,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  gradient: AppColors.auroraGradient,
-                  borderRadius: BorderRadius.circular(999),
-                ),
-                child: const Text(
-                  'LIVE PREVIEW',
-                  style: TextStyle(
-                    fontFamily: 'JetBrainsMono',
-                    fontSize: 9,
-                    letterSpacing: 1.5,
-                    color: AppColors.ink950,
-                    fontWeight: FontWeight.w800,
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Turn a relative `/uploads/designs/x.png` into an absolute URL the
+  /// mobile `Image.network` can fetch. In demo mode uploads never happen,
+  /// so this branch isn't normally reached.
+  String _resolveNetworkUrl(String url) {
+    if (url.startsWith('http://') || url.startsWith('https://')) return url;
+    final base = Env.apiBaseUrl;
+    if (base.isEmpty || base.startsWith('demo://')) return url;
+    final b = base.endsWith('/') ? base.substring(0, base.length - 1) : base;
+    final u = url.startsWith('/') ? url : '/$url';
+    return '$b$u';
+  }
+}
+
+/// Clips the overlay to match the print area shape. For `full` posters we
+/// keep the full rect; for `circle` we clip to a circle; for everything
+/// else we use a soft rounded rect so the print has a subtle frame.
+class _PrintAreaClipper extends CustomClipper<Path> {
+  const _PrintAreaClipper({required this.shape});
+  final String shape;
+
+  @override
+  Path getClip(Size size) {
+    final path = Path();
+    switch (shape) {
+      case 'circle':
+        path.addOval(Rect.fromLTWH(0, 0, size.width, size.height));
+        break;
+      case 'full':
+        path.addRect(Rect.fromLTWH(0, 0, size.width, size.height));
+        break;
+      default:
+        path.addRRect(
+          RRect.fromRectAndRadius(
+            Rect.fromLTWH(0, 0, size.width, size.height),
+            const Radius.circular(6),
+          ),
+        );
+    }
+    return path;
+  }
+
+  @override
+  bool shouldReclip(_PrintAreaClipper old) => old.shape != shape;
+}
+
+/// Auto-fitting overlay text — picks the largest font size that fits in the
+/// print rect on a single line. Mirrors the painter's old behaviour but uses
+/// GoogleFonts so the user's Display/Mono/Sans choice actually shows up.
+class _OverlayText extends StatelessWidget {
+  const _OverlayText({
+    required this.text,
+    required this.color,
+    required this.font,
+    required this.maxWidth,
+    required this.maxHeight,
+  });
+  final String text;
+  final Color color;
+  final _FontOption font;
+  final double maxWidth;
+  final double maxHeight;
+
+  @override
+  Widget build(BuildContext context) {
+    // Normalise same way the painter does so mobile ↔ web look identical.
+    final first =
+        text.trim().split(RegExp(r'\s+')).first.replaceAll(RegExp(r'[….]+$'), '');
+    final label =
+        (first.length <= 7 ? first : first.substring(0, 5)).toUpperCase();
+
+    // Try progressively smaller font sizes until it fits.
+    double size = maxWidth * 0.26; // ≈ painter's 42px at 400px viewBox
+    if (size > maxHeight * 0.6) size = maxHeight * 0.6;
+    const minSize = 14.0;
+
+    while (size >= minSize) {
+      final tp = TextPainter(
+        text: TextSpan(
+          text: label,
+          style: GoogleFonts.getFont(
+            font.googleFamily,
+            color: color,
+            fontSize: size,
+            fontWeight: FontWeight.w800,
+            letterSpacing: -0.4,
+            height: 1.0,
+          ),
+        ),
+        maxLines: 1,
+        textAlign: TextAlign.center,
+        textDirection: TextDirection.ltr,
+      )..layout();
+      if (tp.width <= maxWidth && tp.height <= maxHeight) break;
+      size -= 2;
+    }
+
+    return Text(
+      label,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      textAlign: TextAlign.center,
+      style: GoogleFonts.getFont(
+        font.googleFamily,
+        color: color,
+        fontSize: size,
+        fontWeight: FontWeight.w800,
+        letterSpacing: -0.4,
+        height: 1.0,
+      ),
+    );
+  }
+}
+
+/// Simple pill-style tab bar for the three Studio modes.
+class _StudioTabBar extends StatelessWidget {
+  const _StudioTabBar({required this.selected, required this.onSelect});
+  final _StudioTab selected;
+  final ValueChanged<_StudioTab> onSelect;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.04),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+      ),
+      child: Row(
+        children: [
+          for (final t in _StudioTab.values)
+            Expanded(
+              child: InkWell(
+                onTap: () => onSelect(t),
+                borderRadius: BorderRadius.circular(999),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: t == selected
+                        ? AppColors.signalLime.withValues(alpha: 0.14)
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: Text(
+                    t.label.toUpperCase(),
+                    style: TextStyle(
+                      fontFamily: 'JetBrainsMono',
+                      fontSize: 10,
+                      letterSpacing: 1.5,
+                      fontWeight: FontWeight.w700,
+                      color: t == selected
+                          ? AppColors.signalLime
+                          : AppColors.ink200,
+                    ),
                   ),
                 ),
               ),
             ),
-          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// Three-chip font picker — maps 1:1 to web's `FONTS` list.
+class _FontPickerRow extends StatelessWidget {
+  const _FontPickerRow({required this.selected, required this.onSelect});
+  final _FontOption selected;
+  final ValueChanged<_FontOption> onSelect;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        for (final f in _fonts) ...[
+          Expanded(
+            child: InkWell(
+              borderRadius: BorderRadius.circular(10),
+              onTap: () => onSelect(f),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 160),
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                decoration: BoxDecoration(
+                  color: f.id == selected.id
+                      ? AppColors.signalLime.withValues(alpha: 0.12)
+                      : Colors.white.withValues(alpha: 0.03),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: f.id == selected.id
+                        ? AppColors.signalLime
+                        : Colors.white.withValues(alpha: 0.08),
+                  ),
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  f.label,
+                  style: GoogleFonts.getFont(
+                    f.googleFamily,
+                    color: f.id == selected.id
+                        ? AppColors.ink50
+                        : AppColors.ink100,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          if (f != _fonts.last) const SizedBox(width: 8),
+        ],
+      ],
+    );
+  }
+}
+
+/// Image-upload tile for the Image tab. Shows the picked image (or a hint)
+/// plus two source buttons (Gallery + Camera) and a clear action.
+class _ImagePickerCard extends StatelessWidget {
+  const _ImagePickerCard({
+    required this.bytes,
+    required this.fileName,
+    required this.state,
+    required this.onPickGallery,
+    required this.onPickCamera,
+    required this.onClear,
+  });
+  final Uint8List? bytes;
+  final String? fileName;
+  final _UploadState state;
+  final VoidCallback onPickGallery;
+  final VoidCallback onPickCamera;
+  final VoidCallback onClear;
+
+  @override
+  Widget build(BuildContext context) {
+    final hasImage = bytes != null;
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.03),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: hasImage
+              ? AppColors.signalLime.withValues(alpha: 0.4)
+              : AppColors.paper300.withValues(alpha: 0.6),
+          style: hasImage ? BorderStyle.solid : BorderStyle.solid,
         ),
       ),
+      child: Column(
+        children: [
+          if (hasImage)
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.memory(
+                bytes!,
+                height: 120,
+                fit: BoxFit.contain,
+              ),
+            )
+          else
+            Column(
+              children: [
+                const Icon(
+                  Icons.photo_library_outlined,
+                  color: AppColors.ink300,
+                  size: 28,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Drop PNG, JPG, SVG',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                Text(
+                  'up to 5 MB · transparent recommended',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ],
+            ),
+          const SizedBox(height: 12),
+          if (hasImage && state == _UploadState.uploading)
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 12,
+                  height: 12,
+                  child: CircularProgressIndicator(strokeWidth: 1.6),
+                ),
+                SizedBox(width: 8),
+                Text('Uploading…', style: TextStyle(fontSize: 12)),
+              ],
+            ),
+          if (hasImage && state == _UploadState.done)
+            Text(
+              '✓ ${fileName ?? 'uploaded'}',
+              style: const TextStyle(
+                color: AppColors.signalLimeInk,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          if (hasImage && state == _UploadState.error)
+            const Text(
+              '⚠ Preview only — upload failed. Still prints from local copy on cart submit.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: AppColors.signalCoral,
+                fontSize: 11,
+              ),
+            ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: onPickGallery,
+                  icon: const Icon(Icons.image_outlined, size: 16),
+                  label: Text(hasImage ? 'Replace' : 'Gallery'),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: onPickCamera,
+                  icon: const Icon(Icons.photo_camera_outlined, size: 16),
+                  label: const Text('Camera'),
+                ),
+              ),
+              if (hasImage) ...[
+                const SizedBox(width: 8),
+                IconButton(
+                  tooltip: 'Remove',
+                  onPressed: onClear,
+                  icon: const Icon(Icons.close, size: 18),
+                ),
+              ],
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// 2-column grid of preset lines — mirrors web `PRESET_LINES`.
+class _PresetLinesGrid extends StatelessWidget {
+  const _PresetLinesGrid({required this.current, required this.onPick});
+  final String current;
+  final ValueChanged<String> onPick;
+
+  static const _lines = <String>[
+    'Building...',
+    'v1.0',
+    'No Days Off',
+    'Offline Mode',
+    'Founder Energy',
+    'Late Night Shipping',
+    'Ship It',
+    '0 -> 1',
+    '404 / not found',
+    '\$ npm run launch',
+    '// founder mode',
+    'Online forever',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: [
+        for (final line in _lines)
+          _PresetChip(
+            label: line,
+            selected: line == current,
+            onTap: () => onPick(line),
+          ),
+      ],
+    );
+  }
+}
+
+class _PresetChip extends StatelessWidget {
+  const _PresetChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: selected
+              ? AppColors.signalLime.withValues(alpha: 0.12)
+              : Colors.white.withValues(alpha: 0.03),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: selected
+                ? AppColors.signalLime
+                : Colors.white.withValues(alpha: 0.08),
+          ),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontFamily: 'JetBrainsMono',
+            fontSize: 11,
+            fontWeight: FontWeight.w700,
+            color: selected ? AppColors.ink50 : AppColors.ink100,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Four sliders + a reset button — mirrors the web Studio's "03 · Fine-tune"
+/// card. Adjusts posX / posY / scale / rotation of the design overlay.
+class _FineTuneCard extends StatelessWidget {
+  const _FineTuneCard({
+    required this.posX,
+    required this.posY,
+    required this.scale,
+    required this.rotation,
+    required this.onPosX,
+    required this.onPosY,
+    required this.onScale,
+    required this.onRotation,
+    required this.onReset,
+  });
+  final double posX;
+  final double posY;
+  final double scale;
+  final double rotation;
+  final ValueChanged<double> onPosX;
+  final ValueChanged<double> onPosY;
+  final ValueChanged<double> onScale;
+  final ValueChanged<double> onRotation;
+  final VoidCallback onReset;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.03),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              const Expanded(
+                child: Text(
+                  'Drag directly on the mockup — or use the sliders.',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: AppColors.ink300,
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: onReset,
+                child: const Text('Reset'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          _slider('Horizontal', posX, -50, 50, onPosX, suffix: '%'),
+          _slider('Vertical', posY, -50, 50, onPosY, suffix: '%'),
+          _slider('Scale', scale, 0.4, 1.6, onScale, step: 0.05),
+          _slider('Rotate', rotation, -45, 45, onRotation, suffix: '°'),
+        ],
+      ),
+    );
+  }
+
+  Widget _slider(
+    String label,
+    double value,
+    double min,
+    double max,
+    ValueChanged<double> onChanged, {
+    String suffix = '',
+    double step = 1,
+  }) {
+    final display = value is int || value == value.roundToDouble()
+        ? value.toInt().toString()
+        : value.toStringAsFixed(2);
+    return Row(
+      children: [
+        SizedBox(
+          width: 76,
+          child: Text(
+            label,
+            style: const TextStyle(
+              fontFamily: 'JetBrainsMono',
+              fontSize: 10,
+              color: AppColors.ink300,
+              letterSpacing: 1.4,
+            ),
+          ),
+        ),
+        Expanded(
+          child: Slider(
+            value: value.clamp(min, max),
+            min: min,
+            max: max,
+            divisions: ((max - min) / step).round(),
+            activeColor: AppColors.signalLime,
+            inactiveColor: AppColors.paper200,
+            onChanged: onChanged,
+          ),
+        ),
+        SizedBox(
+          width: 40,
+          child: Text(
+            '$display$suffix',
+            textAlign: TextAlign.right,
+            style: const TextStyle(
+              fontFamily: 'JetBrainsMono',
+              fontSize: 11,
+              color: AppColors.ink100,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

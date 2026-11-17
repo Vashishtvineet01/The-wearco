@@ -56,6 +56,33 @@ class MobileProductMockup extends StatelessWidget {
     final yiq = (r * 299 + g * 587 + b * 114) / 1000;
     return yiq > 160;
   }
+
+  /// Normalised print area (x, y, w, h all in 0..1) for a given category.
+  ///
+  /// Keeps parity with the painter's `_printRect()` — just divided by 400
+  /// (the viewBox we scale from). Used by the Design canvas to place a
+  /// text / image overlay exactly where the painter would draw text, so
+  /// drag-to-position, scale and rotate controls line up with the fabric.
+  static Rect printAreaFor(String category) {
+    switch (category) {
+      case 'hoodie':
+        return const Rect.fromLTWH(128 / 400, 128 / 400, 144 / 400, 112 / 400);
+      case 'sweatshirt':
+        return const Rect.fromLTWH(120 / 400, 128 / 400, 160 / 400, 112 / 400);
+      case 'cap':
+        return const Rect.fromLTWH(120 / 400, 140 / 400, 160 / 400, 72 / 400);
+      case 'mug':
+        return const Rect.fromLTWH(100 / 400, 152 / 400, 176 / 400, 112 / 400);
+      case 'badge':
+        return const Rect.fromLTWH(112 / 400, 112 / 400, 176 / 400, 176 / 400);
+      case 'poster':
+        return const Rect.fromLTWH(56 / 400, 56 / 400, 288 / 400, 288 / 400);
+      case 'tee':
+      case 'sleeve':
+      default:
+        return const Rect.fromLTWH(120 / 400, 112 / 400, 160 / 400, 120 / 400);
+    }
+  }
 }
 
 class _GarmentPainter extends CustomPainter {

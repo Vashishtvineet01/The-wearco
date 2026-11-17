@@ -29,6 +29,12 @@ dependencies:
   # Fonts
   google_fonts: ^6.2.1
 
+  # Design tab — pick artwork from gallery / camera and share the
+  # generated mockup as a PNG.
+  image_picker: ^1.1.2
+  path_provider: ^2.1.4
+  share_plus: ^10.1.1
+
   cupertino_icons: ^1.0.8
 
 dev_dependencies:
