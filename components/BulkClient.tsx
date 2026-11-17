@@ -209,50 +209,66 @@ export default function BulkClient({ products }: { products: Product[] }) {
         {/* LEFT — product + calc */}
         <section className="lg:col-span-7">
           <div className="card p-5">
-            <div className="mb-4 flex items-center justify-between">
-              <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-paper-600">
-                01 · Pick a product
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-paper-600">
+                  01 · Pick a product
+                </div>
+                <span className="font-mono text-[10px] text-paper-500">
+                  · {products.length} available
+                </span>
               </div>
               {product && (
-                <span className="tag">
+                <span className="tag shrink-0">
                   {CATEGORY_LABELS[product.category]} · from{" "}
                   {formatINR(product.price)}
                 </span>
               )}
             </div>
 
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-              {products.map((p) => (
-                <button
-                  key={p.slug}
-                  type="button"
-                  onClick={() => onPickProduct(p.slug)}
-                  className={`card group flex items-center gap-3 p-2 text-left transition ${
-                    product?.slug === p.slug
-                      ? "border-signal-lime/60 bg-signal-lime/5"
-                      : "hover:border-paper-400"
-                  }`}
-                >
-                  <div className="h-14 w-14 shrink-0 overflow-hidden rounded-md bg-paper-100">
-                    <ProductMockup
-                      category={p.category}
-                      fabric={p.colors[0].fabric}
-                      printArea={p.printArea}
-                      printShape={p.printShape}
-                      printText={p.name.split(" ")[0]}
-                      printColor={p.colors[0].printDefault}
-                    />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="truncate font-display text-sm font-semibold">
-                      {p.name}
-                    </div>
-                    <div className="font-mono text-[10px] text-paper-500">
-                      {formatINR(p.price)}
-                    </div>
-                  </div>
-                </button>
-              ))}
+            {/* Scrollable product picker — shows ~2 rows at a time with a soft
+                bottom fade hint so the whole hub fits on one screen. */}
+            <div className="relative">
+              <div className="studio-scroll max-h-[260px] overflow-y-auto pr-1 sm:max-h-[280px]">
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                  {products.map((p) => (
+                    <button
+                      key={p.slug}
+                      type="button"
+                      onClick={() => onPickProduct(p.slug)}
+                      className={`card group flex items-center gap-2.5 p-2 text-left transition ${
+                        product?.slug === p.slug
+                          ? "border-signal-lime/60 bg-signal-lime/5"
+                          : "hover:border-paper-400"
+                      }`}
+                    >
+                      <div className="h-12 w-12 shrink-0 overflow-hidden rounded-md bg-paper-100">
+                        <ProductMockup
+                          category={p.category}
+                          fabric={p.colors[0].fabric}
+                          printArea={p.printArea}
+                          printShape={p.printShape}
+                          printText={p.name.split(" ")[0]}
+                          printColor={p.colors[0].printDefault}
+                        />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="truncate font-display text-xs font-semibold leading-tight">
+                          {p.name}
+                        </div>
+                        <div className="mt-0.5 font-mono text-[10px] text-paper-500">
+                          {formatINR(p.price)}
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+              {/* Soft fade hint so the grid reads as scrollable rather than clipped. */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-x-0 bottom-0 h-8 rounded-b-xl bg-gradient-to-t from-paper-50 to-transparent"
+              />
             </div>
           </div>
 
