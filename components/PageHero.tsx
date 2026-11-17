@@ -67,21 +67,33 @@ export default function PageHero({
 }: Props) {
   return (
     <section
-      className={`relative overflow-hidden rounded-3xl border border-paper-200 bg-paper-50/40 ${SPOTLIGHT[spotlight]} ${
+      className={`aurora-border relative overflow-hidden rounded-3xl border border-paper-200/80 bg-paper-50/50 ${SPOTLIGHT[spotlight]} ${
         compact ? "px-6 py-10 md:px-10 md:py-12" : "px-6 py-12 md:px-10 md:py-16"
       } ${className}`}
     >
-      <Aurora blobs={BLOBS[spotlight]} />
+      <Aurora
+        blobs={BLOBS[spotlight].map((b) => ({
+          ...b,
+          opacity: Math.min(0.65, (b.opacity ?? 0.4) + 0.1),
+        }))}
+      />
       <span
         aria-hidden
-        className="pointer-events-none absolute left-[7%] top-[18%] text-2xl text-signal-violet/55 animate-float"
+        className="pointer-events-none absolute left-[7%] top-[18%] text-2xl text-signal-violet/65 animate-float"
       >
         ✦
       </span>
       <span
         aria-hidden
-        className="pointer-events-none absolute right-[11%] top-[30%] text-xl text-signal-coral/60 animate-float"
+        className="pointer-events-none absolute right-[11%] top-[30%] text-xl text-signal-coral/70 animate-float"
         style={{ animationDelay: "900ms" }}
+      >
+        ✦
+      </span>
+      <span
+        aria-hidden
+        className="pointer-events-none absolute bottom-[20%] left-[42%] text-lg text-signal-limeInk/60 animate-float"
+        style={{ animationDelay: "1600ms" }}
       >
         ✦
       </span>

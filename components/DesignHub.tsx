@@ -43,13 +43,13 @@ export default function DesignHub({ products }: { products: Product[] }) {
   return (
     <div className="relative mx-auto max-w-7xl px-5 pb-16 pt-8 lg:px-8 lg:pt-12">
       {/* Hero */}
-      <section className="spotlight-violet relative mb-10 overflow-hidden rounded-3xl border border-paper-200 bg-paper-50/40 px-6 py-12 text-center md:mb-14 md:px-10 md:py-16">
+      <section className="spotlight-violet aurora-border relative mb-10 overflow-hidden rounded-3xl border border-paper-200/80 bg-paper-50/50 px-6 py-12 text-center md:mb-14 md:px-10 md:py-16">
         <Aurora
           blobs={[
-            { color: "violet", size: 420, top: "-140px", left: "-120px", opacity: 0.55 },
-            { color: "coral", size: 380, top: "-80px", right: "-100px", delay: 3, opacity: 0.42 },
-            { color: "lime", size: 320, bottom: "-160px", left: "30%", delay: 6, opacity: 0.38, slow: true },
-            { color: "peach", size: 300, bottom: "-120px", right: "-60px", delay: 9, opacity: 0.32, slow: true },
+            { color: "violet", size: 420, top: "-140px", left: "-120px", opacity: 0.6 },
+            { color: "coral", size: 380, top: "-80px", right: "-100px", delay: 3, opacity: 0.5 },
+            { color: "lime", size: 320, bottom: "-160px", left: "30%", delay: 6, opacity: 0.45, slow: true },
+            { color: "peach", size: 300, bottom: "-120px", right: "-60px", delay: 9, opacity: 0.38, slow: true },
           ]}
         />
         {/* Floating sparkles for extra personality */}
@@ -75,7 +75,7 @@ export default function DesignHub({ products }: { products: Product[] }) {
         <div
           role="tablist"
           aria-label="Design mode"
-          className="inline-flex items-center gap-1 rounded-full border border-paper-200 bg-paper-100/60 p-1 shadow-sm"
+          className="inline-flex items-center gap-1 rounded-full border border-paper-200 bg-paper-100/80 p-1 shadow-[0_12px_32px_-16px_rgba(124,92,255,0.35)]"
         >
           <TabButton
             active={view === "me"}
@@ -102,7 +102,7 @@ export default function DesignHub({ products }: { products: Product[] }) {
       </div>
 
       {/* Cross-link strip */}
-      <div className="mt-20 rounded-2xl border border-paper-200 bg-paper-100/40 p-6 text-center md:p-10">
+      <div className="card-violet aurora-border mt-20 p-6 text-center md:p-10">
         <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
           // Also worth knowing
         </div>
@@ -117,7 +117,7 @@ export default function DesignHub({ products }: { products: Product[] }) {
         <div className="mt-5">
           <button
             onClick={() => setView(view === "me" ? "team" : "me")}
-            className="btn-ghost"
+            className="btn-primary"
           >
             {view === "me" ? "Switch to team view →" : "Switch to solo view →"}
           </button>

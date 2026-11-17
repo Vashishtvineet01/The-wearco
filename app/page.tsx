@@ -154,12 +154,12 @@ function HeroCard({
 }) {
   return (
     <div
-      className={`card-feature gradient-ring animate-fade-in-up p-4 transition-transform duration-500 ${tilt} hover:rotate-0 hover:-translate-y-1`}
+      className={`card-feature aurora-border animate-fade-in-up p-4 transition-transform duration-500 ${tilt} hover:rotate-0 hover:-translate-y-2 hover:scale-[1.02]`}
       style={{ animationDelay: `${delay}ms` }}
     >
       <div className="tag-aurora absolute left-3 top-3 z-10">{badge}</div>
       <div
-        className="w-full animate-float"
+        className="w-full animate-float-soft"
         style={{ animationDelay: `${delay % 600}ms` }}
       >
         <ProductMockup
@@ -290,8 +290,10 @@ function PrintYourOwnSection() {
         </ScrollReveal>
 
         <ScrollReveal delay={150}>
-          <div className="card gradient-ring relative p-6">
-            <div className="absolute left-6 top-6 tag">// preview.live</div>
+          <div className="card-ink aurora-border relative p-6">
+            <div className="absolute left-6 top-6 tag border-white/15 bg-white/10 text-paper-50">
+              // preview.live
+            </div>
             <div className="tag-aurora absolute right-6 top-6">Editing</div>
             <div className="mt-12 w-full animate-float">
               <ProductMockup
@@ -303,19 +305,19 @@ function PrintYourOwnSection() {
               />
             </div>
             <div className="mt-4 grid grid-cols-3 gap-2 text-xs">
-              <div className="card p-3 text-center">
-                <div className="font-mono text-[10px] uppercase text-paper-500">size</div>
-                <div className="mt-1 font-display font-semibold">L</div>
+              <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-center">
+                <div className="font-mono text-[10px] uppercase text-paper-50/50">size</div>
+                <div className="mt-1 font-display font-semibold text-paper-50">L</div>
               </div>
-              <div className="card p-3 text-center">
-                <div className="font-mono text-[10px] uppercase text-paper-500">color</div>
+              <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-center">
+                <div className="font-mono text-[10px] uppercase text-paper-50/50">color</div>
                 <div className="mt-1 flex justify-center">
-                  <span className="h-4 w-4 rounded-full border border-paper-400 bg-paper-100" />
+                  <span className="h-4 w-4 rounded-full border border-white/30 bg-paper-100" />
                 </div>
               </div>
-              <div className="card p-3 text-center">
-                <div className="font-mono text-[10px] uppercase text-paper-500">price</div>
-                <div className="mt-1 font-display font-semibold">₹999</div>
+              <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-center">
+                <div className="font-mono text-[10px] uppercase text-paper-50/50">price</div>
+                <div className="mt-1 font-display font-semibold text-signal-lime">₹999</div>
               </div>
             </div>
           </div>
@@ -326,8 +328,9 @@ function PrintYourOwnSection() {
 }
 
 function DropsTimeline({ drops }: { drops: string[] }) {
+  const tint = ["card-violet", "card-coral", "card-lime", "card-sky"] as const;
   return (
-    <section className="spotlight-ocean relative overflow-hidden">
+    <section className="band-ocean relative overflow-hidden">
       <div className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
       <ScrollReveal>
         <div className="mb-10">
@@ -345,17 +348,25 @@ function DropsTimeline({ drops }: { drops: string[] }) {
       <div className="grid gap-4 lg:grid-cols-3">
         {drops.map((d, i) => (
           <ScrollReveal key={d} delay={i * 120}>
-            <div className="card-hover gradient-ring group relative p-6">
+            <div className={`${tint[i % tint.length]} aurora-border group relative p-6`}>
               <div className="font-mono text-xs text-paper-500">
                 DROP / {String(i + 1).padStart(2, "0")}
               </div>
               <div className="mt-2 font-display text-2xl font-semibold">{d}</div>
               <p className="mt-2 text-sm text-paper-600">{dropDescription(d)}</p>
               <div className="mt-6 flex items-center gap-2 text-xs">
-                <span className="tag">
+                <span
+                  className={`tag ${
+                    i === 2
+                      ? "border-signal-lime/50 bg-signal-lime/20 text-signal-limeInk"
+                      : i === 1
+                        ? "border-signal-coral/40 bg-signal-coral/10 text-signal-coral"
+                        : ""
+                  }`}
+                >
                   <span
                     className={`h-1.5 w-1.5 rounded-full ${
-                      i === 2 ? "animate-glow bg-signal-lime" : "bg-ink-300"
+                      i === 2 ? "animate-glow bg-signal-lime" : i === 1 ? "bg-signal-coral" : "bg-ink-300"
                     }`}
                   />
                   {i === 2 ? "Live now" : i === 1 ? "Sold out" : "Archived"}
@@ -382,13 +393,20 @@ function dropDescription(drop: string) {
 }
 
 function CommunitySection() {
+  const perks = [
+    { label: "Late Night Founders Discord", surface: "card-violet" },
+    { label: "Monthly office hours", surface: "card-coral" },
+    { label: "Early drops", surface: "card-lime" },
+    { label: "AI-curated playlists", surface: "card-sky" },
+  ] as const;
+
   return (
-    <section className="relative overflow-hidden">
+    <section className="band-violet relative overflow-hidden">
       <div className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
         <ScrollReveal>
-          <div className="card gradient-ring relative grid gap-10 overflow-hidden p-8 md:p-14 lg:grid-cols-2">
-            <div className="absolute -right-32 -top-32 h-72 w-72 animate-drift rounded-full bg-signal-violet/25 blur-3xl" />
-            <div className="absolute -bottom-32 -left-32 h-72 w-72 animate-drift-slow rounded-full bg-signal-coral/15 blur-3xl" />
+          <div className="card-feature aurora-border relative grid gap-10 overflow-hidden p-8 md:p-14 lg:grid-cols-2">
+            <div className="absolute -right-32 -top-32 h-72 w-72 animate-drift rounded-full bg-signal-violet/35 blur-3xl" />
+            <div className="absolute -bottom-32 -left-32 h-72 w-72 animate-drift-slow rounded-full bg-signal-coral/25 blur-3xl" />
 
             <div className="relative">
               <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
@@ -413,18 +431,16 @@ function CommunitySection() {
             </div>
 
             <div className="relative grid grid-cols-2 gap-3">
-              {["Late Night Founders Discord", "Monthly office hours", "Early drops", "AI-curated playlists"].map(
-                (perk, i) => (
-                  <ScrollReveal key={perk} delay={i * 80}>
-                    <div className="rounded-xl border border-paper-200 bg-paper-200 p-4 backdrop-blur transition hover:border-signal-violet/40 hover:bg-paper-200/80">
-                      <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-signal-limeInk">
-                        PERK
-                      </div>
-                      <div className="mt-2 font-display text-base font-semibold">{perk}</div>
+              {perks.map((perk, i) => (
+                <ScrollReveal key={perk.label} delay={i * 80}>
+                  <div className={`${perk.surface} p-4`}>
+                    <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-signal-limeInk">
+                      PERK
                     </div>
-                  </ScrollReveal>
-                )
-              )}
+                    <div className="mt-2 font-display text-base font-semibold">{perk.label}</div>
+                  </div>
+                </ScrollReveal>
+              ))}
             </div>
           </div>
         </ScrollReveal>

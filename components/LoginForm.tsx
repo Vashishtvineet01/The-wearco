@@ -142,7 +142,7 @@ export default function LoginForm() {
         </aside>
 
         {/* Form panel */}
-        <section className="relative flex flex-col justify-center bg-paper-50 px-5 py-12 sm:px-10 lg:px-14 lg:py-16">
+        <section className="spotlight-violet relative flex flex-col justify-center px-5 py-12 sm:px-10 lg:px-14 lg:py-16">
           {/* Mobile brand header */}
           <div className="mb-8 lg:hidden">
             <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
@@ -156,7 +156,7 @@ export default function LoginForm() {
             </p>
           </div>
 
-          <div className="mx-auto w-full max-w-md">
+          <div className="card-feature aurora-border mx-auto w-full max-w-md p-6 sm:p-8">
             <div className="hidden lg:block">
               <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
                 // {method === "phone" ? "Phone OTP" : mode === "signup" ? "Create account" : "Email & password"}
@@ -179,7 +179,7 @@ export default function LoginForm() {
             </div>
 
             {/* Method switch */}
-            <div className="mt-6 flex rounded-full border border-paper-200 bg-paper-100/80 p-1">
+            <div className="mt-6 flex rounded-full border border-paper-200 bg-white/70 p-1 shadow-[0_8px_24px_-14px_rgba(124,92,255,0.35)]">
               {(
                 [
                   ["phone", "Phone OTP"],
@@ -197,7 +197,7 @@ export default function LoginForm() {
                   }}
                   className={`flex-1 rounded-full px-3 py-2.5 text-xs font-semibold uppercase tracking-[0.12em] transition sm:text-[11px] ${
                     method === id
-                      ? "bg-ink-950 text-paper-50 shadow-sm"
+                      ? "bg-ink-950 text-paper-50 shadow-[0_8px_20px_-8px_rgba(124,92,255,0.5)]"
                       : "text-paper-600 hover:text-paper-900"
                   }`}
                 >
@@ -212,8 +212,8 @@ export default function LoginForm() {
                 {otpStep === "phone" ? (
                   <form onSubmit={onSendOtp} className="flex flex-col gap-4">
                     <Field label="Mobile number">
-                      <div className="flex overflow-hidden rounded-2xl border border-paper-200 bg-white focus-within:border-signal-violetInk/50">
-                        <span className="flex items-center border-r border-paper-200 bg-paper-100 px-4 font-mono text-sm text-paper-700">
+                      <div className="flex overflow-hidden rounded-2xl border border-signal-violet/25 bg-white shadow-[0_8px_24px_-16px_rgba(124,92,255,0.35)] transition focus-within:border-signal-violetInk/60 focus-within:shadow-[0_12px_28px_-14px_rgba(124,92,255,0.45)]">
+                        <span className="flex items-center border-r border-paper-200 bg-signal-violet/5 px-4 font-mono text-sm text-paper-700">
                           +91
                         </span>
                         <input
@@ -262,7 +262,7 @@ export default function LoginForm() {
                           setCode(e.target.value.replace(/\D/g, "").slice(0, 6))
                         }
                         placeholder="••••••"
-                        className="w-full rounded-2xl border border-paper-200 bg-white px-4 py-3.5 text-center font-mono text-2xl tracking-[0.4em] outline-none focus:border-signal-violetInk/50"
+                        className="w-full rounded-2xl border border-signal-violet/25 bg-white px-4 py-3.5 text-center font-mono text-2xl tracking-[0.4em] outline-none shadow-[0_8px_24px_-16px_rgba(124,92,255,0.35)] transition focus:border-signal-violetInk/60"
                         autoComplete="one-time-code"
                       />
                     </Field>
@@ -292,7 +292,7 @@ export default function LoginForm() {
             {/* Email + password */}
             {method === "password" && (
               <div className="mt-6">
-                <div className="mb-4 flex rounded-full border border-paper-200 p-1">
+                <div className="mb-4 flex rounded-full border border-paper-200 bg-white/70 p-1">
                   {(
                     [
                       ["signin", "Sign in"],
@@ -308,8 +308,8 @@ export default function LoginForm() {
                       }}
                       className={`flex-1 rounded-full px-3 py-2 text-sm font-semibold transition ${
                         mode === id
-                          ? "bg-signal-lime/15 text-signal-limeInk"
-                          : "text-paper-600"
+                          ? "bg-signal-lime text-ink-950 shadow-[0_8px_20px_-8px_rgba(216,255,54,0.55)]"
+                          : "text-paper-600 hover:text-paper-900"
                       }`}
                     >
                       {label}
@@ -398,7 +398,7 @@ export default function LoginForm() {
 }
 
 const inputClass =
-  "w-full rounded-2xl border border-paper-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-signal-violetInk/50";
+  "w-full rounded-2xl border border-signal-violet/25 bg-white px-4 py-3 text-sm outline-none shadow-[0_8px_24px_-16px_rgba(124,92,255,0.3)] transition focus:border-signal-violetInk/60 focus:shadow-[0_12px_28px_-14px_rgba(124,92,255,0.4)]";
 
 function Field({
   label,

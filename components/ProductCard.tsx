@@ -44,12 +44,12 @@ export default function ProductCard({ product }: { product: Product }) {
   return (
     <Link
       href={`/product/${product.slug}`}
-      className="card-hover group relative block p-4"
+      className="card-hover aurora-border group relative block p-4"
     >
-      {/* Slim aurora accent bar at the top edge — gives every card a dash of brand colour. */}
+      {/* Slim aurora accent bar at the top edge — always faintly on, expands on hover. */}
       <span
         aria-hidden
-        className="pointer-events-none absolute inset-x-6 top-0 h-[2px] origin-left scale-x-0 rounded-full bg-gradient-aurora opacity-0 transition-all duration-500 group-hover:scale-x-100 group-hover:opacity-100"
+        className="pointer-events-none absolute inset-x-6 top-0 h-[3px] origin-left scale-x-50 rounded-full bg-gradient-aurora opacity-70 transition-all duration-500 group-hover:scale-x-100 group-hover:opacity-100"
       />
       <div className="absolute inset-x-4 top-4 z-10 flex items-start justify-between gap-2">
         <span className="tag max-w-[55%] min-w-0">
@@ -61,7 +61,7 @@ export default function ProductCard({ product }: { product: Product }) {
       </div>
 
       <div
-        className="relative mt-2 grid place-items-center overflow-hidden rounded-xl transition-all duration-500"
+        className="relative mt-2 grid min-h-[220px] place-items-center overflow-hidden rounded-xl transition-all duration-500"
         style={{
           // Light theme: LIGHT fabrics (bone, lime) get a soft midnight backdrop so
           // the garment silhouette pops. DARK fabrics (obsidian, graphite) get a soft
@@ -77,14 +77,14 @@ export default function ProductCard({ product }: { product: Product }) {
         {/* Soft radial accent behind the mockup so it pops without a flat color block. */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-70"
+          className="pointer-events-none absolute inset-0 opacity-80"
           style={{
             background: isDarkFabric(color.fabric)
-              ? "radial-gradient(60% 50% at 50% 55%, rgba(124,92,255,0.15), transparent 70%)"
-              : "radial-gradient(60% 50% at 50% 55%, rgba(216,255,54,0.22), transparent 70%)"
+              ? "radial-gradient(60% 50% at 50% 55%, rgba(124,92,255,0.28), transparent 70%)"
+              : "radial-gradient(60% 50% at 50% 55%, rgba(216,255,54,0.3), transparent 70%)"
           }}
         />
-        <div className="relative w-full transition-transform duration-500 ease-out group-hover:-translate-y-1 group-hover:scale-[1.03]">
+        <div className="relative w-full transition-transform duration-500 ease-out group-hover:-translate-y-2 group-hover:scale-[1.05]">
           <ProductMockup
             category={product.category}
             fabric={color.fabric}

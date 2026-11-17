@@ -73,7 +73,11 @@ const config: Config = {
         },
         float: {
           "0%, 100%": { transform: "translateY(0)" },
-          "50%": { transform: "translateY(-8px)" }
+          "50%": { transform: "translateY(-12px)" }
+        },
+        "float-soft": {
+          "0%, 100%": { transform: "translateY(0) rotate(0deg)" },
+          "50%": { transform: "translateY(-10px) rotate(1deg)" }
         },
         drift: {
           "0%, 100%": {
@@ -107,6 +111,7 @@ const config: Config = {
         marquee: "marquee 32s linear infinite",
         glow: "glow 2.4s ease-in-out infinite",
         float: "float 4.5s ease-in-out infinite",
+        "float-soft": "float-soft 5.5s ease-in-out infinite",
         drift: "drift 22s ease-in-out infinite",
         "drift-slow": "drift 36s ease-in-out infinite",
         "gradient-shift": "gradient-shift 6s ease infinite",

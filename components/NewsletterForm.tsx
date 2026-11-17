@@ -44,8 +44,8 @@ export default function NewsletterForm({
 
   const wrapperClass =
     variant === "centered"
-      ? "mx-auto mt-6 flex max-w-md items-center gap-2 rounded-full border border-paper-200 bg-paper-50 p-1"
-      : "flex items-center gap-2 rounded-full border border-paper-200 bg-paper-50 p-1";
+      ? "mx-auto mt-6 flex max-w-md items-center gap-2 rounded-full border border-paper-200 bg-white/90 p-1 shadow-[0_10px_28px_-16px_rgba(124,92,255,0.35)]"
+      : "flex items-center gap-2 rounded-full border border-paper-200 bg-white/90 p-1 shadow-[0_8px_20px_-14px_rgba(124,92,255,0.3)]";
 
   return (
     <div>
@@ -57,12 +57,12 @@ export default function NewsletterForm({
           onChange={(e) => setEmail(e.target.value)}
           placeholder={placeholder}
           disabled={status === "loading"}
-          className="flex-1 bg-transparent px-3 py-2 text-sm text-ink-50 outline-none placeholder:text-paper-500 disabled:opacity-50"
+          className="flex-1 bg-transparent px-3 py-2 text-sm text-paper-900 outline-none placeholder:text-paper-500 disabled:opacity-50"
         />
         <button
           type="submit"
           disabled={status === "loading"}
-          className="rounded-full bg-signal-lime px-4 py-2 text-xs font-medium text-ink-950 transition hover:scale-[1.02] disabled:opacity-60"
+          className="rounded-full bg-signal-lime px-4 py-2 text-xs font-medium text-ink-950 shadow-[0_8px_20px_-8px_rgba(216,255,54,0.55)] transition hover:scale-[1.03] disabled:opacity-60"
         >
           {status === "done"
             ? "On the list"
