@@ -111,16 +111,19 @@ export default function LoginForm() {
         <aside className="relative hidden overflow-hidden bg-ink-950 text-paper-50 lg:flex lg:flex-col lg:justify-between lg:p-12 xl:p-16">
           <div
             aria-hidden
-            className="absolute inset-0 bg-gradient-aurora opacity-90"
-            style={{ backgroundSize: "200% 200%" }}
+            className="absolute inset-0 opacity-95"
+            style={{
+              background:
+                "linear-gradient(145deg, #0a0b0f 0%, #102018 45%, #0f766e 100%)",
+            }}
           />
           <div
             aria-hidden
-            className="absolute -left-20 top-1/4 h-80 w-80 rounded-full bg-signal-lime/30 blur-3xl"
+            className="absolute -left-20 top-1/4 h-80 w-80 rounded-full bg-signal-lime/35 blur-3xl"
           />
           <div
             aria-hidden
-            className="absolute -right-16 bottom-1/4 h-72 w-72 rounded-full bg-signal-coral/40 blur-3xl"
+            className="absolute -right-16 bottom-1/4 h-72 w-72 rounded-full bg-signal-mint/30 blur-3xl"
           />
           <div className="relative">
             <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-50/70">

@@ -47,7 +47,7 @@ export default async function ShopPage() {
       {featured && (
         <Link
           href={`/product/${featured.slug}`}
-          className="group mt-10 grid overflow-hidden rounded-[28px] border border-paper-200 bg-[#12141a] shadow-[0_24px_80px_-48px_rgba(124,92,255,0.55)] lg:grid-cols-[1.1fr_0.9fr]"
+          className="group mt-10 grid overflow-hidden rounded-[28px] border border-paper-200 bg-[#0a0b0f] shadow-[0_24px_80px_-48px_rgba(10,11,15,0.55)] lg:grid-cols-[1.1fr_0.9fr]"
         >
           <div className="relative min-h-[280px] overflow-hidden p-8 md:min-h-[340px]">
             <div
@@ -55,7 +55,7 @@ export default async function ShopPage() {
               className="pointer-events-none absolute inset-0"
               style={{
                 background:
-                  "radial-gradient(50% 55% at 50% 50%, rgba(124,92,255,0.4), transparent 70%), radial-gradient(40% 40% at 85% 15%, rgba(216,255,54,0.15), transparent 55%)",
+                  "radial-gradient(50% 55% at 50% 50%, rgba(198,255,74,0.28), transparent 70%), radial-gradient(40% 40% at 85% 15%, rgba(20,184,166,0.2), transparent 55%)",
               }}
             />
             <div className="absolute left-6 top-6 z-10 flex gap-2">
@@ -91,7 +91,7 @@ export default async function ShopPage() {
               <span className="font-display text-2xl font-bold">
                 {formatINR(featured.price)}
               </span>
-              <span className="rounded-full bg-gradient-aurora px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-ink-950 transition group-hover:shadow-[0_8px_28px_-8px_rgba(124,92,255,0.7)]">
+              <span className="rounded-full bg-signal-lime px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-ink-950 transition group-hover:shadow-[0_8px_28px_-8px_rgba(198,255,74,0.7)]">
                 View piece →
               </span>
             </div>

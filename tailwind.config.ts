@@ -1,111 +1,122 @@
 import type { Config } from "tailwindcss";
 
+/**
+ * TheWearCo visual system v2 — cool stone + electric lime + teal.
+ * Deliberately not purple-pastel / cream-serif / broadsheet.
+ */
 const config: Config = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}"
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
       colors: {
-        // `paper` is the new light-theme neutral scale. Used for backgrounds,
-        // cards, borders. Low numbers = brightest surfaces, high numbers = text.
         paper: {
-          50: "#fafaf7",   // page background (clean near-white with a tiny warm tilt)
-          100: "#f4f3ee",  // elevated surfaces (cards, nav)
-          200: "#eaeae2",  // borders, dividers
-          300: "#d6d4c9",  // muted border on hover
-          400: "#a7a69b",  // muted icons
-          500: "#6f6d62",  // secondary text
-          600: "#4d4b43",  // primary body text alt
-          700: "#2e2c26",  // headings alt
-          800: "#1c1a16",
-          900: "#0f0d0a"
+          50: "#f3f4f6",
+          100: "#e8eaee",
+          200: "#d5d8e0",
+          300: "#b8bdc9",
+          400: "#8b91a1",
+          500: "#5c6374",
+          600: "#3f4554",
+          700: "#2a2e3a",
+          800: "#171a22",
+          900: "#0a0b0f",
         },
-        // Legacy ink scale kept for text colors + any dark-themed surface that
-        // we deliberately keep (hero highlight, mobile app, etc.). ink-50 →
-        // ink-950 goes light to dark as before.
         ink: {
-          50: "#f7f7f7",
-          100: "#e5e5e5",
-          200: "#c2c2c2",
-          300: "#9e9e9e",
-          400: "#7a7a7a",
-          500: "#525252",
-          600: "#363636",
-          700: "#211f2c",
-          800: "#161423",
-          900: "#0f0d1a",
-          950: "#0b0a14"
+          50: "#f4f5f7",
+          100: "#e4e6eb",
+          200: "#c5c9d2",
+          300: "#9aa1b0",
+          400: "#6e7689",
+          500: "#4b5263",
+          600: "#343a48",
+          700: "#222632",
+          800: "#141820",
+          900: "#0c0e14",
+          950: "#06070a",
         },
         signal: {
-          lime: "#d8ff36",      // bright neon — only use for backgrounds/accents on dark
-          limeInk: "#4a6b00",   // forest-lime — use when the brand accent needs to read as TEXT on paper/cream bgs
-          coral: "#ff5c3b",
-          violet: "#7c5cff",
-          violetInk: "#4a2bff", // deeper violet for text on cream
-          sky: "#7cd0ff",
-          peach: "#ff9a6b",
-          mint: "#5ee3b4"
-        }
+          lime: "#c6ff4a",
+          limeInk: "#3a5208",
+          coral: "#ff4d3d",
+          // Legacy class names kept; mapped to teal so the site sheds purple.
+          violet: "#14b8a6",
+          violetInk: "#0f766e",
+          sky: "#38bdf8",
+          peach: "#fb923c",
+          mint: "#2dd4bf",
+        },
       },
       fontFamily: {
-        sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
-        display: ["'Space Grotesk'", "Inter", "sans-serif"],
-        mono: ["'JetBrains Mono'", "ui-monospace", "monospace"]
+        sans: [
+          "Manrope",
+          "ui-sans-serif",
+          "system-ui",
+          "sans-serif",
+        ],
+        display: [
+          "Syne",
+          "Manrope",
+          "sans-serif",
+        ],
+        mono: [
+          "'IBM Plex Mono'",
+          "ui-monospace",
+          "monospace",
+        ],
+      },
+      borderRadius: {
+        "2xl": "1rem",
+        "3xl": "1.25rem",
       },
       backgroundImage: {
         "gradient-aurora":
-          "linear-gradient(135deg, #7c5cff 0%, #ff5c3b 50%, #d8ff36 100%)",
+          "linear-gradient(135deg, #c6ff4a 0%, #14b8a6 48%, #0a0b0f 100%)",
         "gradient-aurora-soft":
-          "linear-gradient(135deg, rgba(124,92,255,0.9) 0%, rgba(255,92,59,0.85) 55%, rgba(216,255,54,0.85) 100%)",
+          "linear-gradient(135deg, rgba(198,255,74,0.95) 0%, rgba(20,184,166,0.9) 55%, rgba(10,11,15,0.9) 100%)",
         "gradient-radial":
-          "radial-gradient(circle at 50% 0%, rgba(124,92,255,0.25), transparent 60%)"
+          "radial-gradient(circle at 50% 0%, rgba(198,255,74,0.22), transparent 60%)",
       },
       keyframes: {
         marquee: {
           "0%": { transform: "translateX(0%)" },
-          "100%": { transform: "translateX(-50%)" }
+          "100%": { transform: "translateX(-50%)" },
         },
         glow: {
           "0%, 100%": { opacity: "0.6" },
-          "50%": { opacity: "1" }
+          "50%": { opacity: "1" },
         },
         float: {
           "0%, 100%": { transform: "translateY(0)" },
-          "50%": { transform: "translateY(-12px)" }
+          "50%": { transform: "translateY(-12px)" },
         },
         "float-soft": {
           "0%, 100%": { transform: "translateY(0) rotate(0deg)" },
-          "50%": { transform: "translateY(-10px) rotate(1deg)" }
+          "50%": { transform: "translateY(-10px) rotate(1deg)" },
         },
         drift: {
-          "0%, 100%": {
-            transform: "translate3d(0,0,0) scale(1)"
-          },
-          "33%": {
-            transform: "translate3d(40px,-30px,0) scale(1.08)"
-          },
-          "66%": {
-            transform: "translate3d(-30px,20px,0) scale(0.95)"
-          }
+          "0%, 100%": { transform: "translate3d(0,0,0) scale(1)" },
+          "33%": { transform: "translate3d(40px,-30px,0) scale(1.08)" },
+          "66%": { transform: "translate3d(-30px,20px,0) scale(0.95)" },
         },
         "gradient-shift": {
           "0%, 100%": { backgroundPosition: "0% 50%" },
-          "50%": { backgroundPosition: "100% 50%" }
+          "50%": { backgroundPosition: "100% 50%" },
         },
         "fade-in-up": {
           "0%": { opacity: "0", transform: "translateY(16px)" },
-          "100%": { opacity: "1", transform: "translateY(0)" }
+          "100%": { opacity: "1", transform: "translateY(0)" },
         },
         "fade-in": {
           "0%": { opacity: "0" },
-          "100%": { opacity: "1" }
+          "100%": { opacity: "1" },
         },
         "spin-slow": {
           "0%": { transform: "rotate(0deg)" },
-          "100%": { transform: "rotate(360deg)" }
-        }
+          "100%": { transform: "rotate(360deg)" },
+        },
       },
       animation: {
         marquee: "marquee 32s linear infinite",
@@ -117,11 +128,11 @@ const config: Config = {
         "gradient-shift": "gradient-shift 6s ease infinite",
         "fade-in-up": "fade-in-up 0.7s ease-out both",
         "fade-in": "fade-in 0.6s ease-out both",
-        "spin-slow": "spin-slow 18s linear infinite"
-      }
-    }
+        "spin-slow": "spin-slow 18s linear infinite",
+      },
+    },
   },
-  plugins: []
+  plugins: [],
 };
 
 export default config;

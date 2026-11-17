@@ -39,13 +39,13 @@ export default function ProductBuyPanel({ product }: { product: Product }) {
     <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:gap-10">
       {/* Viewer stage */}
       <div className="space-y-4">
-        <div className="relative overflow-hidden rounded-[28px] border border-paper-200 bg-[#12141a] shadow-[0_24px_80px_-40px_rgba(124,92,255,0.55)]">
+        <div className="relative overflow-hidden rounded-[28px] border border-paper-200 bg-[#0a0b0f] shadow-[0_24px_80px_-40px_rgba(10,11,15,0.55)]">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0"
             style={{
               background:
-                "radial-gradient(55% 50% at 50% 45%, rgba(124,92,255,0.35), transparent 70%), radial-gradient(40% 35% at 80% 20%, rgba(255,92,59,0.18), transparent 60%)",
+                "radial-gradient(55% 50% at 50% 45%, rgba(198,255,74,0.22), transparent 70%), radial-gradient(40% 35% at 80% 20%, rgba(20,184,166,0.2), transparent 60%)",
             }}
           />
           <div className="absolute left-5 top-5 z-10 flex flex-wrap gap-2">
@@ -183,8 +183,8 @@ export default function ProductBuyPanel({ product }: { product: Product }) {
                 onClick={() => setSize(s)}
                 className={`grid h-12 min-w-12 place-items-center rounded-full border text-sm font-semibold transition ${
                   size === s
-                    ? "border-transparent bg-gradient-aurora text-ink-950 shadow-[0_8px_24px_-10px_rgba(124,92,255,0.7)]"
-                    : "border-paper-200 bg-white text-paper-800 hover:border-paper-400"
+                    ? "border-transparent bg-signal-lime text-ink-950 shadow-[0_8px_24px_-10px_rgba(198,255,74,0.7)]"
+                    : "border-paper-200 bg-white text-paper-800 hover:border-paper-900"
                 }`}
               >
                 {s}

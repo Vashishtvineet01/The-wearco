@@ -49,7 +49,7 @@ export default function ProductCard({ product }: { product: Product }) {
       {/* Slim aurora accent bar at the top edge — always faintly on, expands on hover. */}
       <span
         aria-hidden
-        className="pointer-events-none absolute inset-x-6 top-0 h-[3px] origin-left scale-x-50 rounded-full bg-gradient-aurora opacity-70 transition-all duration-500 group-hover:scale-x-100 group-hover:opacity-100"
+        className="pointer-events-none absolute inset-x-6 top-0 h-[3px] origin-left scale-x-50 rounded-full bg-signal-lime opacity-80 transition-all duration-500 group-hover:scale-x-100 group-hover:opacity-100"
       />
       <div className="absolute inset-x-4 top-4 z-10 flex items-start justify-between gap-2">
         <span className="tag max-w-[55%] min-w-0">
@@ -80,8 +80,8 @@ export default function ProductCard({ product }: { product: Product }) {
           className="pointer-events-none absolute inset-0 opacity-80"
           style={{
             background: isDarkFabric(color.fabric)
-              ? "radial-gradient(60% 50% at 50% 55%, rgba(124,92,255,0.28), transparent 70%)"
-              : "radial-gradient(60% 50% at 50% 55%, rgba(216,255,54,0.3), transparent 70%)"
+              ? "radial-gradient(60% 50% at 50% 55%, rgba(20,184,166,0.28), transparent 70%)"
+              : "radial-gradient(60% 50% at 50% 55%, rgba(198,255,74,0.28), transparent 70%)"
           }}
         />
         <div className="relative w-full transition-transform duration-500 ease-out group-hover:-translate-y-2 group-hover:scale-[1.05]">
