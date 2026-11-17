@@ -400,6 +400,9 @@ class _FabricOption {
   final String swatchHex; // swatch dot shown in picker
 }
 
+// Kept in lockstep with the web Design Studio's palette so cross-device
+// users see the same swatches. The first 4 mirror `baseColors` in
+// `lib/products.ts`; the rest mirror `PRESET_COLORS` in `StudioClient.tsx`.
 const _fabrics = <_FabricOption>[
   _FabricOption(name: 'Obsidian', fabricHex: '#0f0d1a', swatchHex: '#0a0a0a'),
   _FabricOption(name: 'Bone', fabricHex: '#ece7dd', swatchHex: '#ece7dd'),
@@ -407,6 +410,10 @@ const _fabrics = <_FabricOption>[
   _FabricOption(name: 'Signal Lime', fabricHex: '#d8ff36', swatchHex: '#d8ff36'),
   _FabricOption(name: 'Coral', fabricHex: '#ff5c3b', swatchHex: '#ff5c3b'),
   _FabricOption(name: 'Violet', fabricHex: '#7c5cff', swatchHex: '#7c5cff'),
+  _FabricOption(name: 'Sky', fabricHex: '#7cd0ff', swatchHex: '#7cd0ff'),
+  _FabricOption(name: 'Gold', fabricHex: '#ffd166', swatchHex: '#ffd166'),
+  _FabricOption(name: 'Pink', fabricHex: '#ec4899', swatchHex: '#ec4899'),
+  _FabricOption(name: 'White', fabricHex: '#f7f7f7', swatchHex: '#f7f7f7'),
 ];
 
 class _PrintColorOption {
@@ -415,13 +422,19 @@ class _PrintColorOption {
   final String? hex; // null = auto-contrast
 }
 
+// Mirrors `PRESET_COLORS` in `StudioClient.tsx` on the web. "Auto" is a
+// mobile-only convenience that falls back to high-contrast ink / lime
+// depending on the fabric luminance.
 const _printColors = <_PrintColorOption>[
   _PrintColorOption(label: 'Auto', hex: null),
+  _PrintColorOption(label: 'White', hex: '#f7f7f7'),
+  _PrintColorOption(label: 'Ink', hex: '#0a0a0a'),
   _PrintColorOption(label: 'Lime', hex: '#d8ff36'),
   _PrintColorOption(label: 'Coral', hex: '#ff5c3b'),
   _PrintColorOption(label: 'Violet', hex: '#7c5cff'),
-  _PrintColorOption(label: 'Bone', hex: '#ece7dd'),
-  _PrintColorOption(label: 'Ink', hex: '#0b0a14'),
+  _PrintColorOption(label: 'Sky', hex: '#7cd0ff'),
+  _PrintColorOption(label: 'Gold', hex: '#ffd166'),
+  _PrintColorOption(label: 'Pink', hex: '#ec4899'),
 ];
 
 // --------------------------------------------------------------- Widgets --
@@ -665,62 +678,178 @@ class _PrintColorRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Pulled out so the "selected" ring logic also picks up ad-hoc custom
+    // colours created from the hex dialog (which share a stable label).
+    const customLabel = 'Custom';
+    final selectedIsPreset =
+        _printColors.any((c) => c.label == selected.label) &&
+            selected.label != customLabel;
+
     return Wrap(
       spacing: 8,
       runSpacing: 8,
       children: [
         for (final c in _printColors)
-          InkWell(
+          _chip(
+            context: context,
+            label: c.label,
+            hex: c.hex,
+            active: c.label == selected.label,
             onTap: () => onSelect(c),
-            borderRadius: BorderRadius.circular(999),
-            child: Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color: c.label == selected.label
-                    ? AppColors.signalLime.withValues(alpha: 0.12)
-                    : Colors.white.withValues(alpha: 0.03),
-                borderRadius: BorderRadius.circular(999),
-                border: Border.all(
-                  color: c.label == selected.label
-                      ? AppColors.signalLime
-                      : Colors.white.withValues(alpha: 0.1),
-                ),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (c.hex != null)
-                    Container(
-                      width: 12,
-                      height: 12,
-                      decoration: BoxDecoration(
-                        color: Color(parseHexColor(c.hex!)),
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                            color: Colors.white.withValues(alpha: 0.25)),
-                      ),
-                    )
-                  else
-                    const Icon(Icons.auto_awesome,
-                        size: 12, color: AppColors.signalLime),
-                  const SizedBox(width: 6),
-                  Text(
-                    c.label,
-                    style: TextStyle(
-                      color: c.label == selected.label
-                          ? AppColors.ink50
-                          : AppColors.ink100,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
           ),
+        // Custom hex entry — mirrors web's native <input type="color">.
+        _chip(
+          context: context,
+          label: selected.label == customLabel
+              ? 'Custom ${selected.hex}'
+              : '+ Custom',
+          hex: selected.label == customLabel ? selected.hex : null,
+          overrideIcon: Icons.palette_outlined,
+          active: !selectedIsPreset && selected.label == customLabel,
+          onTap: () async {
+            final picked = await _promptHex(context,
+                initialHex: selected.hex ?? '#d8ff36');
+            if (picked != null) {
+              onSelect(_PrintColorOption(label: customLabel, hex: picked));
+            }
+          },
+        ),
       ],
     );
+  }
+
+  Widget _chip({
+    required BuildContext context,
+    required String label,
+    required String? hex,
+    required bool active,
+    required VoidCallback onTap,
+    IconData? overrideIcon,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(999),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: active
+              ? AppColors.signalLime.withValues(alpha: 0.12)
+              : Colors.white.withValues(alpha: 0.03),
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(
+            color: active
+                ? AppColors.signalLime
+                : Colors.white.withValues(alpha: 0.1),
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (overrideIcon != null)
+              Icon(overrideIcon,
+                  size: 12,
+                  color: active ? AppColors.signalLime : AppColors.ink100)
+            else if (hex != null)
+              Container(
+                width: 12,
+                height: 12,
+                decoration: BoxDecoration(
+                  color: Color(parseHexColor(hex)),
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.25)),
+                ),
+              )
+            else
+              const Icon(Icons.auto_awesome,
+                  size: 12, color: AppColors.signalLime),
+            const SizedBox(width: 6),
+            Text(
+              label,
+              style: TextStyle(
+                color: active ? AppColors.ink50 : AppColors.ink100,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Opens a tiny dialog with a hex text field and a live colour preview.
+  /// Returns a normalised `#rrggbb` string or null on cancel / invalid input.
+  Future<String?> _promptHex(BuildContext context,
+      {required String initialHex}) async {
+    final ctl = TextEditingController(text: initialHex);
+    String preview = initialHex;
+    return showDialog<String>(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setLocal) {
+          Color resolved;
+          try {
+            resolved = Color(parseHexColor(preview));
+          } catch (_) {
+            resolved = AppColors.ink700;
+          }
+          return AlertDialog(
+            backgroundColor: AppColors.ink900,
+            title: const Text('Custom print colour'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: resolved,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.12)),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: ctl,
+                  maxLength: 7,
+                  autofocus: true,
+                  decoration: const InputDecoration(
+                    labelText: 'Hex (e.g. #d8ff36)',
+                    counterText: '',
+                  ),
+                  onChanged: (v) => setLocal(() => preview = v),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  final normalised = _normaliseHex(ctl.text);
+                  if (normalised != null) Navigator.of(ctx).pop(normalised);
+                },
+                child: const Text('Use colour'),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  String? _normaliseHex(String raw) {
+    var s = raw.trim();
+    if (s.startsWith('#')) s = s.substring(1);
+    if (s.length == 3) {
+      s = s.split('').map((c) => '$c$c').join();
+    }
+    if (s.length != 6) return null;
+    if (!RegExp(r'^[0-9a-fA-F]{6}$').hasMatch(s)) return null;
+    return '#${s.toLowerCase()}';
   }
 }
 
