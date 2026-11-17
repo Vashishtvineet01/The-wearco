@@ -1,16 +1,17 @@
 import { NextResponse } from "next/server";
-import { verifyEmailOtp } from "@/lib/customer-session";
+import { verifyPhoneOtp } from "@/lib/customer-session";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const email = String(body?.email ?? "");
+    const phone = String(body?.phone ?? "");
     const code = String(body?.code ?? "");
-    const customer = await verifyEmailOtp(email, code);
+    const customer = await verifyPhoneOtp(phone, code);
     return NextResponse.json({
       ok: true,
+      phone: customer.phone,
       email: customer.email,
     });
   } catch (e) {

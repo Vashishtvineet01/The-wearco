@@ -1,31 +1,32 @@
 import { NextResponse } from "next/server";
-import { isValidEmail, normalizeEmail, sendEmailOtp } from "@/lib/customer-session";
+import {
+  isValidIndianPhone,
+  normalizePhone,
+  sendPhoneOtp,
+} from "@/lib/customer-session";
 
 export const dynamic = "force-dynamic";
 
 /**
- * Always returns 200 on syntactically-valid email (anti-enumeration),
- * unless delivery itself hard-fails.
+ * Send SMS OTP. Always 200 on valid phone shape (anti-enumeration),
+ * unless SMS delivery hard-fails after creating the token.
  */
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const email = normalizeEmail(String(body?.email ?? ""));
-    if (!isValidEmail(email)) {
+    const phone = normalizePhone(String(body?.phone ?? ""));
+    if (!isValidIndianPhone(phone)) {
       return NextResponse.json(
-        { error: "Enter a valid email." },
+        { error: "Enter a valid 10-digit Indian mobile number." },
         { status: 400 }
       );
     }
-    await sendEmailOtp(email);
-    return NextResponse.json({ ok: true });
+    await sendPhoneOtp(phone);
+    return NextResponse.json({ ok: true, phone });
   } catch (e) {
     console.error("[otp/send]", e);
     const message =
       e instanceof Error ? e.message : "Could not send code.";
-    // Soft-fail for anti-enumeration when Resend is missing / flaky —
-    // still ok if it's just "couldn't send" after creating the token
-    // in dev without RESEND (sendEmailOtp logs the code).
     if (message.includes("Could not send")) {
       return NextResponse.json({ error: message }, { status: 502 });
     }

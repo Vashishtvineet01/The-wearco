@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { getIronSession } from "iron-session";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
-import { Resend } from "resend";
+import { sendOtpSms } from "@/lib/sms";
 import {
   customerSessionOptions,
   type CustomerSession,
@@ -16,11 +16,9 @@ export {
 
 /**
  * Customer auth:
- *  1. Email + password  → POST /api/auth/register | /api/auth/login
- *  2. Email OTP         → POST /api/auth/otp/send  | /api/auth/otp/verify
+ *  1. Phone SMS OTP     → POST /api/auth/otp/send | /api/auth/otp/verify (default)
+ *  2. Email + password  → POST /api/auth/register | /api/auth/login
  *  3. POST /api/auth/logout
- *
- * Orders join by email, so guest purchases still appear after signup.
  */
 
 export async function getCustomerSession() {
@@ -32,18 +30,20 @@ export async function getCustomerSession() {
 
 export async function requireCustomer() {
   const session = await getCustomerSession();
-  if (!session.isLoggedIn || !session.email) return null;
+  if (!session.isLoggedIn || !session.customerId) return null;
   return session;
 }
 
 export async function establishCustomerSession(customer: {
   id: string;
-  email: string;
+  email?: string | null;
+  phone?: string | null;
 }) {
   const session = await getCustomerSession();
   session.isLoggedIn = true;
   session.customerId = customer.id;
-  session.email = customer.email;
+  session.email = customer.email || undefined;
+  session.phone = customer.phone || undefined;
   await session.save();
 }
 
@@ -60,7 +60,36 @@ export function isValidEmail(email: string): boolean {
 }
 
 export function isValidPassword(password: string): boolean {
-  return typeof password === "string" && password.length >= 8 && password.length <= 128;
+  return (
+    typeof password === "string" &&
+    password.length >= 8 &&
+    password.length <= 128
+  );
+}
+
+/** Normalize Indian mobiles to E.164 (+91…). Accepts 10-digit, 91…, +91…. */
+export function normalizePhone(raw: string): string {
+  const digits = String(raw || "").replace(/\D/g, "");
+  if (digits.length === 10) return `+91${digits}`;
+  if (digits.length === 12 && digits.startsWith("91")) return `+${digits}`;
+  if (digits.length === 11 && digits.startsWith("0")) {
+    return `+91${digits.slice(1)}`;
+  }
+  if (String(raw || "").trim().startsWith("+") && digits.length >= 10) {
+    return `+${digits}`;
+  }
+  return digits ? `+${digits}` : "";
+}
+
+export function isValidIndianPhone(phoneE164: string): boolean {
+  return /^\+91[6-9]\d{9}$/.test(phoneE164);
+}
+
+export function formatPhoneDisplay(phoneE164: string): string {
+  if (/^\+91\d{10}$/.test(phoneE164)) {
+    return `+91 ${phoneE164.slice(3, 8)} ${phoneE164.slice(8)}`;
+  }
+  return phoneE164;
 }
 
 export async function registerWithPassword(
@@ -76,7 +105,9 @@ export async function registerWithPassword(
 
   const existing = await prisma.customer.findUnique({ where: { email } });
   if (existing?.passwordHash) {
-    throw new Error("An account with this email already exists. Sign in instead.");
+    throw new Error(
+      "An account with this email already exists. Sign in instead."
+    );
   }
 
   const passwordHash = await bcrypt.hash(password, 10);
@@ -117,48 +148,46 @@ export async function loginWithPassword(rawEmail: string, password: string) {
   return customer;
 }
 
-/** 6-digit numeric OTP. */
 export function generateOtpCode(): string {
   return String(crypto.randomInt(100000, 999999));
 }
 
-/**
- * Create + email a 6-digit OTP. Always resolves for anti-enumeration
- * when called from the public send route (caller decides).
- */
-export async function sendEmailOtp(rawEmail: string) {
-  const email = normalizeEmail(rawEmail);
-  if (!isValidEmail(email)) throw new Error("Enter a valid email.");
+export async function sendPhoneOtp(rawPhone: string) {
+  const phone = normalizePhone(rawPhone);
+  if (!isValidIndianPhone(phone)) {
+    throw new Error("Enter a valid 10-digit Indian mobile number.");
+  }
 
   const code = generateOtpCode();
   const tokenHash = hashToken(code);
-  const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+  const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
-  // Invalidate prior unused OTPs for this email.
   await prisma.magicLinkToken.updateMany({
-    where: { email, usedAt: null },
+    where: { phone, usedAt: null },
     data: { usedAt: new Date() },
   });
 
   await prisma.magicLinkToken.create({
-    data: { email, tokenHash, expiresAt },
+    data: { phone, tokenHash, expiresAt },
   });
 
-  await deliverOtpEmail(email, code);
-  return { email, expiresAt };
+  await sendOtpSms(phone, code);
+  return { phone, expiresAt };
 }
 
-export async function verifyEmailOtp(rawEmail: string, rawCode: string) {
-  const email = normalizeEmail(rawEmail);
+export async function verifyPhoneOtp(rawPhone: string, rawCode: string) {
+  const phone = normalizePhone(rawPhone);
   const code = String(rawCode || "").replace(/\s+/g, "");
-  if (!isValidEmail(email)) throw new Error("Enter a valid email.");
+  if (!isValidIndianPhone(phone)) {
+    throw new Error("Enter a valid 10-digit Indian mobile number.");
+  }
   if (!/^\d{6}$/.test(code)) throw new Error("Enter the 6-digit code.");
 
   const tokenHash = hashToken(code);
   const record = await prisma.magicLinkToken.findUnique({
     where: { tokenHash },
   });
-  if (!record || record.email !== email) {
+  if (!record || record.phone !== phone) {
     throw new Error("Invalid or expired code.");
   }
   if (record.usedAt) throw new Error("Invalid or expired code.");
@@ -170,9 +199,9 @@ export async function verifyEmailOtp(rawEmail: string, rawCode: string) {
   });
 
   const customer = await prisma.customer.upsert({
-    where: { email },
+    where: { phone },
     update: {},
-    create: { email },
+    create: { phone },
   });
 
   void prisma.magicLinkToken
@@ -181,65 +210,4 @@ export async function verifyEmailOtp(rawEmail: string, rawCode: string) {
 
   await establishCustomerSession(customer);
   return customer;
-}
-
-async function deliverOtpEmail(email: string, code: string) {
-  const key = process.env.RESEND_API_KEY;
-  if (!key) {
-    console.info(`[otp] RESEND_API_KEY not set — OTP for ${email}: ${code}`);
-    return;
-  }
-
-  const resend = new Resend(key);
-  const from = process.env.MAIL_FROM || "TheWearCo <orders@thewearco.com>";
-  const replyTo = process.env.MAIL_REPLY_TO || "hi@thewearco.com";
-  const safeName = escapeHtml(email.split("@")[0]);
-
-  const html = `
-<!DOCTYPE html>
-<html>
-  <body style="margin:0;padding:0;background:#fafaf7;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#0f0d0a;">
-    <div style="max-width:520px;margin:0 auto;padding:32px 24px;">
-      <div style="font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:#4a6b00;font-family:ui-monospace,monospace;">
-        // Sign-in code
-      </div>
-      <h1 style="margin:12px 0 4px;font-size:26px;font-weight:800;letter-spacing:-0.4px;">
-        Your code, ${safeName}.
-      </h1>
-      <p style="margin:0 0 20px;color:#4a4737;font-size:15px;line-height:1.5;">
-        Enter this 6-digit code on TheWearCo to sign in. It expires in 10 minutes.
-      </p>
-      <div style="margin:24px 0;padding:18px 22px;background:#0f0d0a;color:#fff;border-radius:16px;font-size:32px;font-weight:800;letter-spacing:8px;text-align:center;font-family:ui-monospace,monospace;">
-        ${code}
-      </div>
-      <p style="margin-top:24px;font-size:12px;color:#6b6859;line-height:1.5;">
-        Didn't ask for this? Ignore the email.<br/>
-        Questions? Write to
-        <a href="mailto:${replyTo}" style="color:#4a2bff;">${replyTo}</a>.
-      </p>
-    </div>
-  </body>
-</html>`;
-
-  try {
-    await resend.emails.send({
-      from,
-      to: email,
-      replyTo,
-      subject: `${code} is your TheWearCo code`,
-      html,
-    });
-  } catch (e) {
-    console.error("[otp] send failed:", e);
-    throw new Error("Could not send the code. Try again in a moment.");
-  }
-}
-
-function escapeHtml(s: string): string {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
 }

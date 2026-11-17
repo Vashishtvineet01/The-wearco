@@ -209,14 +209,17 @@ export default function CheckoutClient({
   };
 
   const onSendSaveOtp = async () => {
-    if (!email) return;
+    if (!phone) {
+      setSaveError("Add a phone number above, then try again.");
+      return;
+    }
     setSaveBusy(true);
     setSaveError("");
     try {
       const res = await fetch("/api/auth/otp/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ phone }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "Could not send code");
@@ -239,7 +242,7 @@ export default function CheckoutClient({
       const res = await fetch("/api/auth/otp/verify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, code: saveCode }),
+        body: JSON.stringify({ phone, code: saveCode }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "Invalid code");
@@ -293,12 +296,25 @@ export default function CheckoutClient({
                       // You&apos;re in
                     </div>
                     <p className="mt-2 text-sm text-paper-700">
-                      Account ready for{" "}
-                      <span className="font-semibold text-paper-900">
-                        {email}
-                      </span>
-                      . This order (and any past guest orders on this email) now
-                      show on{" "}
+                      Account ready
+                      {phone ? (
+                        <>
+                          {" "}
+                          for{" "}
+                          <span className="font-semibold text-paper-900">
+                            {phone}
+                          </span>
+                        </>
+                      ) : email ? (
+                        <>
+                          {" "}
+                          for{" "}
+                          <span className="font-semibold text-paper-900">
+                            {email}
+                          </span>
+                        </>
+                      ) : null}
+                      . Track orders from{" "}
                       <Link
                         href="/account"
                         className="text-signal-violetInk underline underline-offset-2"
@@ -314,9 +330,9 @@ export default function CheckoutClient({
                       // Enter code
                     </div>
                     <p className="mt-2 text-sm text-paper-700">
-                      We emailed a 6-digit code to{" "}
+                      We texted a 6-digit code to{" "}
                       <span className="font-semibold text-paper-900">
-                        {email}
+                        {phone}
                       </span>
                       .
                     </p>
@@ -398,8 +414,8 @@ export default function CheckoutClient({
                       Save this order to your account
                     </h2>
                     <p className="mt-1 text-sm text-paper-600">
-                      Create a password or get a one-time email code. Track this
-                      order (and any past guest orders) from one place.
+                      Get a one-time SMS code on {phone || "your phone"}, or set
+                      an email password. Track this order from one place.
                     </p>
                     {saveError && (
                       <p className="mt-2 text-xs text-signal-coral">{saveError}</p>
@@ -407,21 +423,21 @@ export default function CheckoutClient({
                     <div className="mt-4 flex flex-wrap gap-2">
                       <button
                         type="button"
+                        onClick={onSendSaveOtp}
+                        disabled={saveBusy}
+                        className="btn-primary"
+                      >
+                        {saveBusy ? "Sending…" : "Text me a code"}
+                      </button>
+                      <button
+                        type="button"
                         onClick={() => {
                           setSavePrompt("password");
                           setSaveError("");
                         }}
-                        className="btn-primary"
-                      >
-                        Set a password
-                      </button>
-                      <button
-                        type="button"
-                        onClick={onSendSaveOtp}
-                        disabled={saveBusy}
                         className="btn-ghost"
                       >
-                        {saveBusy ? "Sending…" : "Email me a code"}
+                        Set a password
                       </button>
                     </div>
                   </>

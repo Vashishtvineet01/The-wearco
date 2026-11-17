@@ -3,12 +3,15 @@ import type { SessionOptions } from "iron-session";
 /**
  * Edge-safe session options + types for customer auth.
  * Kept separate from `customer-session.ts` so middleware can import
- * without pulling Prisma / Resend into the Edge runtime.
+ * without pulling Prisma / SMS into the Edge runtime.
  */
 export type CustomerSession = {
   isLoggedIn: boolean;
   customerId?: string;
+  /** Display / order-join email when set. */
   email?: string;
+  /** E.164 phone when set. */
+  phone?: string;
 };
 
 export const customerSessionOptions: SessionOptions = {

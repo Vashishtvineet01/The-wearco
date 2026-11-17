@@ -21,7 +21,7 @@ export default function Navbar() {
   const { count } = useCart();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [email, setEmail] = useState<string | null>(null);
+  const [accountLabel, setAccountLabel] = useState<string | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -34,11 +34,13 @@ export default function Navbar() {
     let cancelled = false;
     fetch("/api/auth/me")
       .then((r) => r.json())
-      .then((d: { email?: string | null }) => {
-        if (!cancelled) setEmail(d.email ?? null);
+      .then((d: { label?: string | null; email?: string | null; phone?: string | null }) => {
+        if (!cancelled) {
+          setAccountLabel(d.label ?? d.email ?? d.phone ?? null);
+        }
       })
       .catch(() => {
-        if (!cancelled) setEmail(null);
+        if (!cancelled) setAccountLabel(null);
       });
     return () => {
       cancelled = true;
@@ -88,19 +90,19 @@ export default function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2">
-          {email ? (
+          {accountLabel ? (
             <Link
               href="/account"
               className="relative grid h-9 w-9 place-items-center overflow-hidden rounded-full text-sm font-bold text-ink-950 shadow-[0_4px_16px_-4px_rgba(124,92,255,0.5)]"
-              aria-label={`Account · ${email}`}
-              title={email}
+              aria-label={`Account · ${accountLabel}`}
+              title={accountLabel}
             >
               <span
                 className="absolute inset-0 bg-gradient-aurora"
                 style={{ backgroundSize: "200% 200%" }}
               />
               <span className="relative uppercase">
-                {email.charAt(0)}
+                {accountLabel.charAt(0)}
               </span>
             </Link>
           ) : (
@@ -158,9 +160,9 @@ export default function Navbar() {
             </MobileLink>
             <MobileLink
               onClick={() => setOpen(false)}
-              href={email ? "/account" : "/login"}
+              href={accountLabel ? "/account" : "/login"}
             >
-              {email ? "Your account" : "Sign in"}
+              {accountLabel ? "Your account" : "Sign in"}
             </MobileLink>
           </div>
         </div>

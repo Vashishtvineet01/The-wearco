@@ -106,12 +106,14 @@ model NewsletterSubscriber {
   createdAt DateTime @default(now())
 }
 
-/// Customer accounts — email + password and/or email OTP.
-/// Orders are linked by email match, so guest purchases made before
-/// signup are automatically visible in /account once they log in.
+/// Customer accounts — phone OTP (default) and/or email + password.
+/// Orders still join by email when the account has one.
 model Customer {
   id           String   @id @default(cuid())
-  email        String   @unique
+  /// Optional — phone-only OTP accounts may have no email yet.
+  email        String?  @unique
+  /// E.164 e.g. +9198xxxxxxxx — unique when set.
+  phone        String?  @unique
   name         String?
   /// bcrypt hash — null for OTP-only accounts until they set a password.
   passwordHash String?
@@ -119,17 +121,19 @@ model Customer {
   updatedAt    DateTime @updatedAt
 }
 
-/// Short-lived email OTP codes (and legacy magic-link hashes).
-/// We store the sha256 hash of the code/token, never the plaintext.
+/// Short-lived OTP codes (phone SMS or legacy email).
+/// We store the sha256 hash of the code, never the plaintext.
 model MagicLinkToken {
   id        String    @id @default(cuid())
-  email     String
+  email     String?
+  phone     String?
   tokenHash String    @unique
   expiresAt DateTime
   usedAt    DateTime?
   createdAt DateTime  @default(now())
 
   @@index([email])
+  @@index([phone])
   @@index([expiresAt])
 }
 

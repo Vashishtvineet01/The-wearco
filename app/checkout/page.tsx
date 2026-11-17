@@ -12,12 +12,12 @@ export const metadata = {
 };
 
 /**
- * Server wrapper — if the buyer is signed in, pull their email + last order's
- * address so the client form can prefill. Guest buyers get empty defaults.
+ * Server wrapper — if the buyer is signed in, pull last order details
+ * (by email or phone) so the client form can prefill.
  */
 export default async function CheckoutPage() {
   const session = await getCustomerSession();
-  const isLoggedIn = Boolean(session.isLoggedIn && session.email);
+  const isLoggedIn = Boolean(session.isLoggedIn && session.customerId);
 
   const empty: CheckoutPrefill = {
     email: "",
@@ -33,15 +33,17 @@ export default async function CheckoutPage() {
     isLoggedIn: false,
   };
 
-  if (!isLoggedIn || !session.email) {
+  if (!isLoggedIn) {
     return <CheckoutClient prefill={empty} />;
   }
 
-  const email = session.email;
+  const email = session.email || undefined;
+  const phone = session.phone || undefined;
+
   const lastOrder = await prisma.order.findFirst({
-    where: { email },
+    where: email ? { email } : phone ? { phone } : undefined,
     orderBy: { createdAt: "desc" },
-    select: { name: true, phone: true, gst: true, address: true },
+    select: { name: true, phone: true, email: true, gst: true, address: true },
   });
 
   let address: {
@@ -60,15 +62,17 @@ export default async function CheckoutPage() {
     }
   }
 
-  const customer = await prisma.customer.findUnique({
-    where: { email },
-    select: { name: true },
-  });
+  const customer = session.customerId
+    ? await prisma.customer.findUnique({
+        where: { id: session.customerId },
+        select: { name: true, email: true, phone: true },
+      })
+    : null;
 
   const prefill: CheckoutPrefill = {
-    email,
+    email: email || lastOrder?.email || customer?.email || "",
     name: lastOrder?.name || customer?.name || "",
-    phone: lastOrder?.phone || "",
+    phone: phone || lastOrder?.phone || customer?.phone || "",
     gst: lastOrder?.gst || "",
     line1: address.line1 || "",
     line2: address.line2 || "",

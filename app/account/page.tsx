@@ -20,23 +20,53 @@ export const metadata = {
  */
 export default async function AccountPage() {
   const session = await getCustomerSession();
-  if (!session.isLoggedIn || !session.email) {
+  if (!session.isLoggedIn || !session.customerId) {
     redirect("/login?next=/account");
   }
 
-  const email = session.email!;
-  // Grab every order that used this email — includes orders placed as a
-  // guest before the account was created.
-  const orders = await prisma.order.findMany({
-    where: { email },
-    orderBy: { createdAt: "desc" },
-    take: 50,
-    include: {
-      items: {
-        select: { name: true, qty: true, size: true, color: true, price: true },
-      },
-    },
-  });
+  const email = session.email || null;
+  const phone = session.phone || null;
+  const displayName =
+    email?.split("@")[0] ||
+    (phone ? phone.replace(/^\+91/, "") : "member");
+
+  // Orders join by email when the account has one; phone-only accounts
+  // start empty until they place an order while signed in (or add email).
+  const orders = email
+    ? await prisma.order.findMany({
+        where: { email },
+        orderBy: { createdAt: "desc" },
+        take: 50,
+        include: {
+          items: {
+            select: {
+              name: true,
+              qty: true,
+              size: true,
+              color: true,
+              price: true,
+            },
+          },
+        },
+      })
+    : phone
+      ? await prisma.order.findMany({
+          where: { phone },
+          orderBy: { createdAt: "desc" },
+          take: 50,
+          include: {
+            items: {
+              select: {
+                name: true,
+                qty: true,
+                size: true,
+                color: true,
+                price: true,
+              },
+            },
+          },
+        })
+      : [];
 
   // Pull the most-recent address as the "default" shown in the sidebar.
   const lastAddress = (() => {
@@ -77,10 +107,10 @@ export default async function AccountPage() {
               // Your account
             </div>
             <h1 className="mt-3 font-display text-3xl font-bold tracking-tight md:text-5xl">
-              Welcome back, <span className="gradient-text">{email.split("@")[0]}.</span>
+              Welcome back, <span className="gradient-text">{displayName}.</span>
             </h1>
             <p className="mt-2 text-sm text-paper-600">
-              Signed in as {email}.
+              Signed in as {email || phone || "your account"}.
             </p>
           </div>
           <LogoutButton />
@@ -111,7 +141,7 @@ export default async function AccountPage() {
                 return (
                   <li key={o.id}>
                     <Link
-                      href={`/track?order=${encodeURIComponent(o.orderNumber)}&email=${encodeURIComponent(email)}`}
+                      href={`/track?order=${encodeURIComponent(o.orderNumber)}&email=${encodeURIComponent(email || o.email)}`}
                       className="card group block p-5 transition hover:border-paper-400 hover:shadow-[0_12px_40px_-24px_rgba(124,92,255,0.45)]"
                     >
                       <div className="flex flex-wrap items-start justify-between gap-3">
