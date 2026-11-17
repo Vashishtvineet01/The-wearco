@@ -359,7 +359,7 @@ export default function StudioClient({ products }: { products: Product[] }) {
               <button
                 onClick={handleDownload}
                 disabled={downloading}
-                className="tag border-paper-300 text-paper-800 transition hover:border-signal-lime/50 hover:text-signal-limeInkInk disabled:opacity-50"
+                className="tag border-paper-300 text-paper-800 transition hover:border-signal-lime/50 hover:text-signal-limeInk disabled:opacity-50"
                 title="Download mockup as PNG"
               >
                 {downloading ? (
@@ -413,7 +413,7 @@ export default function StudioClient({ products }: { products: Product[] }) {
                   setScale(1);
                   setRotation(0);
                 }}
-                className="text-xs text-paper-600 hover:text-signal-limeInkInk"
+                className="text-xs text-paper-600 hover:text-signal-limeInk"
               >
                 Reset
               </button>

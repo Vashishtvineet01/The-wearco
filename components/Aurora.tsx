@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 
 type Blob = {
-  color: "violet" | "coral" | "lime" | "sky";
+  color: "violet" | "coral" | "lime" | "sky" | "peach" | "mint";
   size: number; // in px
   top?: string;
   left?: string;

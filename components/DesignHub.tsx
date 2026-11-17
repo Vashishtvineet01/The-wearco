@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import type { Product } from "@/lib/products";
 import StudioClient from "./StudioClient";
 import BulkClient from "./BulkClient";
+import Aurora from "./Aurora";
 
 /**
  * Design hub — merges the old /studio (Just for me) and /bulk (For my team)
@@ -40,20 +41,34 @@ export default function DesignHub({ products }: { products: Product[] }) {
   const studioProducts = customizable.length ? customizable : products;
 
   return (
-    <div className="mx-auto max-w-7xl px-5 pb-16 pt-8 lg:px-8 lg:pt-12">
+    <div className="relative mx-auto max-w-7xl px-5 pb-16 pt-8 lg:px-8 lg:pt-12">
       {/* Hero */}
-      <div className="mb-8 text-center md:mb-12">
-        <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
-          // Design
+      <section className="spotlight-violet relative mb-10 overflow-hidden rounded-3xl border border-paper-200 bg-paper-50/40 px-6 py-12 text-center md:mb-14 md:px-10 md:py-16">
+        <Aurora
+          blobs={[
+            { color: "violet", size: 420, top: "-140px", left: "-120px", opacity: 0.55 },
+            { color: "coral", size: 380, top: "-80px", right: "-100px", delay: 3, opacity: 0.42 },
+            { color: "lime", size: 320, bottom: "-160px", left: "30%", delay: 6, opacity: 0.38, slow: true },
+            { color: "peach", size: 300, bottom: "-120px", right: "-60px", delay: 9, opacity: 0.32, slow: true },
+          ]}
+        />
+        {/* Floating sparkles for extra personality */}
+        <span aria-hidden className="pointer-events-none absolute left-[8%] top-[18%] text-2xl text-signal-violet/60 animate-float">✦</span>
+        <span aria-hidden className="pointer-events-none absolute right-[10%] top-[26%] text-xl text-signal-coral/60 animate-float" style={{ animationDelay: "900ms" }}>✦</span>
+        <span aria-hidden className="pointer-events-none absolute right-[16%] bottom-[18%] text-lg text-signal-limeInk/70 animate-float" style={{ animationDelay: "1800ms" }}>✦</span>
+        <div className="relative">
+          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
+            // Design
+          </div>
+          <h1 className="mt-3 font-display text-4xl font-bold tracking-tight md:text-6xl">
+            Print your idea <span className="gradient-text">on anything.</span>
+          </h1>
+          <p className="mx-auto mt-4 max-w-2xl text-paper-700">
+            Two paths — print one for yourself, or kit out the whole team. Same
+            premium fabric, same DTG print, same 5–7 day turnaround.
+          </p>
         </div>
-        <h1 className="mt-3 font-display text-4xl font-bold tracking-tight md:text-6xl">
-          Print your idea <span className="gradient-text">on anything.</span>
-        </h1>
-        <p className="mx-auto mt-4 max-w-2xl text-paper-700">
-          Two paths — print one for yourself, or kit out the whole team. Same
-          premium fabric, same DTG print, same 5–7 day turnaround.
-        </p>
-      </div>
+      </section>
 
       {/* Tabs */}
       <div className="mb-10 flex justify-center">

@@ -46,6 +46,11 @@ export default function ProductCard({ product }: { product: Product }) {
       href={`/product/${product.slug}`}
       className="card-hover group relative block p-4"
     >
+      {/* Slim aurora accent bar at the top edge — gives every card a dash of brand colour. */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-x-6 top-0 h-[2px] origin-left scale-x-0 rounded-full bg-gradient-aurora opacity-0 transition-all duration-500 group-hover:scale-x-100 group-hover:opacity-100"
+      />
       <div className="absolute inset-x-4 top-4 z-10 flex items-start justify-between gap-2">
         <span className="tag max-w-[55%] min-w-0">
           <span className="truncate">{shortDrop(product.drop)}</span>

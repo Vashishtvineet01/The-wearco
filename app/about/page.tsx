@@ -1,18 +1,33 @@
 import Link from "next/link";
 import NewsletterForm from "@/components/NewsletterForm";
+import Aurora from "@/components/Aurora";
 
 export default function AboutPage() {
   return (
-    <div className="mx-auto max-w-4xl px-5 py-16 lg:px-8 lg:py-24">
-      <div className="mb-12">
-        <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
-          // Manifesto
+    <div className="relative mx-auto max-w-4xl px-5 py-16 lg:px-8 lg:py-24">
+      {/* Manifesto hero — aurora wash + sparkles so the opening line lands with force. */}
+      <section className="spotlight-ocean relative mb-14 overflow-hidden rounded-3xl border border-paper-200 bg-paper-50/40 px-6 py-14 md:px-10 md:py-20">
+        <Aurora
+          blobs={[
+            { color: "violet", size: 420, top: "-140px", left: "-120px", opacity: 0.5 },
+            { color: "sky", size: 360, top: "-60px", right: "-80px", delay: 3, opacity: 0.4 },
+            { color: "lime", size: 320, bottom: "-160px", left: "32%", delay: 6, opacity: 0.38, slow: true },
+            { color: "peach", size: 300, bottom: "-120px", right: "-60px", delay: 9, opacity: 0.32, slow: true },
+          ]}
+        />
+        <span aria-hidden className="pointer-events-none absolute left-[7%] top-[20%] text-2xl text-signal-violet/60 animate-float">✦</span>
+        <span aria-hidden className="pointer-events-none absolute right-[9%] top-[30%] text-xl text-signal-coral/60 animate-float" style={{ animationDelay: "900ms" }}>✦</span>
+        <span aria-hidden className="pointer-events-none absolute left-[55%] bottom-[18%] text-lg text-signal-limeInk/70 animate-float" style={{ animationDelay: "1800ms" }}>✦</span>
+        <div className="relative">
+          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
+            // Manifesto
+          </div>
+          <h1 className="mt-3 font-display text-4xl font-bold leading-tight tracking-tight md:text-6xl">
+            Clothing for the people <br />
+            <span className="gradient-text">building it themselves.</span>
+          </h1>
         </div>
-        <h1 className="mt-3 font-display text-4xl font-bold leading-tight tracking-tight md:text-6xl">
-          Clothing for the people <br />
-          <span className="text-signal-limeInk">building it themselves.</span>
-        </h1>
-      </div>
+      </section>
 
       <div className="prose-styles space-y-6 text-lg leading-relaxed text-paper-700">
         <p>

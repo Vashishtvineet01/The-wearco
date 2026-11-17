@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import NewsletterForm from "@/components/NewsletterForm";
+import Aurora from "@/components/Aurora";
 
 export const metadata: Metadata = {
   title: "Community — TheWearCo",
@@ -15,21 +16,34 @@ export const metadata: Metadata = {
  */
 export default function CommunityPage() {
   return (
-    <div className="mx-auto max-w-6xl px-5 pb-20 pt-10 lg:px-8 lg:pt-16">
-      {/* Hero */}
-      <div className="text-center">
-        <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
-          // Community
+    <div className="relative mx-auto max-w-6xl px-5 pb-20 pt-10 lg:px-8 lg:pt-16">
+      {/* Hero — wrapped in an aurora bed so the Community lands with real colour. */}
+      <section className="spotlight-sunrise relative overflow-hidden rounded-3xl border border-paper-200 bg-paper-50/40 px-6 py-14 text-center md:px-10 md:py-20">
+        <Aurora
+          blobs={[
+            { color: "coral", size: 440, top: "-160px", left: "-120px", opacity: 0.5 },
+            { color: "violet", size: 380, top: "-80px", right: "-90px", delay: 3, opacity: 0.45 },
+            { color: "lime", size: 320, bottom: "-160px", right: "28%", delay: 6, opacity: 0.4, slow: true },
+            { color: "sky", size: 300, bottom: "-120px", left: "-60px", delay: 9, opacity: 0.35, slow: true },
+          ]}
+        />
+        <span aria-hidden className="pointer-events-none absolute left-[9%] top-[22%] text-2xl text-signal-coral/60 animate-float">✦</span>
+        <span aria-hidden className="pointer-events-none absolute right-[11%] top-[32%] text-xl text-signal-violet/60 animate-float" style={{ animationDelay: "900ms" }}>✦</span>
+        <span aria-hidden className="pointer-events-none absolute left-[46%] bottom-[18%] text-lg text-signal-limeInk/70 animate-float" style={{ animationDelay: "1800ms" }}>✦</span>
+        <div className="relative">
+          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
+            // Community
+          </div>
+          <h1 className="mt-3 font-display text-4xl font-bold tracking-tight md:text-6xl">
+            Every piece <span className="gradient-text">is a key.</span>
+          </h1>
+          <p className="mx-auto mt-4 max-w-2xl text-paper-700">
+            A hidden QR on every hoodie, cap and badge. Scan it to unlock the
+            founder Discord, monthly office hours and early access to every
+            drop.
+          </p>
         </div>
-        <h1 className="mt-3 font-display text-4xl font-bold tracking-tight md:text-6xl">
-          Every piece <span className="gradient-text">is a key.</span>
-        </h1>
-        <p className="mx-auto mt-4 max-w-2xl text-paper-700">
-          A hidden QR on every hoodie, cap and badge. Scan it to unlock the
-          founder Discord, monthly office hours and early access to every
-          drop.
-        </p>
-      </div>
+      </section>
 
       {/* QR unlock steps */}
       <div className="mt-14 grid gap-4 md:grid-cols-3">
