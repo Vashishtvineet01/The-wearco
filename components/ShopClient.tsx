@@ -61,6 +61,17 @@ export default function ShopClient({ products }: { products: Product[] }) {
 
   return (
     <>
+      <div className="mb-4 flex items-end justify-between gap-4">
+        <div>
+          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
+            // Catalog
+          </div>
+          <h2 className="mt-1 font-display text-2xl font-bold tracking-tight">
+            {list.length} piece{list.length === 1 ? "" : "s"}
+          </h2>
+        </div>
+      </div>
+
       <div className="card mb-8 flex flex-wrap items-center gap-3 p-3">
         <div className="flex flex-wrap items-center gap-1 rounded-full bg-paper-200 p-1">
           {TABS.map((t) => (
@@ -106,7 +117,7 @@ export default function ShopClient({ products }: { products: Product[] }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {list.map((p, i) => (
           <div
             key={p.slug}

@@ -41,21 +41,26 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <div className="mx-auto max-w-7xl px-5 py-10 lg:px-8 lg:py-16">
-      <nav className="mb-6 font-mono text-[11px] uppercase tracking-[0.18em] text-paper-500">
+      <nav className="mb-8 flex flex-wrap items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-paper-500">
         <Link href="/shop" className="hover:text-paper-800">
-          Shop
+          Shop all
         </Link>
-        <span className="mx-2">/</span>
+        <span>/</span>
         <span className="text-paper-700">{product.drop}</span>
+        <span>/</span>
+        <span className="text-paper-800">{product.name}</span>
       </nav>
 
       <ProductBuyPanel product={product} />
 
-      <div className="mt-24">
-        <h2 className="mb-6 font-display text-2xl font-bold tracking-tight">
+      <div className="mt-20">
+        <div className="mb-6 font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
+          // More from the drop
+        </div>
+        <h2 className="mb-6 font-display text-2xl font-bold tracking-tight md:text-3xl">
           You might also wear
         </h2>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {related.map((p) => (
             <ProductCard key={p.slug} product={p} />
           ))}
