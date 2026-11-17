@@ -106,20 +106,21 @@ model NewsletterSubscriber {
   createdAt DateTime @default(now())
 }
 
-/// Customer accounts — created on-demand when someone clicks a magic link.
-/// Orders are linked by email match, so guest purchases a buyer made before
-/// signing up are automatically visible in /account once they log in.
+/// Customer accounts — email + password and/or email OTP.
+/// Orders are linked by email match, so guest purchases made before
+/// signup are automatically visible in /account once they log in.
 model Customer {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  /// bcrypt hash — null for OTP-only accounts until they set a password.
+  passwordHash String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
-/// Short-lived email-confirmation tokens for passwordless login.
-/// We store the sha256 hash of the token, never the token itself, so a
-/// leaked DB can't be replayed. Used once then marked usedAt.
+/// Short-lived email OTP codes (and legacy magic-link hashes).
+/// We store the sha256 hash of the code/token, never the plaintext.
 model MagicLinkToken {
   id        String    @id @default(cuid())
   email     String

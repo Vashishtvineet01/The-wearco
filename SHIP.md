@@ -18,6 +18,6 @@ Env vars required on Vercel (Production):
 After deploy:
 
 1. `npx prisma db push` (or run the SQL in `prisma/migrations/20261117120000_add_customer_auth/`) so `Customer` + `MagicLinkToken` exist.
-2. Hit `/login`, request a magic link to a real inbox, confirm `/auth/verify` lands on `/account`.
-3. Place a guest COD/demo order, confirm the soft-prompt "Save this order" emails a link.
+2. Hit `/login` — create an account with email + password, then sign out and sign in again. Also try **Email OTP** (code is logged to the server console if `RESEND_API_KEY` is missing).
+3. Place a guest COD/demo order, confirm the soft-prompt can set a password or send an OTP.
 4. Confirm navbar shows the aurora initial pill when signed in.

@@ -48,10 +48,14 @@ export default function CheckoutClient({
   const [country, setCountry] = useState(prefill.country || "India");
   const [paymentMethod, setPaymentMethod] = useState<PayMethod>("upi");
 
-  // Soft-prompt state — only shown to guests after a successful order.
-  const [savePrompt, setSavePrompt] = useState<"idle" | "sending" | "sent">(
-    "idle"
-  );
+  // Soft-prompt — guests can create a password or verify via OTP.
+  const [savePrompt, setSavePrompt] = useState<
+    "idle" | "password" | "otp-sent" | "done"
+  >("idle");
+  const [savePassword, setSavePassword] = useState("");
+  const [saveCode, setSaveCode] = useState("");
+  const [saveBusy, setSaveBusy] = useState(false);
+  const [saveError, setSaveError] = useState("");
 
   const shippingBase = subtotal === 0 ? 0 : subtotal >= 1499 ? 0 : 99;
   const shipping = shippingBase + (paymentMethod === "cod" ? 49 : 0);
@@ -179,19 +183,71 @@ export default function CheckoutClient({
     }
   };
 
-  const onSaveAccount = async () => {
-    if (!email || savePrompt !== "idle") return;
-    setSavePrompt("sending");
+  const onCreatePassword = async () => {
+    if (!email || savePassword.length < 8) {
+      setSaveError("Password must be at least 8 characters.");
+      return;
+    }
+    setSaveBusy(true);
+    setSaveError("");
     try {
-      await fetch("/api/auth/magic-link", {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password: savePassword, name }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Could not create account");
+      setSavePrompt("done");
+    } catch (err) {
+      setSaveError(
+        err instanceof Error ? err.message : "Could not create account"
+      );
+    } finally {
+      setSaveBusy(false);
+    }
+  };
+
+  const onSendSaveOtp = async () => {
+    if (!email) return;
+    setSaveBusy(true);
+    setSaveError("");
+    try {
+      const res = await fetch("/api/auth/otp/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
-      setSavePrompt("sent");
-    } catch {
-      // Still show "sent" — magic-link route always 200s for anti-enumeration.
-      setSavePrompt("sent");
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Could not send code");
+      setSavePrompt("otp-sent");
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : "Could not send code");
+    } finally {
+      setSaveBusy(false);
+    }
+  };
+
+  const onVerifySaveOtp = async () => {
+    if (saveCode.length !== 6) {
+      setSaveError("Enter the 6-digit code.");
+      return;
+    }
+    setSaveBusy(true);
+    setSaveError("");
+    try {
+      const res = await fetch("/api/auth/otp/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, code: saveCode }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Invalid code");
+      setSavePrompt("done");
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : "Invalid code");
+    } finally {
+      setSaveBusy(false);
     }
   };
 
@@ -231,20 +287,107 @@ export default function CheckoutClient({
             {/* Soft-prompt: guest only */}
             {!prefill.isLoggedIn && (
               <div className="mt-8 rounded-2xl border border-paper-200 bg-paper-100/80 p-5 text-left">
-                {savePrompt === "sent" ? (
+                {savePrompt === "done" ? (
                   <>
                     <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-signal-limeInk">
-                      // Check your inbox
+                      // You&apos;re in
                     </div>
                     <p className="mt-2 text-sm text-paper-700">
-                      We sent a one-click sign-in link to{" "}
+                      Account ready for{" "}
                       <span className="font-semibold text-paper-900">
                         {email}
                       </span>
-                      . It works once and expires in 15 minutes — after that
-                      this order (and any past guest orders on this email) show
-                      up in your account.
+                      . This order (and any past guest orders on this email) now
+                      show on{" "}
+                      <Link
+                        href="/account"
+                        className="text-signal-violetInk underline underline-offset-2"
+                      >
+                        your account
+                      </Link>
+                      .
                     </p>
+                  </>
+                ) : savePrompt === "otp-sent" ? (
+                  <>
+                    <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-signal-limeInk">
+                      // Enter code
+                    </div>
+                    <p className="mt-2 text-sm text-paper-700">
+                      We emailed a 6-digit code to{" "}
+                      <span className="font-semibold text-paper-900">
+                        {email}
+                      </span>
+                      .
+                    </p>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={6}
+                      value={saveCode}
+                      onChange={(e) =>
+                        setSaveCode(
+                          e.target.value.replace(/\D/g, "").slice(0, 6)
+                        )
+                      }
+                      placeholder="123456"
+                      className="mt-3 w-full rounded-full border border-paper-200 bg-paper-50 px-4 py-2.5 font-mono text-sm tracking-[0.3em] outline-none focus:border-signal-violetInk/50"
+                    />
+                    {saveError && (
+                      <p className="mt-2 text-xs text-signal-coral">{saveError}</p>
+                    )}
+                    <button
+                      type="button"
+                      onClick={onVerifySaveOtp}
+                      disabled={saveBusy}
+                      className="btn-primary mt-3"
+                    >
+                      {saveBusy ? "Verifying…" : "Verify & save"}
+                    </button>
+                  </>
+                ) : savePrompt === "password" ? (
+                  <>
+                    <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-paper-600">
+                      // Create password
+                    </div>
+                    <p className="mt-2 text-sm text-paper-700">
+                      Saving for{" "}
+                      <span className="font-semibold text-paper-900">
+                        {email}
+                      </span>
+                      . Min 8 characters.
+                    </p>
+                    <input
+                      type="password"
+                      minLength={8}
+                      value={savePassword}
+                      onChange={(e) => setSavePassword(e.target.value)}
+                      placeholder="••••••••"
+                      className="mt-3 w-full rounded-full border border-paper-200 bg-paper-50 px-4 py-2.5 text-sm outline-none focus:border-signal-violetInk/50"
+                    />
+                    {saveError && (
+                      <p className="mt-2 text-xs text-signal-coral">{saveError}</p>
+                    )}
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        onClick={onCreatePassword}
+                        disabled={saveBusy}
+                        className="btn-primary"
+                      >
+                        {saveBusy ? "Saving…" : "Create account"}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSavePrompt("idle");
+                          setSaveError("");
+                        }}
+                        className="btn-ghost"
+                      >
+                        Back
+                      </button>
+                    </div>
                   </>
                 ) : (
                   <>
@@ -255,20 +398,32 @@ export default function CheckoutClient({
                       Save this order to your account
                     </h2>
                     <p className="mt-1 text-sm text-paper-600">
-                      One tap. We&apos;ll email a magic link — no password.
-                      Track this order (and any you placed as a guest before)
-                      from one place.
+                      Create a password or get a one-time email code. Track this
+                      order (and any past guest orders) from one place.
                     </p>
-                    <button
-                      type="button"
-                      onClick={onSaveAccount}
-                      disabled={savePrompt === "sending"}
-                      className="btn-primary mt-4"
-                    >
-                      {savePrompt === "sending"
-                        ? "Sending link…"
-                        : "Email me a sign-in link"}
-                    </button>
+                    {saveError && (
+                      <p className="mt-2 text-xs text-signal-coral">{saveError}</p>
+                    )}
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSavePrompt("password");
+                          setSaveError("");
+                        }}
+                        className="btn-primary"
+                      >
+                        Set a password
+                      </button>
+                      <button
+                        type="button"
+                        onClick={onSendSaveOtp}
+                        disabled={saveBusy}
+                        className="btn-ghost"
+                      >
+                        {saveBusy ? "Sending…" : "Email me a code"}
+                      </button>
+                    </div>
                   </>
                 )}
               </div>

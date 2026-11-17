@@ -4,7 +4,8 @@ import BrandLoader from "@/components/BrandLoader";
 
 export const metadata = {
   title: "Sign in — TheWearCo",
-  description: "Passwordless sign-in. No account needed to shop.",
+  description:
+    "Sign in with email and password, or a one-time email code. Guest checkout still available.",
 };
 
 export default function LoginPage() {
