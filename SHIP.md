@@ -11,6 +11,7 @@ Env vars required on Vercel (Production):
 | `MAIL_REPLY_TO` | e.g. `hi@thewearco.com` |
 | `NEXT_PUBLIC_SITE_URL` | Canonical site URL (no trailing slash) |
 | `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` | Optional. e.g. `thewearco.com` — enables cookie-less analytics |
+| `NEXT_PUBLIC_ANDROID_APP_URL` | Optional. Direct Android APK / Play Store URL. Default: GitHub `releases/latest/download/thewearco-android.apk` |
 | `RAZORPAY_KEY_ID` | Live key for production |
 | `RAZORPAY_KEY_SECRET` | Live secret |
 | `RAZORPAY_WEBHOOK_SECRET` | From Razorpay dashboard webhook |

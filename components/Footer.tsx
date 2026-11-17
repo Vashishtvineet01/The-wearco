@@ -1,6 +1,11 @@
 import Link from "next/link";
 import NewsletterForm from "./NewsletterForm";
 
+/** Play Store / direct APK URL. Override with NEXT_PUBLIC_ANDROID_APP_URL. */
+const ANDROID_APP_URL =
+  process.env.NEXT_PUBLIC_ANDROID_APP_URL ||
+  "https://github.com/Vashishtvineet01/The-wearco/releases/latest/download/thewearco-android.apk";
+
 export default function Footer() {
   return (
     <footer className="relative mt-32 overflow-hidden border-t border-paper-200">
@@ -20,12 +25,24 @@ export default function Footer() {
           <p className="mt-2 max-w-xs text-sm text-paper-600">
             Internet uniform for founders, creators and builders. Wear what you’re shipping.
           </p>
-          <div className="mt-6 flex items-center gap-2">
+          <div className="mt-6 flex flex-wrap items-center gap-2">
             <span className="tag">
               <span className="h-1.5 w-1.5 animate-glow rounded-full bg-signal-lime" />
               Drop 03 — Live
             </span>
           </div>
+          <a
+            href={ANDROID_APP_URL}
+            download="thewearco-android.apk"
+            className="btn-primary mt-5 inline-flex items-center gap-2"
+            aria-label="Download TheWearCo Android app"
+          >
+            <AndroidIcon />
+            Download Android app
+          </a>
+          <p className="mt-2 max-w-xs text-[11px] text-paper-500">
+            Direct APK install. Allow installs from this browser if Android asks.
+          </p>
         </div>
 
         <div>
@@ -56,6 +73,11 @@ export default function Footer() {
             <li><Link href="/track">Track an order</Link></li>
             <li><Link href="/account">Your account</Link></li>
             <li><Link href="/login">Sign in</Link></li>
+            <li>
+              <a href={ANDROID_APP_URL} download="thewearco-android.apk">
+                Android app
+              </a>
+            </li>
           </ul>
         </div>
 
@@ -86,5 +108,13 @@ export default function Footer() {
         </div>
       </div>
     </footer>
+  );
+}
+
+function AndroidIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor" aria-hidden>
+      <path d="M17.6 9.48l1.84-3.18c.16-.31.04-.69-.26-.85-.29-.15-.65-.06-.83.22l-1.88 3.24a11.43 11.43 0 00-8.94 0L5.65 5.67c-.19-.28-.54-.37-.83-.22-.3.16-.42.54-.26.85l1.84 3.18C4.16 11.17 2.4 14.05 2.4 17.3v.6c0 .55.45 1 1 1h17.2c.55 0 1-.45 1-1v-.6c0-3.25-1.76-6.13-3.99-7.82zM7.5 15.3a1.1 1.1 0 110-2.2 1.1 1.1 0 010 2.2zm9 0a1.1 1.1 0 110-2.2 1.1 1.1 0 010 2.2z" />
+    </svg>
   );
 }
