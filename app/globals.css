@@ -376,20 +376,6 @@ body::after {
   background: transparent;
 }
 
-.studio-stories-scroll {
-  -webkit-overflow-scrolling: touch;
-}
-.studio-stories-scroll::-webkit-scrollbar {
-  height: 6px;
-}
-.studio-stories-scroll::-webkit-scrollbar-thumb {
-  background: rgba(20, 17, 14, 0.2);
-  border-radius: 8px;
-}
-.studio-stories-scroll::-webkit-scrollbar-track {
-  background: transparent;
-}
-
 @keyframes shimmer-sweep {
   0% {
     transform: translateX(-120%);

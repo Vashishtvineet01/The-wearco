@@ -3,6 +3,7 @@ import Marquee from "@/components/Marquee";
 import ProductCard from "@/components/ProductCard";
 import ProductMockup from "@/components/ProductMockup";
 import ScrollReveal from "@/components/ScrollReveal";
+import StudioStories from "@/components/StudioStories";
 import { getActiveProducts } from "@/lib/catalog";
 import {
   CATEGORY_PLURAL_LABELS,
@@ -367,135 +368,6 @@ function PrintYourOwnSection() {
     </section>
   );
 }
-
-function StudioStories() {
-  // Duplicate once so the strip feels continuous when scrolling.
-  const stories = [...STUDIO_STORIES, ...STUDIO_STORIES];
-
-  return (
-    <section id="worn-by" className="relative overflow-hidden border-y border-paper-200">
-      <div className="mx-auto max-w-7xl px-5 pt-16 lg:px-8 lg:pt-20">
-        <ScrollReveal>
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div className="max-w-xl">
-              <div className="flex items-center gap-3">
-                <span aria-hidden className="h-px w-8 bg-paper-400" />
-                <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-500">
-                  Made with Design Studio
-                </div>
-              </div>
-              <h2 className="mt-4 font-display text-3xl font-bold tracking-tight md:text-4xl">
-                Real customers. <span className="gradient-text">Real prints.</span>
-              </h2>
-              <p className="mt-3 text-sm text-paper-600 md:text-base">
-                People using the shop and studio for everyday wear, teams and walls.
-              </p>
-            </div>
-            <Link
-              href="/design"
-              className="text-sm font-semibold text-paper-900 underline-offset-4 hover:underline"
-            >
-              Start your design →
-            </Link>
-          </div>
-        </ScrollReveal>
-      </div>
-
-      <div className="relative mt-10 pb-16 lg:pb-20">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-paper-50 to-transparent sm:w-16"
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-paper-50 to-transparent sm:w-16"
-        />
-
-        <div
-          className="studio-stories-scroll flex gap-4 overflow-x-auto px-5 pb-2 scroll-smooth snap-x snap-mandatory lg:px-8"
-          style={{ scrollbarWidth: "thin" }}
-        >
-          {stories.map((f, i) => (
-            <blockquote
-              key={`${f.handle}-${i}`}
-              className="flex w-[85vw] max-w-sm shrink-0 snap-start flex-col rounded-2xl border border-paper-200 bg-paper-50/90 p-5 sm:w-[320px]"
-            >
-              <div className="flex items-center gap-3">
-                <span
-                  className="grid h-10 w-10 shrink-0 place-items-center rounded-full font-display text-sm font-bold text-[#fff8eb]"
-                  style={{ background: f.tone }}
-                >
-                  {f.initials}
-                </span>
-                <div className="min-w-0">
-                  <div className="truncate font-semibold text-paper-900">{f.name}</div>
-                  <div className="truncate font-mono text-[10px] uppercase tracking-[0.16em] text-paper-500">
-                    {f.handle} · {f.role}
-                  </div>
-                </div>
-              </div>
-              <p className="mt-4 flex-1 text-base leading-relaxed text-paper-800">
-                “{f.quote}”
-              </p>
-              <div className="mt-4 flex items-center justify-between gap-3 border-t border-paper-200 pt-3">
-                <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-paper-500">
-                  Ordered
-                </span>
-                <span className="font-semibold text-paper-900">{f.piece}</span>
-              </div>
-            </blockquote>
-          ))}
-        </div>
-        <p className="mt-3 px-5 text-center font-mono text-[10px] uppercase tracking-[0.2em] text-paper-400 lg:px-8">
-          Scroll to see more →
-        </p>
-      </div>
-    </section>
-  );
-}
-
-const STUDIO_STORIES = [
-  {
-    initials: "KR",
-    name: "Kavya Rao",
-    handle: "@kavyabuilds",
-    role: "Team order",
-    piece: "Custom hoodies × 24",
-    tone: "#b45309",
-    quote:
-      "Ordered branded hoodies for the launch team. Studio mockup made approvals easy — they landed in a week.",
-  },
-  {
-    initials: "AN",
-    name: "Arjun Nair",
-    handle: "@arjunwrites",
-    role: "Solo print",
-    piece: "Offline Mode Tee",
-    tone: "#92400e",
-    quote:
-      "Bought a ready tee from the shop, then customized a second one with my newsletter logo. Both feel premium.",
-  },
-  {
-    initials: "PM",
-    name: "Priya Mehta",
-    handle: "@priyacreates",
-    role: "Poster drop",
-    piece: "Studio Print Poster",
-    tone: "#6b4f35",
-    quote:
-      "Printed menu art as posters for the restaurant. Uploaded the file, picked A2, done.",
-  },
-  {
-    initials: "ZS",
-    name: "Zaid Sheikh",
-    handle: "@zaidbuilds",
-    role: "Merch pack",
-    piece: "Caps + badges",
-    tone: "#5a4e42",
-    quote:
-      "Mixed caps and badges for a beta meetup. Guest checkout was quick; tracking was clear.",
-  },
-];
 
 function DropsTimeline({ drops }: { drops: string[] }) {
   return (
