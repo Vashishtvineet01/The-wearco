@@ -51,9 +51,9 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ["Manrope", "ui-sans-serif", "system-ui", "sans-serif"],
-        display: ["Syne", "Manrope", "sans-serif"],
-        mono: ["'IBM Plex Mono'", "ui-monospace", "monospace"],
+        sans: ["'Source Sans 3'", "ui-sans-serif", "system-ui", "sans-serif"],
+        display: ["'Source Sans 3'", "ui-sans-serif", "system-ui", "sans-serif"],
+        mono: ["'Source Code Pro'", "ui-monospace", "monospace"],
       },
       borderRadius: {
         "2xl": "1rem",

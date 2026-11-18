@@ -10,9 +10,9 @@ import type { CustomDesign } from "@/lib/types";
 import { downloadDataURL, renderMockupToDataURL } from "@/lib/mockup";
 
 const FONTS = [
-  { id: "display", label: "Display", css: "'Space Grotesk', sans-serif" },
-  { id: "mono", label: "Mono", css: "'JetBrains Mono', monospace" },
-  { id: "sans", label: "Sans", css: "Inter, sans-serif" }
+  { id: "display", label: "Sans", css: "'Source Sans 3', sans-serif" },
+  { id: "mono", label: "Mono", css: "'Source Code Pro', monospace" },
+  { id: "sans", label: "Clean", css: "ui-sans-serif, system-ui, sans-serif" }
 ];
 
 const PRESET_LINES = [

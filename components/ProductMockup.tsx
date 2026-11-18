@@ -203,7 +203,7 @@ const ProductMockup = forwardRef<HTMLDivElement, Props>(function ProductMockup(
                     design?.textColor ||
                     printColor ||
                     (isLightFabric ? "#0a0a0a" : "#f7f7f7"),
-                  fontFamily: design?.font || "'Space Grotesk', Inter, sans-serif",
+                  fontFamily: design?.font || "'Source Sans 3', ui-sans-serif, sans-serif",
                   // Size relative to the CARD (container inline size), not the
                   // viewport. 7cqi keeps the print token readable at ~8–22px
                   // across every breakpoint without ever overflowing the print
