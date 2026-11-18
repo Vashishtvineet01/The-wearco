@@ -62,8 +62,8 @@ export default function Navbar() {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
         <Link href="/" className="group flex items-center gap-2.5">
-          <span className="relative grid h-9 w-9 place-items-center overflow-hidden rounded-xl bg-signal-lime text-ink-950 shadow-[0_6px_24px_-6px_rgba(198,255,74,0.55)] transition-transform duration-300 group-hover:scale-105">
-            <span className="absolute inset-0 bg-signal-lime" />
+          <span className="relative grid h-9 w-9 place-items-center overflow-hidden rounded-xl bg-signal-coral text-white shadow-[0_6px_24px_-6px_rgba(225,29,46,0.55)] transition-transform duration-300 group-hover:scale-105">
+            <span className="absolute inset-0 bg-signal-coral" />
             <span className="absolute inset-0 bg-gradient-aurora opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
             <svg viewBox="0 0 24 24" className="relative h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.2">
               <path d="M3 7l9-5 9 5-9 5-9-5zM3 12l9 5 9-5M3 17l9 5 9-5" />
@@ -93,11 +93,11 @@ export default function Navbar() {
           {accountLabel ? (
             <Link
               href="/account"
-              className="relative grid h-9 w-9 place-items-center overflow-hidden rounded-full bg-signal-lime text-sm font-bold text-ink-950 shadow-[0_4px_16px_-4px_rgba(198,255,74,0.55)]"
+              className="relative grid h-9 w-9 place-items-center overflow-hidden rounded-full bg-signal-coral text-sm font-bold text-white shadow-[0_4px_16px_-4px_rgba(225,29,46,0.55)]"
               aria-label={`Account · ${accountLabel}`}
               title={accountLabel}
             >
-              <span className="absolute inset-0 bg-signal-lime" />
+              <span className="absolute inset-0 bg-signal-coral" />
               <span className="relative uppercase">
                 {accountLabel.charAt(0)}
               </span>
@@ -122,7 +122,7 @@ export default function Navbar() {
               <circle cx="18" cy="20" r="1.5" />
             </svg>
             {count > 0 && (
-              <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-signal-lime px-1 font-mono text-[10px] font-bold text-ink-950">
+              <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-signal-coral px-1 font-mono text-[10px] font-bold text-white">
                 {count}
               </span>
             )}

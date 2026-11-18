@@ -114,16 +114,16 @@ export default function LoginForm() {
             className="absolute inset-0 opacity-95"
             style={{
               background:
-                "linear-gradient(145deg, #0a0b0f 0%, #102018 45%, #0f766e 100%)",
+                "linear-gradient(145deg, #14110e 0%, #2a1216 45%, #e11d2e 100%)",
             }}
           />
           <div
             aria-hidden
-            className="absolute -left-20 top-1/4 h-80 w-80 rounded-full bg-signal-lime/35 blur-3xl"
+            className="absolute -left-20 top-1/4 h-80 w-80 rounded-full bg-signal-coral/40 blur-3xl"
           />
           <div
             aria-hidden
-            className="absolute -right-16 bottom-1/4 h-72 w-72 rounded-full bg-signal-mint/30 blur-3xl"
+            className="absolute -right-16 bottom-1/4 h-72 w-72 rounded-full bg-signal-peach/35 blur-3xl"
           />
           <div className="relative">
             <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-50/70">

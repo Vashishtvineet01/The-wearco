@@ -55,7 +55,7 @@ export default async function ShopPage() {
               className="pointer-events-none absolute inset-0"
               style={{
                 background:
-                  "radial-gradient(50% 55% at 50% 50%, rgba(198,255,74,0.28), transparent 70%), radial-gradient(40% 40% at 85% 15%, rgba(20,184,166,0.2), transparent 55%)",
+                  "radial-gradient(50% 55% at 50% 50%, rgba(225,29,46,0.32), transparent 70%), radial-gradient(40% 40% at 85% 15%, rgba(245,158,11,0.2), transparent 55%)",
               }}
             />
             <div className="absolute left-6 top-6 z-10 flex gap-2">
@@ -91,7 +91,7 @@ export default async function ShopPage() {
               <span className="font-display text-2xl font-bold">
                 {formatINR(featured.price)}
               </span>
-              <span className="rounded-full bg-signal-lime px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-ink-950 transition group-hover:shadow-[0_8px_28px_-8px_rgba(198,255,74,0.7)]">
+              <span className="rounded-full bg-signal-coral px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-white transition group-hover:shadow-[0_8px_28px_-8px_rgba(225,29,46,0.7)]">
                 View piece →
               </span>
             </div>

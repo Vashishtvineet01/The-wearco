@@ -1,8 +1,8 @@
 import type { Config } from "tailwindcss";
 
 /**
- * TheWearCo visual system v2 — cool stone + electric lime + teal.
- * Deliberately not purple-pastel / cream-serif / broadsheet.
+ * TheWearCo visual system v3 — warm cream + red accents.
+ * Background inspired by parchment/dot-grid; primary signal is red.
  */
 const config: Config = {
   content: [
@@ -13,59 +13,47 @@ const config: Config = {
     extend: {
       colors: {
         paper: {
-          50: "#f3f4f6",
-          100: "#e8eaee",
-          200: "#d5d8e0",
-          300: "#b8bdc9",
-          400: "#8b91a1",
-          500: "#5c6374",
-          600: "#3f4554",
-          700: "#2a2e3a",
-          800: "#171a22",
-          900: "#0a0b0f",
+          50: "#f7f1e9",
+          100: "#efe7db",
+          200: "#e2d6c6",
+          300: "#cfc0ab",
+          400: "#a9947c",
+          500: "#7a6a58",
+          600: "#5a4e42",
+          700: "#3d352d",
+          800: "#241f1a",
+          900: "#14110e",
         },
         ink: {
-          50: "#f4f5f7",
-          100: "#e4e6eb",
-          200: "#c5c9d2",
-          300: "#9aa1b0",
-          400: "#6e7689",
-          500: "#4b5263",
-          600: "#343a48",
-          700: "#222632",
-          800: "#141820",
-          900: "#0c0e14",
-          950: "#06070a",
+          50: "#f7f1e9",
+          100: "#ebe3d8",
+          200: "#d2c6b6",
+          300: "#b0a090",
+          400: "#857564",
+          500: "#5c4f43",
+          600: "#3f352c",
+          700: "#2a231d",
+          800: "#1a1511",
+          900: "#100e0b",
+          950: "#0a0806",
         },
         signal: {
-          lime: "#c6ff4a",
-          limeInk: "#3a5208",
-          coral: "#ff4d3d",
-          // Legacy class names kept; mapped to teal so the site sheds purple.
-          violet: "#14b8a6",
-          violetInk: "#0f766e",
-          sky: "#38bdf8",
-          peach: "#fb923c",
-          mint: "#2dd4bf",
+          // Primary brand punch — red
+          coral: "#e11d2e",
+          // Legacy names remapped into the new system
+          lime: "#e11d2e",
+          limeInk: "#9f1239",
+          violet: "#e11d2e",
+          violetInk: "#be123c",
+          sky: "#0ea5e9",
+          peach: "#f59e0b",
+          mint: "#059669",
         },
       },
       fontFamily: {
-        sans: [
-          "Manrope",
-          "ui-sans-serif",
-          "system-ui",
-          "sans-serif",
-        ],
-        display: [
-          "Syne",
-          "Manrope",
-          "sans-serif",
-        ],
-        mono: [
-          "'IBM Plex Mono'",
-          "ui-monospace",
-          "monospace",
-        ],
+        sans: ["Manrope", "ui-sans-serif", "system-ui", "sans-serif"],
+        display: ["Syne", "Manrope", "sans-serif"],
+        mono: ["'IBM Plex Mono'", "ui-monospace", "monospace"],
       },
       borderRadius: {
         "2xl": "1rem",
@@ -73,11 +61,11 @@ const config: Config = {
       },
       backgroundImage: {
         "gradient-aurora":
-          "linear-gradient(135deg, #c6ff4a 0%, #14b8a6 48%, #0a0b0f 100%)",
+          "linear-gradient(135deg, #e11d2e 0%, #f59e0b 45%, #14110e 100%)",
         "gradient-aurora-soft":
-          "linear-gradient(135deg, rgba(198,255,74,0.95) 0%, rgba(20,184,166,0.9) 55%, rgba(10,11,15,0.9) 100%)",
+          "linear-gradient(135deg, rgba(225,29,46,0.95) 0%, rgba(245,158,11,0.85) 55%, rgba(20,17,14,0.9) 100%)",
         "gradient-radial":
-          "radial-gradient(circle at 50% 0%, rgba(198,255,74,0.22), transparent 60%)",
+          "radial-gradient(circle at 50% 0%, rgba(225,29,46,0.14), transparent 60%)",
       },
       keyframes: {
         marquee: {

@@ -44,8 +44,8 @@ export default function ProductBuyPanel({ product }: { product: Product }) {
             aria-hidden
             className="pointer-events-none absolute inset-0"
             style={{
-              background:
-                "radial-gradient(55% 50% at 50% 45%, rgba(198,255,74,0.22), transparent 70%), radial-gradient(40% 35% at 80% 20%, rgba(20,184,166,0.2), transparent 60%)",
+                background:
+                "radial-gradient(55% 50% at 50% 45%, rgba(225,29,46,0.28), transparent 70%), radial-gradient(40% 35% at 80% 20%, rgba(245,158,11,0.18), transparent 60%)",
             }}
           />
           <div className="absolute left-5 top-5 z-10 flex flex-wrap gap-2">
@@ -183,7 +183,7 @@ export default function ProductBuyPanel({ product }: { product: Product }) {
                 onClick={() => setSize(s)}
                 className={`grid h-12 min-w-12 place-items-center rounded-full border text-sm font-semibold transition ${
                   size === s
-                    ? "border-transparent bg-signal-lime text-ink-950 shadow-[0_8px_24px_-10px_rgba(198,255,74,0.7)]"
+                    ? "border-transparent bg-signal-coral text-white shadow-[0_8px_24px_-10px_rgba(225,29,46,0.7)]"
                     : "border-paper-200 bg-white text-paper-800 hover:border-paper-900"
                 }`}
               >

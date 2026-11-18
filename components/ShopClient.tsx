@@ -81,7 +81,7 @@ export default function ShopClient({ products }: { products: Product[] }) {
               onClick={() => onTab(t.id)}
               className={`relative rounded-full px-4 py-1.5 text-xs transition-all duration-300 ${
                 tab === t.id
-                  ? "bg-gradient-aurora text-ink-950 shadow-[0_4px_18px_-6px_rgba(124,92,255,0.6)]"
+                  ? "bg-signal-coral text-white shadow-[0_4px_18px_-6px_rgba(225,29,46,0.55)]"
                   : "text-paper-700 hover:bg-paper-100 hover:text-paper-900"
               }`}
             >
