@@ -184,21 +184,13 @@ class _NavButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
           margin: const EdgeInsets.symmetric(horizontal: 2),
           decoration: BoxDecoration(
-            gradient: selected
-                ? const LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color(0x337C5CFF),
-                      Color(0x33FF5C3B),
-                      Color(0x22D8FF36),
-                    ],
-                  )
+            color: selected
+                ? AppColors.paper100.withValues(alpha: 0.95)
                 : null,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
               color: selected
-                  ? AppColors.signalViolet.withValues(alpha: 0.4)
+                  ? AppColors.paper300
                   : Colors.transparent,
               width: 1,
             ),
@@ -222,23 +214,15 @@ class _NavButton extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 5, vertical: 1),
                         decoration: BoxDecoration(
-                          gradient: AppColors.auroraGradient,
+                          color: AppColors.brandAmberInk,
                           borderRadius: BorderRadius.circular(999),
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppColors.signalCoral
-                                  .withValues(alpha: 0.6),
-                              blurRadius: 10,
-                              spreadRadius: -2,
-                            ),
-                          ],
                         ),
                         constraints: const BoxConstraints(minWidth: 16),
                         child: Text(
                           badge!,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
-                            color: AppColors.ink950,
+                            color: AppColors.brandCream,
                             fontSize: 10,
                             fontWeight: FontWeight.w800,
                             height: 1.1,

@@ -194,7 +194,7 @@ class _GarmentPainter extends CustomPainter {
             fontWeight: FontWeight.w800,
             height: 1.0,
             letterSpacing: -0.4,
-            fontFamily: 'SpaceGrotesk',
+            fontFamily: 'Source Sans 3',
           ),
         ),
         textAlign: TextAlign.center,

@@ -363,20 +363,20 @@ class _DesignScreenState extends ConsumerState<DesignScreen> {
         padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
         children: [
           Text(
-            '// PRINT YOUR OWN',
+            '// DESIGN STUDIO',
             style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                  color: AppColors.signalLime,
+                  color: AppColors.brandAmberInk,
                 ),
           ),
           const SizedBox(height: 6),
           Text(
-            'Your text. Any garment.',
+            'Design & print on anything.',
             style: Theme.of(context).textTheme.displayMedium,
           ),
           const SizedBox(height: 8),
           Text(
-            'Pick a base, type your line, choose a colour. We DTG-print and '
-            'ship in 5–7 days. ₹100 flat customization fee.',
+            'Pick a base, type your line or upload art, place it on a live '
+            'mockup. We print and ship in 5–7 days. ₹100 flat customization fee.',
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: 18),
@@ -610,9 +610,9 @@ class _FontOption {
 /// Mirrors the web `FONTS` list in `StudioClient.tsx`. Keep ids identical so
 /// an order placed from either surface prints with the same typeface.
 const _fonts = <_FontOption>[
-  _FontOption(id: 'display', label: 'Display', googleFamily: 'Space Grotesk'),
-  _FontOption(id: 'mono', label: 'Mono', googleFamily: 'JetBrains Mono'),
-  _FontOption(id: 'sans', label: 'Sans', googleFamily: 'Inter'),
+  _FontOption(id: 'display', label: 'Sans', googleFamily: 'Source Sans 3'),
+  _FontOption(id: 'mono', label: 'Mono', googleFamily: 'Source Code Pro'),
+  _FontOption(id: 'sans', label: 'Clean', googleFamily: 'Source Sans 3'),
 ];
 
 class _GarmentOption {
@@ -913,7 +913,7 @@ class _DesignCanvas extends StatelessWidget {
                         child: const Text(
                           'LIVE PREVIEW',
                           style: TextStyle(
-                            fontFamily: 'JetBrainsMono',
+                            fontFamily: 'Source Code Pro',
                             fontSize: 9,
                             letterSpacing: 1.5,
                             color: AppColors.ink950,
@@ -961,7 +961,7 @@ class _DesignCanvas extends StatelessWidget {
                                   'PNG',
                                   style: TextStyle(
                                     color: AppColors.signalLime,
-                                    fontFamily: 'JetBrainsMono',
+                                    fontFamily: 'Source Code Pro',
                                     fontSize: 10,
                                     letterSpacing: 1.5,
                                     fontWeight: FontWeight.w700,
@@ -1153,7 +1153,7 @@ class _StudioTabBar extends StatelessWidget {
                   child: Text(
                     t.label.toUpperCase(),
                     style: TextStyle(
-                      fontFamily: 'JetBrainsMono',
+                      fontFamily: 'Source Code Pro',
                       fontSize: 10,
                       letterSpacing: 1.5,
                       fontWeight: FontWeight.w700,
@@ -1362,7 +1362,7 @@ class _PresetLinesGrid extends StatelessWidget {
     'v1.0',
     'No Days Off',
     'Offline Mode',
-    'Founder Energy',
+    'Custom Print',
     'Late Night Shipping',
     'Ship It',
     '0 -> 1',
@@ -1420,7 +1420,7 @@ class _PresetChip extends StatelessWidget {
         child: Text(
           label,
           style: TextStyle(
-            fontFamily: 'JetBrainsMono',
+            fontFamily: 'Source Code Pro',
             fontSize: 11,
             fontWeight: FontWeight.w700,
             color: selected ? AppColors.ink50 : AppColors.ink100,
@@ -1512,7 +1512,7 @@ class _FineTuneCard extends StatelessWidget {
           child: Text(
             label,
             style: const TextStyle(
-              fontFamily: 'JetBrainsMono',
+              fontFamily: 'Source Code Pro',
               fontSize: 10,
               color: AppColors.ink300,
               letterSpacing: 1.4,
@@ -1536,7 +1536,7 @@ class _FineTuneCard extends StatelessWidget {
             '$display$suffix',
             textAlign: TextAlign.right,
             style: const TextStyle(
-              fontFamily: 'JetBrainsMono',
+              fontFamily: 'Source Code Pro',
               fontSize: 11,
               color: AppColors.ink100,
             ),
@@ -1628,7 +1628,7 @@ class _GarmentChip extends StatelessWidget {
             Text(
               formatInr(option.price),
               style: const TextStyle(
-                fontFamily: 'JetBrainsMono',
+                fontFamily: 'Source Code Pro',
                 fontSize: 10,
                 color: AppColors.ink300,
               ),
@@ -1914,7 +1914,7 @@ class _QtyStepper extends StatelessWidget {
               '$qty',
               textAlign: TextAlign.center,
               style: const TextStyle(
-                fontFamily: 'JetBrainsMono',
+                fontFamily: 'Source Code Pro',
                 color: AppColors.ink50,
                 fontWeight: FontWeight.w700,
                 fontSize: 16,
@@ -1973,7 +1973,7 @@ class _PriceBreakdown extends StatelessWidget {
               Text(
                 formatInr(total),
                 style: const TextStyle(
-                  fontFamily: 'JetBrainsMono',
+                  fontFamily: 'Source Code Pro',
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
                   color: AppColors.signalLime,
@@ -1994,7 +1994,7 @@ class _PriceBreakdown extends StatelessWidget {
         Text(
           b,
           style: const TextStyle(
-            fontFamily: 'JetBrainsMono',
+            fontFamily: 'Source Code Pro',
             color: AppColors.ink100,
             fontSize: 13,
           ),
@@ -2016,18 +2016,9 @@ class _BulkPromoCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              AppColors.signalViolet.withValues(alpha: 0.18),
-              AppColors.signalCoral.withValues(alpha: 0.10),
-            ],
-          ),
+          color: AppColors.paper100,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: AppColors.signalViolet.withValues(alpha: 0.35),
-          ),
+          border: Border.all(color: AppColors.paper300),
         ),
         child: Row(
           children: [
@@ -2035,12 +2026,12 @@ class _BulkPromoCard extends StatelessWidget {
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: AppColors.ink950.withValues(alpha: 0.5),
+                gradient: AppColors.auroraGradient,
                 borderRadius: BorderRadius.circular(10),
               ),
               alignment: Alignment.center,
               child: const Icon(Icons.inventory_2_outlined,
-                  color: AppColors.ink50, size: 20),
+                  color: AppColors.brandCream, size: 20),
             ),
             const SizedBox(width: 12),
             const Expanded(

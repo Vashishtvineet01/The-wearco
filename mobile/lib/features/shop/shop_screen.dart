@@ -110,17 +110,17 @@ class _ShopBody extends StatelessWidget {
                 Text(
                   '// SHOP',
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: AppColors.signalLime,
+                        color: AppColors.brandAmberInk,
                       ),
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  'Internet uniform.',
+                  'Apparel & prints, ready to wear.',
                   style: Theme.of(context).textTheme.displayMedium,
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  'Limited drops for founders, creators, freelancers.',
+                  'Browse the catalog — or design your own in Design Studio.',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],
@@ -152,31 +152,22 @@ class _ShopBody extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 10),
                     decoration: BoxDecoration(
-                      gradient:
-                          active ? AppColors.auroraGradient : null,
-                      color: active ? null : Colors.white.withValues(alpha: 0.04),
+                      color: active
+                          ? AppColors.paper900
+                          : AppColors.paper100.withValues(alpha: 0.85),
                       borderRadius: BorderRadius.circular(999),
                       border: Border.all(
                         color: active
-                            ? AppColors.signalViolet.withValues(alpha: 0.5)
-                            : Colors.white10,
+                            ? AppColors.paper900
+                            : AppColors.paper300,
                       ),
-                      boxShadow: active
-                          ? [
-                              BoxShadow(
-                                color: AppColors.signalViolet
-                                    .withValues(alpha: 0.4),
-                                blurRadius: 14,
-                                spreadRadius: -4,
-                              ),
-                            ]
-                          : null,
                     ),
                     child: Text(
                       label,
                       style: TextStyle(
-                        color:
-                            active ? AppColors.ink950 : AppColors.ink100,
+                        color: active
+                            ? AppColors.brandCream
+                            : AppColors.paper800,
                         fontWeight: FontWeight.w700,
                         fontSize: 12,
                       ),
@@ -234,19 +225,9 @@ class _DesignBanner extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              AppColors.signalViolet.withValues(alpha: 0.22),
-              AppColors.signalCoral.withValues(alpha: 0.14),
-              AppColors.signalLime.withValues(alpha: 0.10),
-            ],
-          ),
+          color: AppColors.paper100,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: AppColors.signalLime.withValues(alpha: 0.35),
-          ),
+          border: Border.all(color: AppColors.paper300),
         ),
         child: Row(
           children: [
@@ -261,7 +242,7 @@ class _DesignBanner extends StatelessWidget {
               child: const Icon(
                 Icons.palette,
                 size: 22,
-                color: AppColors.ink950,
+                color: AppColors.brandCream,
               ),
             ),
             const SizedBox(width: 12),
@@ -280,7 +261,7 @@ class _DesignBanner extends StatelessWidget {
                   const Text(
                     'Pick a garment, type your line, see a live mockup.',
                     style: TextStyle(
-                      color: AppColors.ink200,
+                      color: AppColors.paper700,
                       fontSize: 12,
                     ),
                   ),
@@ -288,7 +269,7 @@ class _DesignBanner extends StatelessWidget {
               ),
             ),
             const Icon(Icons.chevron_right,
-                color: AppColors.ink100, size: 22),
+                color: AppColors.paper800, size: 22),
           ],
         ),
       ),
@@ -309,8 +290,8 @@ class _ProductCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
-          color: Colors.white.withValues(alpha: 0.03),
+          border: Border.all(color: AppColors.paper200),
+          color: AppColors.paper100.withValues(alpha: 0.65),
         ),
         padding: const EdgeInsets.all(10),
         child: Column(
@@ -350,7 +331,7 @@ class _ProductCard extends StatelessWidget {
                 Text(
                   formatInr(product.price),
                   style: const TextStyle(
-                    fontFamily: 'JetBrainsMono',
+                    fontFamily: 'Source Code Pro',
                     fontSize: 13,
                     color: AppColors.ink100,
                     fontWeight: FontWeight.w600,
@@ -439,11 +420,9 @@ class _ErrorState extends StatelessWidget {
               padding:
                   const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
-                color: AppColors.ink950,
+                color: AppColors.paper100,
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: AppColors.ink50.withValues(alpha: 0.12),
-                ),
+                border: Border.all(color: AppColors.paper300),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -453,10 +432,10 @@ class _ErrorState extends StatelessWidget {
                       Text(
                         'BACKEND',
                         style: TextStyle(
-                          fontFamily: 'JetBrainsMono',
+                          fontFamily: 'Source Code Pro',
                           fontSize: 9,
                           letterSpacing: 1.5,
-                          color: AppColors.ink50.withValues(alpha: 0.5),
+                          color: AppColors.paper500,
                         ),
                       ),
                       if (Env.hasOverride) ...[
@@ -465,16 +444,16 @@ class _ErrorState extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 5, vertical: 1),
                           decoration: BoxDecoration(
-                            color: AppColors.signalViolet.withValues(alpha: 0.2),
+                            color: AppColors.brandAmber.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: const Text(
                             'OVERRIDE',
                             style: TextStyle(
-                              fontFamily: 'JetBrainsMono',
+                              fontFamily: 'Source Code Pro',
                               fontSize: 8,
                               letterSpacing: 1,
-                              color: AppColors.signalViolet,
+                              color: AppColors.brandAmberInk,
                             ),
                           ),
                         ),
@@ -485,9 +464,9 @@ class _ErrorState extends StatelessWidget {
                   Text(
                     Env.apiBaseUrl,
                     style: const TextStyle(
-                      fontFamily: 'JetBrainsMono',
+                      fontFamily: 'Source Code Pro',
                       fontSize: 11,
-                      color: AppColors.ink50,
+                      color: AppColors.paper900,
                     ),
                   ),
                 ],

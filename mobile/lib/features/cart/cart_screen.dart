@@ -155,7 +155,7 @@ class _CartRow extends StatelessWidget {
                       child: const Text(
                         'CUSTOM',
                         style: TextStyle(
-                          fontFamily: 'JetBrainsMono',
+                          fontFamily: 'Source Code Pro',
                           fontSize: 8,
                           letterSpacing: 1.5,
                           color: AppColors.ink950,
@@ -185,7 +185,7 @@ class _CartRow extends StatelessWidget {
                         '${item.qty}',
                         textAlign: TextAlign.center,
                         style: const TextStyle(
-                          fontFamily: 'JetBrainsMono',
+                          fontFamily: 'Source Code Pro',
                           color: AppColors.ink50,
                         ),
                       ),
@@ -206,7 +206,7 @@ class _CartRow extends StatelessWidget {
           Text(
             formatInr(item.lineTotal),
             style: const TextStyle(
-              fontFamily: 'JetBrainsMono',
+              fontFamily: 'Source Code Pro',
               color: AppColors.ink50,
               fontWeight: FontWeight.w600,
             ),

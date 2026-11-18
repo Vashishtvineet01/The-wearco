@@ -1,25 +1,11 @@
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../core/theme/app_theme.dart';
 
-/// Decorative aurora wash — mobile equivalent of the web's `<Aurora />`
-/// component + `spotlight-*` utility classes.
+/// Cream page wash — mobile equivalent of the web flat paper base.
 ///
-/// Drops a stack of soft radial colour blobs behind the screen content so
-/// the paper base doesn't read as flat white. Each blob is a large blurred
-/// circle with low alpha. Optionally scatters three floating `✦` sparkles
-/// over the top for extra personality.
-///
-/// Usage:
-/// ```dart
-/// Scaffold(
-///   body: AuroraBackdrop(
-///     palette: AuroraPalette.violet,
-///     child: ListView(children: [...]),
-///   ),
-/// );
-/// ```
+/// Kept as `AuroraBackdrop` / `AuroraPalette` so shell call sites don't
+/// change; washes are now subtle warm amber / parchment only (no neon).
 enum AuroraPalette { violet, sunrise, ocean, mint }
 
 class AuroraBackdrop extends StatelessWidget {
@@ -27,7 +13,7 @@ class AuroraBackdrop extends StatelessWidget {
     super.key,
     required this.child,
     this.palette = AuroraPalette.violet,
-    this.sparkles = true,
+    this.sparkles = false,
     this.intensity = 1.0,
   });
 
@@ -35,38 +21,28 @@ class AuroraBackdrop extends StatelessWidget {
   final AuroraPalette palette;
   final bool sparkles;
 
-  /// Multiplier on blob opacity. 1.0 = default, 0.6 = whisper, 1.4 = loud.
+  /// Multiplier on blob opacity. Kept for API compat; cream look uses low alpha.
   final double intensity;
 
   List<_Blob> _blobs() {
+    // Soft amber / espresso whispers only — matches web cream, not mesh.
     switch (palette) {
       case AuroraPalette.violet:
-        return const [
-          _Blob(AppColors.signalViolet, 420, Alignment(-1.2, -1.1), 0.22),
-          _Blob(AppColors.signalCoral, 380, Alignment(1.1, -1.0), 0.18),
-          _Blob(AppColors.signalLime, 340, Alignment(0.0, 1.2), 0.18),
-          _Blob(AppColors.signalPeach, 300, Alignment(1.1, 1.2), 0.14),
-        ];
       case AuroraPalette.sunrise:
         return const [
-          _Blob(AppColors.signalCoral, 440, Alignment(-1.2, -1.1), 0.22),
-          _Blob(AppColors.signalViolet, 380, Alignment(1.1, -1.0), 0.18),
-          _Blob(AppColors.signalLime, 340, Alignment(0.6, 1.2), 0.18),
-          _Blob(AppColors.signalSky, 300, Alignment(-1.0, 1.2), 0.14),
+          _Blob(AppColors.brandAmber, 420, Alignment(-1.1, -1.0), 0.08),
+          _Blob(AppColors.brandGold, 360, Alignment(1.0, -0.8), 0.06),
+          _Blob(AppColors.brandEspresso, 300, Alignment(0.2, 1.1), 0.04),
         ];
       case AuroraPalette.ocean:
         return const [
-          _Blob(AppColors.signalViolet, 420, Alignment(-1.2, -1.1), 0.22),
-          _Blob(AppColors.signalSky, 360, Alignment(1.1, -1.0), 0.18),
-          _Blob(AppColors.signalLime, 340, Alignment(0.0, 1.2), 0.16),
-          _Blob(AppColors.signalPeach, 300, Alignment(1.1, 1.2), 0.14),
+          _Blob(AppColors.signalSky, 400, Alignment(-1.0, -1.0), 0.05),
+          _Blob(AppColors.brandAmber, 340, Alignment(1.0, 0.2), 0.05),
         ];
       case AuroraPalette.mint:
         return const [
-          _Blob(AppColors.signalMint, 420, Alignment(-1.2, -1.1), 0.22),
-          _Blob(AppColors.signalSky, 380, Alignment(1.1, -1.0), 0.18),
-          _Blob(AppColors.signalLime, 340, Alignment(0.0, 1.2), 0.18),
-          _Blob(AppColors.signalViolet, 300, Alignment(1.1, 1.2), 0.12),
+          _Blob(AppColors.signalMint, 400, Alignment(-1.0, -1.0), 0.05),
+          _Blob(AppColors.brandAmber, 340, Alignment(1.0, 1.0), 0.05),
         ];
     }
   }
@@ -77,37 +53,36 @@ class AuroraBackdrop extends StatelessWidget {
     return RepaintBoundary(
       child: Stack(
         children: [
-          // Lightest paper base so the blobs blend cleanly.
           const Positioned.fill(
             child: ColoredBox(color: AppColors.paper50),
           ),
-          // Soft radial washes.
+          // Dot-grid parchment texture (web body::after).
+          Positioned.fill(
+            child: CustomPaint(
+              painter: _DotGridPainter(
+                color: const Color(0x145A4632),
+              ),
+            ),
+          ),
           for (final b in blobs)
-            Positioned.fill(
+            Align(
+              alignment: b.align,
               child: IgnorePointer(
-                child: Align(
-                  alignment: b.align,
-                  child: Container(
-                    width: b.size,
-                    height: b.size,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: RadialGradient(
-                        colors: [
-                          b.color
-                              .withValues(alpha: b.opacity * intensity),
-                          b.color.withValues(alpha: 0),
-                        ],
-                        stops: const [0.0, 1.0],
-                      ),
+                child: Container(
+                  width: b.size,
+                  height: b.size,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: RadialGradient(
+                      colors: [
+                        b.color.withValues(alpha: b.alpha * intensity),
+                        b.color.withValues(alpha: 0),
+                      ],
                     ),
                   ),
                 ),
               ),
             ),
-          // Floating sparkles.
-          if (sparkles) const _Sparkles(),
-          // Actual screen content on top.
           child,
         ],
       ),
@@ -116,94 +91,29 @@ class AuroraBackdrop extends StatelessWidget {
 }
 
 class _Blob {
-  const _Blob(this.color, this.size, this.align, this.opacity);
+  const _Blob(this.color, this.size, this.align, this.alpha);
   final Color color;
   final double size;
   final Alignment align;
-  final double opacity;
+  final double alpha;
 }
 
-/// Three ✦ marks that drift up-and-down. Pure cosmetic.
-class _Sparkles extends StatefulWidget {
-  const _Sparkles();
-
-  @override
-  State<_Sparkles> createState() => _SparklesState();
-}
-
-class _SparklesState extends State<_Sparkles>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _c;
-
-  @override
-  void initState() {
-    super.initState();
-    _c = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 6),
-    )..repeat();
-  }
-
-  @override
-  void dispose() {
-    _c.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned.fill(
-      child: IgnorePointer(
-        child: AnimatedBuilder(
-          animation: _c,
-          builder: (context, _) {
-            final t = _c.value * 2 * math.pi;
-            return Stack(
-              children: [
-                _Sparkle(
-                  offset: Alignment(-0.6, -0.75 + 0.05 * math.sin(t)),
-                  color: AppColors.signalViolet.withValues(alpha: 0.55),
-                  size: 22,
-                ),
-                _Sparkle(
-                  offset:
-                      Alignment(0.7, -0.6 + 0.05 * math.sin(t + 2.0)),
-                  color: AppColors.signalCoral.withValues(alpha: 0.55),
-                  size: 18,
-                ),
-                _Sparkle(
-                  offset:
-                      Alignment(0.4, 0.75 + 0.05 * math.sin(t + 4.0)),
-                  color: AppColors.signalLimeInk.withValues(alpha: 0.6),
-                  size: 16,
-                ),
-              ],
-            );
-          },
-        ),
-      ),
-    );
-  }
-}
-
-class _Sparkle extends StatelessWidget {
-  const _Sparkle({
-    required this.offset,
-    required this.color,
-    required this.size,
-  });
-  final Alignment offset;
+class _DotGridPainter extends CustomPainter {
+  _DotGridPainter({required this.color});
   final Color color;
-  final double size;
 
   @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: offset,
-      child: Text(
-        '✦',
-        style: TextStyle(color: color, fontSize: size),
-      ),
-    );
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..color = color;
+    const step = 22.0;
+    for (double y = 0; y < size.height; y += step) {
+      for (double x = 0; x < size.width; x += step) {
+        canvas.drawCircle(Offset(x, y), 1, paint);
+      }
+    }
   }
+
+  @override
+  bool shouldRepaint(covariant _DotGridPainter oldDelegate) =>
+      oldDelegate.color != color;
 }

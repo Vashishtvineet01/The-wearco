@@ -106,9 +106,9 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                       label: const Text('Customize'),
                       style: OutlinedButton.styleFrom(
                         side: BorderSide(
-                          color: AppColors.signalLime.withValues(alpha: 0.5),
+                          color: AppColors.brandAmberInk.withValues(alpha: 0.55),
                         ),
-                        foregroundColor: AppColors.signalLime,
+                        foregroundColor: AppColors.brandAmberInk,
                         padding:
                             const EdgeInsets.symmetric(horizontal: 14),
                       ),

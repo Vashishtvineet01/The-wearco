@@ -369,9 +369,12 @@ function PrintYourOwnSection() {
 }
 
 function StudioStories() {
+  // Duplicate once so the strip feels continuous when scrolling.
+  const stories = [...STUDIO_STORIES, ...STUDIO_STORIES];
+
   return (
     <section id="worn-by" className="relative overflow-hidden border-y border-paper-200">
-      <div className="mx-auto max-w-7xl px-5 py-16 lg:px-8 lg:py-20">
+      <div className="mx-auto max-w-7xl px-5 pt-16 lg:px-8 lg:pt-20">
         <ScrollReveal>
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div className="max-w-xl">
@@ -396,38 +399,56 @@ function StudioStories() {
             </Link>
           </div>
         </ScrollReveal>
+      </div>
 
-        <div className="mt-10 grid gap-x-10 gap-y-8 border-t border-paper-200 pt-10 sm:grid-cols-2">
-          {STUDIO_STORIES.map((f, i) => (
-            <ScrollReveal key={f.handle} delay={i * 70}>
-              <blockquote className="flex h-full flex-col">
-                <div className="flex items-center gap-3">
-                  <span
-                    className="grid h-10 w-10 shrink-0 place-items-center rounded-full font-display text-sm font-bold text-[#fff8eb]"
-                    style={{ background: f.tone }}
-                  >
-                    {f.initials}
-                  </span>
-                  <div className="min-w-0">
-                    <div className="truncate font-semibold text-paper-900">{f.name}</div>
-                    <div className="truncate font-mono text-[10px] uppercase tracking-[0.16em] text-paper-500">
-                      {f.handle} · {f.role}
-                    </div>
+      <div className="relative mt-10 pb-16 lg:pb-20">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-paper-50 to-transparent sm:w-16"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-paper-50 to-transparent sm:w-16"
+        />
+
+        <div
+          className="studio-stories-scroll flex gap-4 overflow-x-auto px-5 pb-2 scroll-smooth snap-x snap-mandatory lg:px-8"
+          style={{ scrollbarWidth: "thin" }}
+        >
+          {stories.map((f, i) => (
+            <blockquote
+              key={`${f.handle}-${i}`}
+              className="flex w-[85vw] max-w-sm shrink-0 snap-start flex-col rounded-2xl border border-paper-200 bg-paper-50/90 p-5 sm:w-[320px]"
+            >
+              <div className="flex items-center gap-3">
+                <span
+                  className="grid h-10 w-10 shrink-0 place-items-center rounded-full font-display text-sm font-bold text-[#fff8eb]"
+                  style={{ background: f.tone }}
+                >
+                  {f.initials}
+                </span>
+                <div className="min-w-0">
+                  <div className="truncate font-semibold text-paper-900">{f.name}</div>
+                  <div className="truncate font-mono text-[10px] uppercase tracking-[0.16em] text-paper-500">
+                    {f.handle} · {f.role}
                   </div>
                 </div>
-                <p className="mt-4 flex-1 text-base leading-relaxed text-paper-800 md:text-[17px]">
-                  “{f.quote}”
-                </p>
-                <div className="mt-4 flex items-center justify-between gap-3 border-t border-paper-200 pt-3">
-                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-paper-500">
-                    Ordered
-                  </span>
-                  <span className="font-semibold text-paper-900">{f.piece}</span>
-                </div>
-              </blockquote>
-            </ScrollReveal>
+              </div>
+              <p className="mt-4 flex-1 text-base leading-relaxed text-paper-800">
+                “{f.quote}”
+              </p>
+              <div className="mt-4 flex items-center justify-between gap-3 border-t border-paper-200 pt-3">
+                <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-paper-500">
+                  Ordered
+                </span>
+                <span className="font-semibold text-paper-900">{f.piece}</span>
+              </div>
+            </blockquote>
           ))}
         </div>
+        <p className="mt-3 px-5 text-center font-mono text-[10px] uppercase tracking-[0.2em] text-paper-400 lg:px-8">
+          Scroll to see more →
+        </p>
       </div>
     </section>
   );

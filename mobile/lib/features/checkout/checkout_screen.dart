@@ -326,7 +326,7 @@ class CheckoutSuccessScreen extends StatelessWidget {
                   child: Text(
                     orderNumber,
                     style: const TextStyle(
-                      fontFamily: 'JetBrainsMono',
+                      fontFamily: 'Source Code Pro',
                       color: AppColors.ink50,
                     ),
                   ),

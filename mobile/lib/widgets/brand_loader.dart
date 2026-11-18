@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 
 import '../core/theme/app_theme.dart';
 
-/// Full-page brand loader — mirrors the web `<BrandLoader />`.
+/// Full-page brand loader — mirrors the web cream / amber brand.
 ///
-/// Shows a spinning 5-colour aurora conic ring with a pulsing lime core,
-/// then an eyebrow + headline underneath with a 3-dot bounce.
+/// Shows a spinning amber conic ring with a pulsing core, then an
+/// eyebrow + headline underneath with a 3-dot bounce.
 ///
 /// Usage:
 /// ```dart
@@ -65,7 +65,6 @@ class _BrandLoaderState extends State<BrandLoader>
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  // Soft blurred aurora glow behind the ring.
                   Container(
                     width: 120,
                     height: 120,
@@ -73,22 +72,19 @@ class _BrandLoaderState extends State<BrandLoader>
                       shape: BoxShape.circle,
                       gradient: SweepGradient(
                         colors: [
-                          AppColors.signalViolet,
-                          AppColors.signalCoral,
-                          AppColors.signalLime,
-                          AppColors.signalSky,
-                          AppColors.signalViolet,
+                          AppColors.brandGold,
+                          AppColors.brandAmber,
+                          AppColors.brandAmberMid,
+                          AppColors.brandAmberInk,
+                          AppColors.brandGold,
                         ],
                       ),
                     ),
-                    // Fake "blur" with low opacity.
                     foregroundDecoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: AppColors.paper50.withValues(alpha: 0.55),
                     ),
                   ),
-                  // Spinning conic ring — painter draws a thin stroke with
-                  // the sweep gradient rotated by _spin.value.
                   AnimatedBuilder(
                     animation: _spin,
                     builder: (context, _) {
@@ -102,7 +98,7 @@ class _BrandLoaderState extends State<BrandLoader>
                       );
                     },
                   ),
-                  // Pulsing lime core.
+                  // Pulsing amber core.
                   AnimatedBuilder(
                     animation: _pulse,
                     builder: (context, _) {
@@ -161,26 +157,14 @@ class _BrandLoaderState extends State<BrandLoader>
               ],
             ),
             const SizedBox(height: 10),
-            // Gradient headline.
-            ShaderMask(
-              shaderCallback: (bounds) => const LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [
-                  AppColors.signalViolet,
-                  AppColors.signalCoral,
-                  AppColors.signalLime,
-                ],
-              ).createShader(bounds),
-              child: Text(
-                widget.title,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w800,
-                  color: Colors.white,
-                  letterSpacing: -0.4,
-                ),
+            Text(
+              widget.title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w800,
+                color: AppColors.brandEspresso,
+                letterSpacing: -0.4,
               ),
             ),
             const SizedBox(height: 12),
@@ -262,11 +246,11 @@ class _RingPainter extends CustomPainter {
       endAngle: 2 * math.pi,
       transform: GradientRotation(rotation),
       colors: const [
-        AppColors.signalViolet,
-        AppColors.signalCoral,
-        AppColors.signalLime,
-        AppColors.signalSky,
-        AppColors.signalViolet,
+        AppColors.brandGold,
+        AppColors.brandAmber,
+        AppColors.brandAmberMid,
+        AppColors.brandAmberInk,
+        AppColors.brandGold,
       ],
     );
 

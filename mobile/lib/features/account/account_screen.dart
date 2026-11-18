@@ -214,12 +214,12 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
               _LinkRow(
                 icon: Icons.info_outline,
                 label: 'About TheWearCo',
-                sublabel: 'The internet uniform.',
+                sublabel: 'Shop it. Design it.',
                 onTap: () => _showInfoSheet(
                   context,
                   title: 'TheWearCo',
                   body:
-                      'Internet uniform for founders, creators, freelancers and the terminally online.\n\nMonthly drops + a Design Studio on the web so you can print your own art on tees, hoodies, mugs, pins, posters and more.',
+                      'A store for premium tees, hoodies, caps, mugs, badges and posters — plus a Design Studio to print your own with no minimums.\n\nBrowse ready-to-wear drops, or upload artwork / type a line on a live mockup. We print and ship in 5–7 days across India.',
                 ),
               ),
               const SizedBox(height: 28),
@@ -249,19 +249,9 @@ class _GuestCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.signalViolet.withValues(alpha: 0.18),
-            AppColors.signalCoral.withValues(alpha: 0.10),
-            AppColors.signalLime.withValues(alpha: 0.08),
-          ],
-        ),
+        color: AppColors.paper100,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(
-          color: AppColors.signalViolet.withValues(alpha: 0.35),
-        ),
+        border: Border.all(color: AppColors.paper300),
       ),
       child: Row(
         children: [
@@ -269,12 +259,12 @@ class _GuestCard extends StatelessWidget {
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: AppColors.ink950.withValues(alpha: 0.5),
+              gradient: AppColors.auroraGradient,
               borderRadius: BorderRadius.circular(12),
             ),
             alignment: Alignment.center,
             child: const Icon(Icons.person_outline,
-                color: AppColors.ink50, size: 22),
+                color: AppColors.brandCream, size: 22),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -388,7 +378,7 @@ class _OrderCard extends StatelessWidget {
               Text(
                 order.orderNumber,
                 style: const TextStyle(
-                  fontFamily: 'JetBrainsMono',
+                  fontFamily: 'Source Code Pro',
                   fontSize: 14,
                   color: AppColors.signalLime,
                   fontWeight: FontWeight.w700,
@@ -408,7 +398,7 @@ class _OrderCard extends StatelessWidget {
                 child: Text(
                   order.status.toUpperCase(),
                   style: const TextStyle(
-                    fontFamily: 'JetBrainsMono',
+                    fontFamily: 'Source Code Pro',
                     fontSize: 10,
                     color: AppColors.signalLime,
                     letterSpacing: 1.2,
