@@ -14,3 +14,4 @@ public/uploads/orders/*
 !public/uploads/designs/.gitkeep
 !public/uploads/orders/.gitkeep
 *.tsbuildinfo
+public/thewearco-android.apk

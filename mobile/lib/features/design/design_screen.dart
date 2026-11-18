@@ -258,10 +258,10 @@ class _DesignScreenState extends ConsumerState<DesignScreen> {
   }
 
   String _resolvePrintColorHex() {
-    // Auto: pick lime if fabric is dark, else ink950.
+    // Auto: cream-gold on dark fabric, ink on light.
     if (_print.hex == null) {
       final isLight = _isLight(Color(parseHexColor(_fabric.fabricHex)));
-      return isLight ? '#0f0d1a' : '#d8ff36';
+      return isLight ? '#0f0d1a' : '#fde68a';
     }
     return _print.hex!;
   }
@@ -710,11 +710,11 @@ const _fabrics = <_FabricOption>[
   _FabricOption(name: 'Obsidian', fabricHex: '#0f0d1a', swatchHex: '#0a0a0a'),
   _FabricOption(name: 'Bone', fabricHex: '#ece7dd', swatchHex: '#ece7dd'),
   _FabricOption(name: 'Graphite', fabricHex: '#2a2a2d', swatchHex: '#2a2a2d'),
-  _FabricOption(name: 'Signal Lime', fabricHex: '#d8ff36', swatchHex: '#d8ff36'),
-  _FabricOption(name: 'Coral', fabricHex: '#ff5c3b', swatchHex: '#ff5c3b'),
-  _FabricOption(name: 'Violet', fabricHex: '#7c5cff', swatchHex: '#7c5cff'),
+  _FabricOption(name: 'Amber', fabricHex: '#f59e0b', swatchHex: '#f59e0b'),
+  _FabricOption(name: 'Clay', fabricHex: '#b45309', swatchHex: '#b45309'),
+  _FabricOption(name: 'Espresso', fabricHex: '#6b4f35', swatchHex: '#6b4f35'),
   _FabricOption(name: 'Sky', fabricHex: '#7cd0ff', swatchHex: '#7cd0ff'),
-  _FabricOption(name: 'Gold', fabricHex: '#ffd166', swatchHex: '#ffd166'),
+  _FabricOption(name: 'Gold', fabricHex: '#fde68a', swatchHex: '#fde68a'),
   _FabricOption(name: 'Pink', fabricHex: '#ec4899', swatchHex: '#ec4899'),
   _FabricOption(name: 'White', fabricHex: '#f7f7f7', swatchHex: '#f7f7f7'),
 ];
@@ -726,15 +726,15 @@ class _PrintColorOption {
 }
 
 // Mirrors `PRESET_COLORS` in `StudioClient.tsx` on the web. "Auto" is a
-// mobile-only convenience that falls back to high-contrast ink / lime
+// mobile-only convenience that falls back to high-contrast ink / cream-gold
 // depending on the fabric luminance.
 const _printColors = <_PrintColorOption>[
   _PrintColorOption(label: 'Auto', hex: null),
   _PrintColorOption(label: 'White', hex: '#f7f7f7'),
   _PrintColorOption(label: 'Ink', hex: '#0a0a0a'),
-  _PrintColorOption(label: 'Lime', hex: '#d8ff36'),
-  _PrintColorOption(label: 'Coral', hex: '#ff5c3b'),
-  _PrintColorOption(label: 'Violet', hex: '#7c5cff'),
+  _PrintColorOption(label: 'Amber', hex: '#f59e0b'),
+  _PrintColorOption(label: 'Clay', hex: '#b45309'),
+  _PrintColorOption(label: 'Cream', hex: '#fde68a'),
   _PrintColorOption(label: 'Sky', hex: '#7cd0ff'),
   _PrintColorOption(label: 'Gold', hex: '#ffd166'),
   _PrintColorOption(label: 'Pink', hex: '#ec4899'),
@@ -1741,7 +1741,7 @@ class _PrintColorRow extends StatelessWidget {
           active: !selectedIsPreset && selected.label == customLabel,
           onTap: () async {
             final picked = await _promptHex(context,
-                initialHex: selected.hex ?? '#d8ff36');
+                initialHex: selected.hex ?? '#f59e0b');
             if (picked != null) {
               onSelect(_PrintColorOption(label: customLabel, hex: picked));
             }
@@ -1848,7 +1848,7 @@ class _PrintColorRow extends StatelessWidget {
                   maxLength: 7,
                   autofocus: true,
                   decoration: const InputDecoration(
-                    labelText: 'Hex (e.g. #d8ff36)',
+                    labelText: 'Hex (e.g. #f59e0b)',
                     counterText: '',
                   ),
                   onChanged: (v) => setLocal(() => preview = v),

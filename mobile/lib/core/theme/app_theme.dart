@@ -33,7 +33,8 @@ class AppColors {
   static const Color signalViolet = brandAmberMid;
   static const Color signalSky = Color(0xFF0EA5E9);
   static const Color signalPeach = brandAmber;
-  static const Color signalMint = Color(0xFF059669);
+  /// Remapped off green — matches cream/amber brand (was mint #059669).
+  static const Color signalMint = brandAmber;
 
   static const Color signalLimeInk = brandAmberInk;
   static const Color signalVioletInk = brandAmberInk;

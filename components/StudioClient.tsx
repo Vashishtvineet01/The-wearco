@@ -33,9 +33,9 @@ const PRESET_LINES = [
 const PRESET_COLORS = [
   "#f7f7f7",
   "#0a0a0a",
-  "#d8ff36",
-  "#ff5c3b",
-  "#7c5cff",
+  "#f59e0b",
+  "#b45309",
+  "#fde68a",
   "#7cd0ff",
   "#ffd166",
   "#ec4899"

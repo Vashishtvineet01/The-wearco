@@ -25,9 +25,9 @@ const HOME_CATEGORIES: {
   { id: "tee", fabric: "#0e0e10", print: "#f7f7f7", sample: "TEE" },
   { id: "hoodie", fabric: "#ece7dd", print: "#0a0a0a", sample: "v1" },
   { id: "sweatshirt", fabric: "#2a2a2d", print: "#f7f7f7", sample: "CREW" },
-  { id: "cap", fabric: "#0e0e10", print: "#d8ff36", sample: "CAP" },
+  { id: "cap", fabric: "#0e0e10", print: "#fde68a", sample: "CAP" },
   { id: "mug", fabric: "#ece7dd", print: "#0a0a0a", shape: "cylinder", sample: "MUG" },
-  { id: "badge", fabric: "#0e0e10", print: "#d8ff36", shape: "circle", sample: "PIN" },
+  { id: "badge", fabric: "#0e0e10", print: "#fde68a", shape: "circle", sample: "PIN" },
   { id: "poster", fabric: "#ece7dd", print: "#0a0a0a", shape: "full", sample: "ART" },
 ];
 
