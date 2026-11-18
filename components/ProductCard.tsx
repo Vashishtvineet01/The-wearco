@@ -66,24 +66,12 @@ export default function ProductCard({ product }: { product: Product }) {
           // Light theme: LIGHT fabrics (bone, lime) get a soft midnight backdrop so
           // the garment silhouette pops. DARK fabrics (obsidian, graphite) get a soft
           // paper wash that still lets them read without putting black on white.
-          background: isDarkFabric(color.fabric)
-            ? "linear-gradient(180deg, rgba(234,234,226,0.9) 0%, rgba(214,212,201,0.9) 100%)"
-            : "linear-gradient(180deg, rgba(28,24,58,0.92) 0%, rgba(15,13,26,0.95) 100%)",
+          background: isDarkFabric(color.fabric) ? "#eaeae2" : "#14110e",
           // Enable container queries so the mockup can size its print text
           // relative to the card width instead of the viewport width.
           containerType: "inline-size"
         }}
       >
-        {/* Soft radial accent behind the mockup so it pops without a flat color block. */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-80"
-          style={{
-            background: isDarkFabric(color.fabric)
-              ? "radial-gradient(60% 50% at 50% 55%, rgba(225,29,46,0.2), transparent 70%)"
-              : "radial-gradient(60% 50% at 50% 55%, rgba(245,158,11,0.22), transparent 70%)"
-          }}
-        />
         <div className="relative w-full transition-transform duration-500 ease-out group-hover:-translate-y-2 group-hover:scale-[1.05]">
           <ProductMockup
             category={product.category}

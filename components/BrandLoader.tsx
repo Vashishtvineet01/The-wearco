@@ -22,34 +22,20 @@ export default function BrandLoader({
 }) {
   return (
     <div className="mx-auto flex max-w-5xl flex-col items-center justify-center px-5 py-20 text-center lg:px-8 lg:py-28">
-      {/* Spinning aurora ring with inner logo-mark cutout. */}
+      {/* Spinning coral ring */}
       <div className="relative mb-8 h-20 w-20">
-        {/* Glow aurora behind the ring so the light theme doesn't look empty. */}
         <span
           aria-hidden
-          className="absolute inset-[-20px] rounded-full blur-2xl opacity-60"
-          style={{
-            background:
-              "conic-gradient(from 0deg, #7c5cff, #ff5c3b, #d8ff36, #7cd0ff, #7c5cff)",
-          }}
+          className="absolute inset-[-16px] rounded-full bg-signal-coral/25 blur-2xl"
         />
-        {/* Spinning ring — conic gradient masked to a 3px stroke. */}
         <span
           aria-hidden
-          className="absolute inset-0 animate-spin rounded-full"
-          style={{
-            background:
-              "conic-gradient(from 0deg, #7c5cff, #ff5c3b, #d8ff36, #7cd0ff, #7c5cff)",
-            WebkitMask:
-              "radial-gradient(closest-side, transparent calc(100% - 3px), #000 calc(100% - 3px))",
-            mask: "radial-gradient(closest-side, transparent calc(100% - 3px), #000 calc(100% - 3px))",
-            animationDuration: "2.2s",
-          }}
+          className="absolute inset-0 animate-spin rounded-full border-[3px] border-signal-coral/20 border-t-signal-coral"
+          style={{ animationDuration: "1.1s" }}
         />
-        {/* Inner pulsing dot so the center isn't empty. */}
         <span
           aria-hidden
-          className="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 animate-glow rounded-full bg-signal-lime"
+          className="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 animate-glow rounded-full bg-signal-coral"
         />
       </div>
 
@@ -77,15 +63,13 @@ export default function BrandLoader({
         </span>
       </div>
 
-      {/* Eyebrow with blinking lime dot. */}
-      <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
-        <span className="h-1.5 w-1.5 animate-glow rounded-full bg-signal-lime" />
+      <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.22em] text-signal-coral">
+        <span className="h-1.5 w-1.5 animate-glow rounded-full bg-signal-coral" />
         // {eyebrow}
       </div>
 
-      {/* Headline — uses the global gradient-text (5-stop aurora shift). */}
-      <h2 className="mt-3 font-display text-3xl font-bold tracking-tight md:text-4xl">
-        <span className="gradient-text">{title}</span>
+      <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-paper-900 md:text-4xl">
+        {title}
       </h2>
 
       {/* Subtle secondary line so there's visible motion while we wait. */}
@@ -117,7 +101,7 @@ export default function BrandLoader({
 function Dot({ delay }: { delay: number }) {
   return (
     <span
-      className="h-1 w-1 animate-glow rounded-full bg-signal-limeInk"
+      className="h-1 w-1 animate-glow rounded-full bg-signal-coral"
       style={{ animationDelay: `${delay}ms` }}
     />
   );

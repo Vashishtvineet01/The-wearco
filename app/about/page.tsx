@@ -1,31 +1,18 @@
 import Link from "next/link";
 import NewsletterForm from "@/components/NewsletterForm";
-import Aurora from "@/components/Aurora";
 import ScrollReveal from "@/components/ScrollReveal";
 
 export default function AboutPage() {
   return (
     <div className="relative mx-auto max-w-4xl px-5 py-12 lg:px-8 lg:py-16">
-      {/* Manifesto hero — aurora wash + sparkles so the opening line lands with force. */}
-      <section className="spotlight-ocean relative mb-12 overflow-hidden rounded-3xl border border-paper-200 bg-paper-50/40 px-6 py-12 md:px-10 md:py-16">
-        <Aurora
-          blobs={[
-            { color: "violet", size: 420, top: "-140px", left: "-120px", opacity: 0.55 },
-            { color: "sky", size: 360, top: "-60px", right: "-80px", delay: 3, opacity: 0.45 },
-            { color: "lime", size: 320, bottom: "-160px", left: "32%", delay: 6, opacity: 0.42, slow: true },
-            { color: "peach", size: 300, bottom: "-120px", right: "-60px", delay: 9, opacity: 0.36, slow: true },
-          ]}
-        />
-        <span aria-hidden className="pointer-events-none absolute left-[7%] top-[20%] text-2xl text-signal-violet/60 animate-float">✦</span>
-        <span aria-hidden className="pointer-events-none absolute right-[9%] top-[30%] text-xl text-signal-coral/60 animate-float" style={{ animationDelay: "900ms" }}>✦</span>
-        <span aria-hidden className="pointer-events-none absolute left-[55%] bottom-[18%] text-lg text-signal-limeInk/70 animate-float" style={{ animationDelay: "1800ms" }}>✦</span>
+      <section className="relative mb-12 overflow-hidden rounded-3xl border border-paper-200 bg-white px-6 py-12 md:px-10 md:py-16">
         <div className="relative">
-          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
+          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-coral">
             // Manifesto
           </div>
-          <h1 className="mt-3 font-display text-4xl font-bold leading-tight tracking-tight md:text-6xl">
+          <h1 className="mt-3 font-display text-4xl font-bold leading-tight tracking-tight text-paper-900 md:text-6xl">
             Clothing for the people <br />
-            <span className="gradient-text">building it themselves.</span>
+            <span className="text-signal-coral">building it themselves.</span>
           </h1>
         </div>
       </section>

@@ -40,14 +40,6 @@ export default function ProductBuyPanel({ product }: { product: Product }) {
       {/* Viewer stage */}
       <div className="space-y-4">
         <div className="relative overflow-hidden rounded-[28px] border border-paper-200 bg-[#0a0b0f] shadow-[0_24px_80px_-40px_rgba(10,11,15,0.55)]">
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0"
-            style={{
-                background:
-                "radial-gradient(55% 50% at 50% 45%, rgba(225,29,46,0.28), transparent 70%), radial-gradient(40% 35% at 80% 20%, rgba(245,158,11,0.18), transparent 60%)",
-            }}
-          />
           <div className="absolute left-5 top-5 z-10 flex flex-wrap gap-2">
             <span className="rounded-full border border-white/15 bg-black/40 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-white/80 backdrop-blur">
               {product.drop}
@@ -55,7 +47,7 @@ export default function ProductBuyPanel({ product }: { product: Product }) {
             {product.customizable && (
               <Link
                 href={`/design?product=${product.slug}`}
-                className="rounded-full border border-signal-lime/40 bg-signal-lime/15 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-signal-lime backdrop-blur"
+                className="rounded-full border border-signal-coral/40 bg-signal-coral/15 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-signal-coral backdrop-blur"
               >
                 Customize
               </Link>

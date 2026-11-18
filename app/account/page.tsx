@@ -3,7 +3,6 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { getCustomerSession } from "@/lib/customer-session";
 import { formatINR } from "@/lib/products";
-import Aurora from "@/components/Aurora";
 import LogoutButton from "@/components/LogoutButton";
 
 export const dynamic = "force-dynamic";
@@ -93,21 +92,14 @@ export default async function AccountPage() {
   return (
     <div className="relative mx-auto max-w-6xl px-5 py-12 lg:px-8 lg:py-16">
       {/* Hero */}
-      <section className="spotlight-violet relative mb-10 overflow-hidden rounded-3xl border border-paper-200 bg-paper-50/40 px-6 py-10 md:px-10 md:py-14">
-        <Aurora
-          blobs={[
-            { color: "violet", size: 380, top: "-120px", left: "-100px", opacity: 0.45 },
-            { color: "coral", size: 320, top: "-60px", right: "-70px", delay: 3, opacity: 0.35 },
-            { color: "lime", size: 260, bottom: "-120px", right: "25%", delay: 6, opacity: 0.35, slow: true },
-          ]}
-        />
+      <section className="relative mb-10 overflow-hidden rounded-3xl border border-paper-200 bg-white px-6 py-10 md:px-10 md:py-14">
         <div className="relative flex flex-wrap items-end justify-between gap-6">
           <div>
-            <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
+            <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-coral">
               // Your account
             </div>
-            <h1 className="mt-3 font-display text-3xl font-bold tracking-tight md:text-5xl">
-              Welcome back, <span className="gradient-text">{displayName}.</span>
+            <h1 className="mt-3 font-display text-3xl font-bold tracking-tight text-paper-900 md:text-5xl">
+              Welcome back, <span className="text-signal-coral">{displayName}.</span>
             </h1>
             <p className="mt-2 text-sm text-paper-600">
               Signed in as {email || phone || "your account"}.

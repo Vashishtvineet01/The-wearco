@@ -109,22 +109,7 @@ export default function LoginForm() {
       <div className="mx-auto grid min-h-[calc(100vh-5rem)] max-w-6xl lg:grid-cols-2">
         {/* Brand strip */}
         <aside className="relative hidden overflow-hidden bg-ink-950 text-paper-50 lg:flex lg:flex-col lg:justify-between lg:p-12 xl:p-16">
-          <div
-            aria-hidden
-            className="absolute inset-0 opacity-95"
-            style={{
-              background:
-                "linear-gradient(145deg, #14110e 0%, #2a1216 45%, #e11d2e 100%)",
-            }}
-          />
-          <div
-            aria-hidden
-            className="absolute -left-20 top-1/4 h-80 w-80 rounded-full bg-signal-coral/40 blur-3xl"
-          />
-          <div
-            aria-hidden
-            className="absolute -right-16 bottom-1/4 h-72 w-72 rounded-full bg-signal-peach/35 blur-3xl"
-          />
+          <div aria-hidden className="absolute inset-0 bg-paper-900" />
           <div className="relative">
             <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-50/70">
               // TheWearCo
@@ -145,7 +130,7 @@ export default function LoginForm() {
         </aside>
 
         {/* Form panel */}
-        <section className="spotlight-violet relative flex flex-col justify-center px-5 py-12 sm:px-10 lg:px-14 lg:py-16">
+        <section className="relative flex flex-col justify-center bg-paper-50 px-5 py-12 sm:px-10 lg:px-14 lg:py-16">
           {/* Mobile brand header */}
           <div className="mb-8 lg:hidden">
             <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">

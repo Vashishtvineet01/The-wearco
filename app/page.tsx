@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Aurora from "@/components/Aurora";
 import Marquee from "@/components/Marquee";
 import ProductCard from "@/components/ProductCard";
 import ProductMockup from "@/components/ProductMockup";
@@ -37,39 +36,27 @@ export default async function HomePage() {
 
 function Hero() {
   return (
-    <section className="grid-bg noise spotlight-violet relative overflow-hidden">
-      <Aurora
-        blobs={[
-          { color: "violet", size: 640, top: "-240px", left: "-160px", delay: 0, opacity: 0.55 },
-          { color: "coral", size: 520, top: "-140px", right: "-140px", delay: 4, slow: true, opacity: 0.5 },
-          { color: "lime", size: 440, bottom: "-220px", left: "32%", delay: 2, opacity: 0.4 },
-          { color: "sky", size: 320, top: "38%", right: "18%", delay: 6, opacity: 0.32, slow: true },
-          { color: "peach", size: 360, top: "55%", left: "-80px", delay: 8, opacity: 0.3, slow: true }
-        ]}
-      />
-      {/* Fade into the next section so the ticker strip lands softly. */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-paper-100/70" />
-
+    <section className="relative overflow-hidden bg-paper-50">
       <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 py-20 lg:grid-cols-12 lg:px-8 lg:py-28">
         <div className="lg:col-span-7">
-          <div className="mb-5 inline-flex animate-fade-in-up items-center gap-2 rounded-full border border-paper-200 bg-paper-100/80 px-3 py-1.5 backdrop-blur shadow-[0_6px_18px_-10px_rgba(124,92,255,0.5)]">
+          <div className="mb-5 inline-flex animate-fade-in-up items-center gap-2 rounded-full border border-paper-200 bg-white px-3 py-1.5">
             <span className="dot-live" />
             <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-paper-700">
               Drop 03 — QR Layer is live
             </span>
             <span className="h-3 w-px bg-paper-300" />
-            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-signal-violetInk">
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-signal-coral">
               Guest checkout · email or OTP later
             </span>
           </div>
 
           <h1
-            className="animate-fade-in-up font-display text-5xl font-bold leading-[0.95] tracking-tight md:text-7xl lg:text-[88px]"
+            className="animate-fade-in-up font-display text-5xl font-bold leading-[0.95] tracking-tight text-paper-900 md:text-7xl lg:text-[88px]"
             style={{ animationDelay: "120ms" }}
           >
             TheWearCo
             <br />
-            <span className="gradient-text">Internet uniform.</span>
+            <span className="text-signal-coral">Internet uniform.</span>
           </h1>
 
           <p
@@ -199,21 +186,15 @@ function Stat({ label, value }: { label: string; value: string }) {
 function FeaturedProducts({ featured }: { featured: Product[] }) {
   return (
     <section className="relative overflow-hidden">
-      <Aurora
-        blobs={[
-          { color: "lime", size: 420, top: "-120px", left: "-100px", delay: 0, opacity: 0.22 },
-          { color: "violet", size: 380, bottom: "-140px", right: "-120px", delay: 3, slow: true, opacity: 0.22 }
-        ]}
-      />
       <div className="relative mx-auto max-w-7xl px-5 py-20 lg:px-8">
         <ScrollReveal>
           <div className="mb-10 flex items-end justify-between gap-6">
             <div>
-              <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
+              <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-coral">
                 // Featured
               </div>
               <h2 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-5xl">
-                The current <span className="gradient-text">uniform</span>
+                The current <span className="text-signal-coral">uniform</span>
               </h2>
             </div>
             <Link
@@ -239,21 +220,14 @@ function FeaturedProducts({ featured }: { featured: Product[] }) {
 
 function PrintYourOwnSection() {
   return (
-    <section className="relative overflow-hidden border-y border-paper-200">
-      <Aurora
-        blobs={[
-          { color: "coral", size: 500, top: "-100px", right: "-120px", delay: 0, opacity: 0.35 },
-          { color: "violet", size: 420, bottom: "-160px", left: "-80px", delay: 4, opacity: 0.35, slow: true }
-        ]}
-      />
-
+    <section className="relative overflow-hidden border-y border-paper-200 bg-white/40">
       <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 py-20 lg:grid-cols-2 lg:px-8">
         <ScrollReveal>
-          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
+          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-coral">
             // The Design Studio
           </div>
           <h2 className="mt-2 font-display text-4xl font-bold leading-tight tracking-tight md:text-6xl">
-            Print your <span className="gradient-text">own</span> design.
+            Print your <span className="text-signal-coral">own</span> design.
             <br />
             Made in 5 minutes.
           </h2>

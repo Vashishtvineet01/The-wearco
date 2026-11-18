@@ -49,17 +49,9 @@ export default async function ShopPage() {
           href={`/product/${featured.slug}`}
           className="group mt-10 grid overflow-hidden rounded-[28px] border border-paper-200 bg-[#0a0b0f] shadow-[0_24px_80px_-48px_rgba(10,11,15,0.55)] lg:grid-cols-[1.1fr_0.9fr]"
         >
-          <div className="relative min-h-[280px] overflow-hidden p-8 md:min-h-[340px]">
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0"
-              style={{
-                background:
-                  "radial-gradient(50% 55% at 50% 50%, rgba(225,29,46,0.32), transparent 70%), radial-gradient(40% 40% at 85% 15%, rgba(245,158,11,0.2), transparent 55%)",
-              }}
-            />
+          <div className="relative min-h-[280px] overflow-hidden bg-[#0a0b0f] p-8 md:min-h-[340px]">
             <div className="absolute left-6 top-6 z-10 flex gap-2">
-              <span className="rounded-full border border-signal-lime/40 bg-signal-lime/15 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-signal-lime">
+              <span className="rounded-full border border-signal-coral/40 bg-signal-coral/15 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-signal-coral">
                 Live now
               </span>
               <span className="rounded-full border border-white/15 bg-black/35 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-white/75">

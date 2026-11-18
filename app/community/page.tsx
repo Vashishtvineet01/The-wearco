@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import NewsletterForm from "@/components/NewsletterForm";
-import Aurora from "@/components/Aurora";
 import ScrollReveal from "@/components/ScrollReveal";
 
 export const metadata: Metadata = {
@@ -18,25 +17,14 @@ export const metadata: Metadata = {
 export default function CommunityPage() {
   return (
     <div className="relative mx-auto max-w-6xl px-5 pb-20 pt-12 lg:px-8 lg:pt-16">
-      {/* Hero — wrapped in an aurora bed so the Community lands with real colour. */}
-      <section className="spotlight-sunrise relative overflow-hidden rounded-3xl border border-paper-200 bg-paper-50/40 px-6 py-12 text-center md:px-10 md:py-16">
-        <Aurora
-          blobs={[
-            { color: "coral", size: 440, top: "-160px", left: "-120px", opacity: 0.55 },
-            { color: "violet", size: 380, top: "-80px", right: "-90px", delay: 3, opacity: 0.5 },
-            { color: "lime", size: 320, bottom: "-160px", right: "28%", delay: 6, opacity: 0.45, slow: true },
-            { color: "sky", size: 300, bottom: "-120px", left: "-60px", delay: 9, opacity: 0.4, slow: true },
-          ]}
-        />
-        <span aria-hidden className="pointer-events-none absolute left-[9%] top-[22%] text-2xl text-signal-coral/60 animate-float">✦</span>
-        <span aria-hidden className="pointer-events-none absolute right-[11%] top-[32%] text-xl text-signal-violet/60 animate-float" style={{ animationDelay: "900ms" }}>✦</span>
-        <span aria-hidden className="pointer-events-none absolute left-[46%] bottom-[18%] text-lg text-signal-limeInk/70 animate-float" style={{ animationDelay: "1800ms" }}>✦</span>
+      {/* Flat hero — cream card, no mesh gradient */}
+      <section className="relative overflow-hidden rounded-3xl border border-paper-200 bg-white px-6 py-12 text-center md:px-10 md:py-16">
         <div className="relative">
-          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
+          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-coral">
             // Community
           </div>
-          <h1 className="mt-3 font-display text-4xl font-bold tracking-tight md:text-6xl">
-            Every piece <span className="gradient-text">is a key.</span>
+          <h1 className="mt-3 font-display text-4xl font-bold tracking-tight text-paper-900 md:text-6xl">
+            Every piece is a <span className="text-signal-coral">key.</span>
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-paper-700">
             A hidden QR on every hoodie, cap and badge. Scan it to unlock the
@@ -50,7 +38,7 @@ export default function CommunityPage() {
       <div className="mt-14 grid gap-4 md:grid-cols-3">
         {UNLOCK_STEPS.map((s, i) => (
           <ScrollReveal key={s.n} delay={i * 100}>
-            <div className={`${s.surface} aurora-border p-6`}>
+            <div className="card p-6">
               <div className={s.chip}>{s.n}</div>
               <div className="mt-4 font-display text-xl font-semibold">{s.h}</div>
               <p className="mt-2 text-sm text-paper-600">{s.d}</p>
@@ -64,12 +52,12 @@ export default function CommunityPage() {
         <div className="grid gap-6 md:grid-cols-2 md:items-center">
           <ScrollReveal>
             <div>
-              <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
+              <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-coral">
                 // Office hours
               </div>
               <h2 className="mt-3 font-display text-3xl font-bold tracking-tight md:text-4xl">
                 First Thursday <br />
-                <span className="gradient-text">of every month.</span>
+                <span className="text-signal-coral">of every month.</span>
               </h2>
               <p className="mt-3 max-w-md text-sm text-paper-600 md:text-base">
                 Open call at 7pm IST. Hosted by the TheWearCo team. Bring one
@@ -85,7 +73,7 @@ export default function CommunityPage() {
                   <div
                     className={`flex items-center gap-3 rounded-xl px-4 py-3 ${t.surface}`}
                   >
-                    <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-signal-limeInk">
+                    <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-signal-coral">
                       {t.k}
                     </span>
                     <span className="text-sm text-paper-800">{t.v}</span>
@@ -101,7 +89,7 @@ export default function CommunityPage() {
       <div className="mt-14">
         <div className="mb-6 flex items-end justify-between gap-4">
           <div>
-            <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
+            <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-coral">
               // Members
             </div>
             <h2 className="mt-2 font-display text-2xl font-bold tracking-tight md:text-3xl">
@@ -118,7 +106,7 @@ export default function CommunityPage() {
               <div className={`${m.surface} p-4`}>
                 <div className="flex items-center gap-3">
                   <div
-                    className="grid h-10 w-10 place-items-center rounded-full font-display text-sm font-bold text-ink-950 shadow-[0_8px_20px_-8px_rgba(124,92,255,0.5)]"
+                    className="grid h-10 w-10 place-items-center rounded-full font-display text-sm font-bold text-white shadow-[0_8px_20px_-8px_rgba(225,29,46,0.4)]"
                     style={{ background: m.color }}
                   >
                     {m.initials}
@@ -239,7 +227,7 @@ const MEMBERS = [
     handle: "@kavyabuilds",
     piece: "v1.0 Hoodie",
     shipping: "Payments infra for Indian freelancers. Shipped v1 last month.",
-    color: "linear-gradient(135deg,#7c5cff,#ff5c3b)",
+    color: "#e11d2e",
     surface: "card-violet",
   },
   {
@@ -248,7 +236,7 @@ const MEMBERS = [
     handle: "@arjunwrites",
     piece: "Offline Mode Tee",
     shipping: "Weekly newsletter on operator mindset. 4,200 readers and climbing.",
-    color: "linear-gradient(135deg,#ff5c3b,#d8ff36)",
+    color: "#c41626",
     surface: "card-coral",
   },
   {
@@ -257,7 +245,7 @@ const MEMBERS = [
     handle: "@priyacreates",
     piece: "QR Secret Hoodie",
     shipping: "A no-code studio for small restaurants. 30 customers, bootstrapped.",
-    color: "linear-gradient(135deg,#d8ff36,#7cd0ff)",
+    color: "#b45309",
     surface: "card-lime",
   },
   {
@@ -266,7 +254,7 @@ const MEMBERS = [
     handle: "@zaidbuilds",
     piece: "Late Night Cap",
     shipping: "AI code-review tool for small teams. 280 active devs on the beta.",
-    color: "linear-gradient(135deg,#7cd0ff,#7c5cff)",
+    color: "#0369a1",
     surface: "card-sky",
   },
 ];

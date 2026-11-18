@@ -45,19 +45,14 @@ h3 {
   letter-spacing: -0.03em;
 }
 
-/* Warm cream atmosphere + soft arcs (matches reference bg) */
+/* Flat cream page base — no mesh / aurora washes */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: -2;
   pointer-events: none;
-  background:
-    radial-gradient(ellipse 90% 70% at 20% 40%, rgba(255, 252, 246, 0.95), transparent 55%),
-    radial-gradient(ellipse 80% 60% at 85% 30%, rgba(232, 220, 200, 0.55), transparent 50%),
-    radial-gradient(ellipse 70% 50% at 60% 90%, rgba(225, 29, 46, 0.05), transparent 55%),
-    radial-gradient(ellipse 50% 40% at 10% 85%, rgba(245, 158, 11, 0.06), transparent 50%),
-    #f7f1e9;
+  background: #f7f1e9;
 }
 
 /* Dot grid overlay — blueprint / parchment texture */
@@ -105,49 +100,22 @@ body::after {
   background: var(--aurora-mint);
 }
 
-.spotlight-violet {
-  background:
-    radial-gradient(60% 55% at 18% 22%, rgba(225, 29, 46, 0.1), transparent 70%),
-    radial-gradient(55% 60% at 88% 82%, rgba(245, 158, 11, 0.1), transparent 70%);
-}
-.spotlight-sunrise {
-  background:
-    radial-gradient(60% 55% at 15% 28%, rgba(225, 29, 46, 0.12), transparent 70%),
-    radial-gradient(55% 55% at 85% 78%, rgba(245, 158, 11, 0.14), transparent 70%);
-}
-.spotlight-ocean {
-  background:
-    radial-gradient(60% 55% at 15% 25%, rgba(14, 165, 233, 0.1), transparent 70%),
-    radial-gradient(55% 55% at 85% 80%, rgba(225, 29, 46, 0.08), transparent 70%);
-}
+/* Flat section surfaces — no mesh / aurora washes */
+.spotlight-violet,
+.spotlight-sunrise,
+.spotlight-ocean,
 .spotlight-lime {
-  background:
-    radial-gradient(60% 55% at 18% 28%, rgba(245, 158, 11, 0.14), transparent 70%),
-    radial-gradient(55% 60% at 88% 80%, rgba(225, 29, 46, 0.1), transparent 70%);
+  background: #fffdf9;
 }
 
-.band-violet {
-  background:
-    linear-gradient(180deg, rgba(225, 29, 46, 0.06) 0%, rgba(247, 241, 233, 0.55) 100%),
-    radial-gradient(70% 60% at 15% 20%, rgba(225, 29, 46, 0.1), transparent 65%);
-}
-.band-sunrise {
-  background:
-    linear-gradient(180deg, rgba(245, 158, 11, 0.08) 0%, rgba(247, 241, 233, 0.5) 100%),
-    radial-gradient(65% 55% at 20% 30%, rgba(225, 29, 46, 0.08), transparent 65%);
-}
-.band-ocean {
-  background:
-    linear-gradient(180deg, rgba(14, 165, 233, 0.06) 0%, rgba(247, 241, 233, 0.5) 100%),
-    radial-gradient(65% 55% at 18% 25%, rgba(14, 165, 233, 0.1), transparent 65%);
-}
+.band-violet,
+.band-sunrise,
+.band-ocean,
 .band-lime {
-  background:
-    linear-gradient(180deg, rgba(245, 158, 11, 0.1) 0%, rgba(247, 241, 233, 0.5) 100%),
-    radial-gradient(65% 55% at 20% 28%, rgba(245, 158, 11, 0.12), transparent 65%);
+  background: #efe7db;
 }
 .band-ink {
-  background: linear-gradient(160deg, #1a1511 0%, #14110e 55%, #2a1214 100%);
+  background: #14110e;
   color: #f7f1e9;
 }
 
@@ -169,77 +137,30 @@ body::after {
 .aurora-divider {
   height: 1px;
   width: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(225, 29, 46, 0.45) 30%,
-    rgba(245, 158, 11, 0.4) 60%,
-    transparent 100%
-  );
+  background: rgba(20, 17, 14, 0.1);
 }
 
+/* Solid accent text — no rainbow clip */
 .gradient-text {
-  background: linear-gradient(
-    120deg,
-    #14110e 0%,
-    #e11d2e 40%,
-    #f59e0b 75%,
-    #14110e 100%
-  );
-  background-size: 200% 200%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: gradient-shift 10s ease infinite;
+  color: #e11d2e;
+  background: none;
+  -webkit-text-fill-color: unset;
+  animation: none;
 }
 
 .gradient-ring {
   position: relative;
 }
 .gradient-ring::before {
-  content: "";
-  position: absolute;
-  inset: -1.5px;
-  z-index: -1;
-  border-radius: inherit;
-  background: conic-gradient(
-    from 0deg,
-    rgba(225, 29, 46, 0.2) 0%,
-    rgba(225, 29, 46, 0.8) 30%,
-    rgba(245, 158, 11, 0.7) 55%,
-    rgba(20, 17, 14, 0.5) 80%,
-    rgba(225, 29, 46, 0.2) 100%
-  );
-  animation: spin-slow 14s linear infinite;
-  opacity: 0.5;
-}
-.gradient-ring:hover::before {
-  opacity: 0.9;
+  content: none;
 }
 
 .aurora-border {
-  position: relative;
-  isolation: isolate;
+  /* Flat border only — no spinning gradient ring */
+  border-color: rgba(20, 17, 14, 0.1);
 }
 .aurora-border::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  padding: 1px;
-  border-radius: inherit;
-  background: linear-gradient(
-    135deg,
-    rgba(225, 29, 46, 0.75),
-    rgba(245, 158, 11, 0.55),
-    rgba(20, 17, 14, 0.35)
-  );
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  opacity: 0.9;
+  content: none !important;
 }
 
 .shimmer {
@@ -310,7 +231,7 @@ body::after {
 
 .card-feature {
   @apply card;
-  background: linear-gradient(165deg, #fffdf9 0%, #f7f1e9 100%);
+  background: #fffdf9;
 }
 .card-feature::before {
   content: "";
@@ -319,7 +240,7 @@ body::after {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #e11d2e, #f59e0b, #14110e);
+  background: #e11d2e;
   z-index: 1;
 }
 
@@ -333,15 +254,15 @@ body::after {
 .card-violet,
 .card-coral {
   border-color: rgba(225, 29, 46, 0.22);
-  background: linear-gradient(160deg, #fff5f5 0%, #fffdf9 70%);
+  background: #fff5f5;
 }
 .card-lime {
   border-color: rgba(245, 158, 11, 0.35);
-  background: linear-gradient(160deg, #fff8eb 0%, #fffdf9 70%);
+  background: #fff8eb;
 }
 .card-sky {
   border-color: rgba(14, 165, 233, 0.28);
-  background: linear-gradient(160deg, #f0f9ff 0%, #fffdf9 70%);
+  background: #f0f9ff;
 }
 .card-violet:hover,
 .card-coral:hover,
@@ -354,7 +275,7 @@ body::after {
 .card-ink {
   @apply relative overflow-hidden rounded-2xl transition-all duration-300;
   border: 1px solid rgba(225, 29, 46, 0.3);
-  background: linear-gradient(155deg, #1f1814 0%, #14110e 55%, #2a1216 100%);
+  background: #14110e;
   color: #f7f1e9;
   box-shadow: 0 20px 48px -24px rgba(20, 17, 14, 0.5);
 }
