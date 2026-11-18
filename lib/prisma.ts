@@ -7,17 +7,24 @@ import path from "path";
  * Copy the build-time SQLite DB into /tmp so reads (and cold-start writes) work.
  */
 function resolveDatabaseUrl(): string {
-  const configured = process.env.DATABASE_URL;
+  const bundled = path.join(process.cwd(), "prisma", "dev.db");
+  const absoluteFile = `file:${bundled}`;
+
+  // Local / non-Vercel: always use prisma/dev.db (absolute) so cwd
+  // differences never point at an empty ./dev.db without Customer tables.
   if (!process.env.VERCEL) {
-    return configured || "file:./dev.db";
+    if (process.env.DATABASE_URL?.startsWith("file:")) {
+      return absoluteFile;
+    }
+    return process.env.DATABASE_URL || absoluteFile;
   }
 
+  // Vercel: filesystem is read-only except /tmp — copy the bundled DB there.
   const tmpDb = "/tmp/thewearco.db";
-  const bundled = path.join(process.cwd(), "prisma", "dev.db");
-
   try {
-    if (!existsSync(tmpDb) && existsSync(bundled)) {
-      mkdirSync("/tmp", { recursive: true });
+    mkdirSync("/tmp", { recursive: true });
+    // Always refresh from the build artifact so new tables (Customer, etc.) ship.
+    if (existsSync(bundled)) {
       copyFileSync(bundled, tmpDb);
     }
   } catch (e) {
@@ -28,7 +35,7 @@ function resolveDatabaseUrl(): string {
     return `file:${tmpDb}`;
   }
 
-  return configured || `file:${bundled}`;
+  return absoluteFile;
 }
 
 const datasourceUrl = resolveDatabaseUrl();

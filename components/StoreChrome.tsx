@@ -8,6 +8,7 @@ import { CartProvider } from "@/components/CartProvider";
 export default function StoreChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith("/admin");
+  const isAuth = pathname === "/login" || pathname?.startsWith("/login/");
 
   if (isAdmin) {
     return <>{children}</>;
@@ -17,7 +18,8 @@ export default function StoreChrome({ children }: { children: React.ReactNode })
     <CartProvider>
       <Navbar />
       <main>{children}</main>
-      <Footer />
+      {/* Auth is full-bleed split — skip footer so the panels fill the viewport */}
+      {!isAuth && <Footer />}
     </CartProvider>
   );
 }

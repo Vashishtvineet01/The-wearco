@@ -108,10 +108,10 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="relative min-h-[calc(100vh-5rem)] bg-white">
-      <div className="mx-auto grid min-h-[calc(100vh-5rem)] max-w-7xl lg:grid-cols-2">
-        {/* Left promo — lifestyle panel */}
-        <aside className="relative hidden overflow-hidden bg-[#1a1511] lg:block">
+    <div className="relative w-full bg-white">
+      <div className="grid min-h-[calc(100vh-5rem)] w-full lg:grid-cols-2">
+        {/* Left promo — lifestyle panel (full-bleed, no max-width gutters) */}
+        <aside className="relative hidden min-h-[calc(100vh-5rem)] overflow-hidden bg-[#1a1511] lg:block">
           <div
             aria-hidden
             className="absolute inset-0 opacity-90"
