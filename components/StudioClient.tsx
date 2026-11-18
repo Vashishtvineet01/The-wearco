@@ -20,7 +20,7 @@ const PRESET_LINES = [
   "v1.0",
   "No Days Off",
   "Offline Mode",
-  "Founder Energy",
+  "Custom Print",
   "Late Night Shipping",
   "Ship It",
   "0 -> 1",

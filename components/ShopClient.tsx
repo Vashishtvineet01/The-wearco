@@ -63,25 +63,25 @@ export default function ShopClient({ products }: { products: Product[] }) {
     <>
       <div className="mb-4 flex items-end justify-between gap-4">
         <div>
-          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
-            // Catalog
+          <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-500">
+            Catalog
           </div>
           <h2 className="mt-1 font-display text-2xl font-bold tracking-tight">
-            {list.length} piece{list.length === 1 ? "" : "s"}
+            {list.length} product{list.length === 1 ? "" : "s"}
           </h2>
         </div>
       </div>
 
-      <div className="card mb-8 flex flex-wrap items-center gap-3 p-3">
-        <div className="flex flex-wrap items-center gap-1 rounded-full bg-paper-200 p-1">
+      <div className="mb-8 flex flex-wrap items-center gap-3 border-y border-paper-200 py-3">
+        <div className="flex flex-wrap items-center gap-1">
           {TABS.map((t) => (
             <button
               key={t.id}
               type="button"
               onClick={() => onTab(t.id)}
-              className={`relative rounded-full px-4 py-1.5 text-xs transition-all duration-300 ${
+              className={`rounded-full px-4 py-1.5 text-xs transition ${
                 tab === t.id
-                  ? "bg-signal-coral text-white shadow-[0_4px_18px_-6px_rgba(225,29,46,0.55)]"
+                  ? "bg-paper-900 text-paper-50"
                   : "text-paper-700 hover:bg-paper-100 hover:text-paper-900"
               }`}
             >

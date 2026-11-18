@@ -9,12 +9,13 @@ export default function AboutPage() {
         <div className="flex items-center gap-3">
           <span aria-hidden className="hidden h-px w-8 bg-paper-400 sm:block" />
           <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-500">
-            Manifesto
+            About
           </div>
         </div>
         <h1 className="mt-5 font-display text-4xl font-bold leading-[1.05] tracking-tight text-paper-900 md:text-6xl">
-          Clothing for the people <br />
-          <span className="gradient-text">building it themselves.</span>
+          A store for apparel &amp; prints.
+          <br />
+          <span className="gradient-text">Plus a studio to design your own.</span>
         </h1>
         <div aria-hidden className="mt-10 h-px max-w-3xl bg-paper-200" />
       </section>
@@ -22,26 +23,38 @@ export default function AboutPage() {
       <ScrollReveal>
         <div className="prose-styles space-y-6 text-lg leading-relaxed text-paper-700">
           <p>
-            TheWearCo is not a fashion brand. It&apos;s an{" "}
-            <span className="text-paper-900">internet uniform</span> — quiet,
-            identity-first clothing for founders, creators, freelancers and the
-            terminally online.
+            TheWearCo is a shopping destination for premium tees, hoodies, caps,
+            mugs, badges and posters — and a place to{" "}
+            <span className="text-paper-900">print your own design</span> with
+            no minimums.
           </p>
           <p>
-            We design slowly, drop in small batches, and embed culture into every
-            piece — from a chest typeline to a hidden QR on a sleeve that unlocks
-            a private community.
+            Browse ready-to-wear drops in the shop, or open the Design Studio:
+            upload artwork, type a line, place it on a live mockup, and we print
+            and ship in 5–7 days. Need ten or a hundred? Switch to team orders
+            for volume pricing.
           </p>
           <p>
-            And if our drops don&apos;t say what you&apos;re trying to say, you
-            can{" "}
+            Everything is printed and finished in small batches in India. Quality
+            fabric, clean prints, guest checkout — and a members layer on select
+            pieces if you want extras.
+          </p>
+          <p>
+            Start in the{" "}
+            <Link
+              href="/shop"
+              className="text-paper-900 underline underline-offset-4 hover:text-paper-700"
+            >
+              shop
+            </Link>{" "}
+            or jump straight into{" "}
             <Link
               href="/design"
               className="text-paper-900 underline underline-offset-4 hover:text-paper-700"
             >
-              print your own
+              Design Studio
             </Link>
-            . That&apos;s the whole point.
+            .
           </p>
         </div>
       </ScrollReveal>
@@ -49,18 +62,21 @@ export default function AboutPage() {
       <ScrollReveal delay={100}>
         <div className="mt-16 border-y border-paper-200 py-10">
           <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-500">
-            Members-only layer
+            Two ways to buy
           </div>
           <h2 className="mt-3 font-display text-2xl font-bold tracking-tight md:text-3xl">
-            Every piece is a <span className="gradient-text">key.</span>
+            Ready-made <span className="gradient-text">or made by you.</span>
           </h2>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-paper-600 md:text-base">
-            Hidden QR on every hoodie, cap and badge. Scan it to unlock the
-            founder Discord, monthly office hours and early access to every drop.
+            Shop limited editions as they drop, or customize any blank in the
+            Design Studio. Same fabric, same print quality either way.
           </p>
-          <div className="mt-6">
-            <Link href="/community" className="btn-primary">
-              See how the community works →
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link href="/shop" className="btn-primary">
+              Browse the shop →
+            </Link>
+            <Link href="/design" className="btn-ghost">
+              Design your own
             </Link>
           </div>
         </div>
@@ -102,10 +118,10 @@ export default function AboutPage() {
             <span aria-hidden className="h-px w-8 bg-paper-400" />
           </div>
           <h3 className="mt-4 font-display text-3xl font-bold tracking-tight md:text-4xl">
-            Be the first to <span className="gradient-text">wear it.</span>
+            Be first when something <span className="gradient-text">new drops.</span>
           </h3>
           <p className="mx-auto mt-3 max-w-md text-paper-600">
-            No spam. New drops + community invites only.
+            New products and studio updates. No spam.
           </p>
           <div className="mx-auto mt-8 max-w-sm">
             <NewsletterForm variant="stacked" buttonLabel="Join the list" />

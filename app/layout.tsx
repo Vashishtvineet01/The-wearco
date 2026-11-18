@@ -8,23 +8,23 @@ const plausibleDomain = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN;
 
 export const metadata: Metadata = {
   title: {
-    default: "TheWearCo — Internet Uniform for Founders & Creators",
+    default: "TheWearCo — Shop apparel & custom prints",
     template: "%s — TheWearCo"
   },
   description:
-    "TheWearCo is the internet uniform for founders, creators and builders. Drops, QR-unlocked community, and a Design Studio to print your own art.",
+    "Shop premium tees, hoodies, caps, mugs and posters — or design your own in the Design Studio. No minimums. Printed and shipped in 5–7 days.",
   metadataBase: new URL(siteUrl),
   openGraph: {
-    title: "TheWearCo — Internet Uniform",
+    title: "TheWearCo — Shop it. Design it. Wear it.",
     description:
-      "Founder-culture clothing + a Design Studio to print your own art on premium tees, hoodies and caps.",
+      "A shopping destination for apparel and prints, plus a Design Studio to customize your own art on premium blanks.",
     type: "website",
     siteName: "TheWearCo"
   },
   twitter: {
     card: "summary_large_image",
-    title: "TheWearCo — Internet Uniform",
-    description: "Founder-culture clothing + Design Studio."
+    title: "TheWearCo — Shop it. Design it. Wear it.",
+    description: "Shop apparel & prints, or design your own. No minimums."
   }
 };
 

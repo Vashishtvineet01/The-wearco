@@ -6,14 +6,9 @@ import ScrollReveal from "@/components/ScrollReveal";
 export const metadata: Metadata = {
   title: "Community — TheWearCo",
   description:
-    "Every TheWearCo piece is a key. Scan the QR, unlock the founder Discord, monthly office hours, and early access to every drop.",
+    "Optional member extras on select TheWearCo pieces. Scan the QR to unlock invites and early access — shopping and custom design work without it.",
 };
 
-/**
- * Real community page — the old nav link labelled 'Community' used to
- * drop users on the Manifesto. This page is now actually about the member
- * layer: QR unlock flow, Discord, office hours, drop previews.
- */
 export default function CommunityPage() {
   return (
     <div className="relative mx-auto max-w-6xl px-5 pb-20 pt-12 lg:px-8 lg:pt-16">
@@ -21,17 +16,25 @@ export default function CommunityPage() {
         <div className="flex items-center justify-center gap-3">
           <span aria-hidden className="h-px w-8 bg-paper-400" />
           <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-500">
-            Community
+            Member extras
           </div>
           <span aria-hidden className="h-px w-8 bg-paper-400" />
         </div>
         <h1 className="mt-5 font-display text-4xl font-bold leading-[1.05] tracking-tight text-paper-900 md:text-6xl">
-          Every piece is a <span className="gradient-text">key.</span>
+          Nice perks. <span className="gradient-text">Not required.</span>
         </h1>
         <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-paper-600 md:text-lg">
-          A hidden QR on every hoodie, cap and badge. Scan it to unlock the
-          founder Discord, monthly office hours and early access to every drop.
+          Select pieces include a hidden QR. Scan it for invites and early access.
+          You can shop and design without unlocking anything.
         </p>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <Link href="/shop" className="btn-primary">
+            Browse the shop
+          </Link>
+          <Link href="/design" className="btn-ghost">
+            Design your own
+          </Link>
+        </div>
         <div aria-hidden className="mx-auto mt-10 h-px max-w-md bg-paper-200" />
       </section>
 
@@ -59,9 +62,8 @@ export default function CommunityPage() {
             <span className="gradient-text">of every month.</span>
           </h2>
           <p className="mt-4 max-w-md text-sm leading-relaxed text-paper-600 md:text-base">
-            Open call at 7pm IST. Hosted by the TheWearCo team. Bring one question
-            about the thing you&apos;re shipping. No pitch decks, no networking
-            bingo — just operators talking to operators.
+            Open call at 7pm IST for members who unlocked a QR piece. Bring a
+            product or design question — keep it practical.
           </p>
         </ScrollReveal>
         <ul className="divide-y divide-paper-200 border-y border-paper-200">
@@ -81,30 +83,37 @@ export default function CommunityPage() {
       <div className="mt-16 border-y border-paper-200 py-8">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <p className="max-w-lg text-sm text-paper-600">
-            Want the founder stories first? See who&apos;s wearing the drops on
-            the homepage — this page stays focused on getting you in.
+            Looking for products or custom prints? Head to the shop or Design
+            Studio — this page is only for unlock extras.
           </p>
-          <Link
-            href="/#worn-by"
-            className="text-sm font-semibold text-paper-900 underline-offset-4 hover:underline"
-          >
-            See who&apos;s wearing it →
-          </Link>
+          <div className="flex flex-wrap gap-4">
+            <Link
+              href="/shop"
+              className="text-sm font-semibold text-paper-900 underline-offset-4 hover:underline"
+            >
+              Shop →
+            </Link>
+            <Link
+              href="/#worn-by"
+              className="text-sm font-semibold text-paper-700 underline-offset-4 hover:underline"
+            >
+              Customer stories →
+            </Link>
+          </div>
         </div>
       </div>
 
       <div className="mt-16 grid gap-12 border-t border-paper-200 pt-14 md:grid-cols-2 md:gap-16">
         <ScrollReveal>
           <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-500">
-            Already own a piece?
+            Already own a QR piece?
           </div>
           <h3 className="mt-3 font-display text-2xl font-bold tracking-tight text-paper-900">
             Find the QR, scan, unlock.
           </h3>
           <p className="mt-3 text-sm leading-relaxed text-paper-600">
-            Every hoodie has it tucked inside the hem. Every cap, inside the
-            sweatband. Every badge, on the back. Scan with any camera — the
-            invite link opens in Discord.
+            Hoodies: inside the hem. Caps: sweatband. Badges: on the back. Any
+            camera opens the invite link.
           </p>
           <Link
             href="/shop"
@@ -118,10 +127,10 @@ export default function CommunityPage() {
             Drop alerts
           </div>
           <h3 className="mt-3 font-display text-2xl font-bold tracking-tight">
-            Not ready to join yet?
+            Just want new product news?
           </h3>
           <p className="mt-3 text-sm leading-relaxed text-paper-600">
-            Get a heads-up when the next drop goes live. No spam, ever.
+            Get a heads-up when something new hits the shop. No spam.
           </p>
           <div className="mt-5 max-w-sm">
             <NewsletterForm variant="stacked" buttonLabel="Notify me" />
@@ -136,23 +145,23 @@ const UNLOCK_STEPS = [
   {
     n: "01",
     h: "Scan the QR",
-    d: "Hidden on the sleeve, hem or sweatband. Any camera app will open the invite link.",
+    d: "Hidden on the sleeve, hem or sweatband. Any camera app opens the invite link.",
   },
   {
     n: "02",
-    h: "Prove you own it",
-    d: "A one-tap verify handshake confirms the piece hasn't been unlocked before.",
+    h: "Verify ownership",
+    d: "A one-tap handshake confirms the piece has not been unlocked before.",
   },
   {
     n: "03",
     h: "You're in",
-    d: "Dropped straight into the founder Discord, with your member role waiting.",
+    d: "Access member extras — invites, office hours, early looks at new drops.",
   },
 ];
 
 const OFFICE_HOUR_TOPICS = [
   { k: "Product", v: "what to ship, what to cut" },
-  { k: "Distribution", v: "finding the first 100 real users" },
-  { k: "Hiring", v: "founding team, contractors, when to pay" },
-  { k: "Operations", v: "tools, bookkeeping, keeping sane" },
+  { k: "Design", v: "artwork, print placement, bulk setups" },
+  { k: "Orders", v: "sizing, timelines, exchanges" },
+  { k: "Studio", v: "custom prints and team kits" },
 ];

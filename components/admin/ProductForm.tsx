@@ -72,7 +72,7 @@ const empty: FormState = {
   tagline: "",
   category: "tee",
   price: 999,
-  drop: "Drop 01 — Founder Energy",
+  drop: "Drop 01 — Late Night",
   description: "",
   details: [],
   printArea: { x: 30, y: 28, w: 40, h: 30 },

@@ -231,37 +231,27 @@ export default function ProductBuyPanel({ product }: { product: Product }) {
           <button
             type="button"
             onClick={() => router.push(`/design?product=${product.slug}`)}
-            className="mt-3 w-full text-center text-sm text-signal-violetInk underline underline-offset-4"
+            className="btn-ghost mt-3 w-full py-3"
           >
-            Or print your own design on this piece →
+            Customize this in Design Studio →
           </button>
         )}
 
-        <div className="mt-8 rounded-2xl border border-paper-200 bg-paper-100/80 p-4">
-          <div className="flex gap-3">
-            <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-full bg-signal-lime/20 text-signal-limeInk">
-              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M4 8h16v10a2 2 0 01-2 2H6a2 2 0 01-2-2V8z" />
-                <path d="M8 8V6a4 4 0 018 0v2" />
-              </svg>
-            </span>
-            <div>
-              <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-signal-limeInk">
-                // QR unlock
-              </div>
-              <p className="mt-1 text-xs leading-relaxed text-paper-700">
-                Hidden QR on every piece unlocks founder Discord + office hours.
-                Scan with any phone — or use the Android app.
-              </p>
-              <a
-                href={ANDROID_APP_URL}
-                download="thewearco-android.apk"
-                className="mt-2 inline-flex text-xs font-semibold text-signal-violetInk underline underline-offset-2"
-              >
-                Download Android app →
-              </a>
-            </div>
+        <div className="mt-8 border-t border-paper-200 pt-5">
+          <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-paper-500">
+            Optional extras
           </div>
+          <p className="mt-1 text-xs leading-relaxed text-paper-600">
+            Select pieces include a hidden QR for member perks. Nice to have —
+            not required to buy or customize.
+          </p>
+          <a
+            href={ANDROID_APP_URL}
+            download="thewearco-android.apk"
+            className="mt-2 inline-flex text-xs font-semibold text-paper-900 underline underline-offset-2"
+          >
+            Download Android app →
+          </a>
         </div>
 
         <div className="mt-6 flex flex-wrap gap-4 text-[10px] font-mono uppercase tracking-[0.16em] text-paper-500">

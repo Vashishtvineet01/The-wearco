@@ -2,7 +2,7 @@
   "name": "thewearco",
   "version": "0.1.0",
   "private": true,
-  "description": "TheWearCo — Internet Uniform for founders, creators, and builders. Print your own designs.",
+  "description": "TheWearCo — shop apparel and prints, or design your own. No minimums.",
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",

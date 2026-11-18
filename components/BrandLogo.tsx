@@ -75,7 +75,7 @@ export default function BrandLogo({
           <span
             className={`mt-0.5 block font-mono text-[10px] uppercase tracking-[0.22em] ${tag}`}
           >
-            Internet Uniform
+            Shop it. Design it.
           </span>
         </span>
       )}

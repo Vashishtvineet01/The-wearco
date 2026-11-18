@@ -10,13 +10,13 @@ export default function Footer() {
         <div>
           <BrandLogo size="lg" />
           <p className="mt-3 max-w-xs text-sm text-paper-600">
-            Internet uniform for founders, creators and builders. Wear what
-            you&apos;re shipping.
+            Shop premium apparel and prints — or design your own. No minimums.
+            Made and shipped from India.
           </p>
           <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-paper-300 bg-paper-50 px-3 py-1.5">
             <span className="h-1.5 w-1.5 rounded-full bg-paper-700" />
             <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-paper-700">
-              Drop 03 — Live
+              Custom print · 5–7 days
             </span>
           </div>
           <a
@@ -158,7 +158,7 @@ export default function Footer() {
 
       <div className="border-t border-paper-200">
         <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-3 px-5 py-6 text-xs text-paper-500 md:flex-row md:items-center lg:px-8">
-          <div>© {new Date().getFullYear()} TheWearCo. Made by builders.</div>
+          <div>© {new Date().getFullYear()} TheWearCo. Shop · Design · Wear.</div>
           <nav className="flex flex-wrap items-center gap-4" aria-label="Policies">
             <Link href="/privacy" className="hover:text-paper-800">
               Privacy

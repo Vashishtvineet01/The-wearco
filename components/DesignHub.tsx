@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import type { Product } from "@/lib/products";
 import StudioClient from "./StudioClient";
@@ -42,11 +43,11 @@ export default function DesignHub({ products }: { products: Product[] }) {
           <span aria-hidden className="h-px w-8 bg-paper-400" />
         </div>
         <h1 className="mt-5 font-display text-4xl font-bold leading-[1.05] tracking-tight text-paper-900 md:text-6xl">
-          Print your idea <span className="gradient-text">on anything.</span>
+          Design &amp; print <span className="gradient-text">on anything.</span>
         </h1>
         <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-paper-600 md:text-lg">
-          Choose how you want to print — one piece for yourself, or a full team
-          order. Same fabric, same DTG print, same 5–7 day turnaround.
+          Customize a single piece or kit out a team. Same premium blanks, same
+          DTG print, same 5–7 day turnaround — then shop ready-mades anytime.
         </p>
       </section>
 
@@ -86,13 +87,21 @@ export default function DesignHub({ products }: { products: Product[] }) {
             ? "Need 10 or more? Volume pricing starts at 10 units."
             : "Want to test one piece first? Same print and fabric in solo mode."}
         </p>
-        <button
-          type="button"
-          onClick={() => setView(view === "me" ? "team" : "me")}
-          className="mt-3 text-sm font-semibold text-paper-900 underline-offset-4 hover:underline"
-        >
-          {view === "me" ? "Switch to team orders →" : "Switch to solo design →"}
-        </button>
+        <div className="mt-3 flex flex-wrap items-center justify-center gap-4">
+          <button
+            type="button"
+            onClick={() => setView(view === "me" ? "team" : "me")}
+            className="text-sm font-semibold text-paper-900 underline-offset-4 hover:underline"
+          >
+            {view === "me" ? "Switch to team orders →" : "Switch to solo design →"}
+          </button>
+          <Link
+            href="/shop"
+            className="text-sm font-semibold text-paper-700 underline-offset-4 hover:underline"
+          >
+            Or browse the shop →
+          </Link>
+        </div>
       </div>
     </div>
   );

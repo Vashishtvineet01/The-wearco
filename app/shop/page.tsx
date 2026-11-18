@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 export const metadata = {
   title: "Shop — TheWearCo",
   description:
-    "Browse limited drops: tees, hoodies and caps for founders and creators.",
+    "Browse tees, hoodies, caps, mugs, badges and posters — or design your own in the Design Studio.",
 };
 
 export default async function ShopPage() {
@@ -23,20 +23,20 @@ export default async function ShopPage() {
   return (
     <div className="relative mx-auto max-w-7xl px-5 py-12 lg:px-8 lg:py-20">
       <PageHero
-        eyebrow="Shop all"
+        eyebrow="Shop"
         title={
           <>
-            Limited drops, <span className="gradient-text">live now.</span>
+            Apparel &amp; prints, <span className="gradient-text">ready to wear.</span>
           </>
         }
         subtitle={
           <>
-            Edition pieces for founders and builders — or skip the catalog and{" "}
+            Browse everything in the catalog — or skip ahead and{" "}
             <Link
               href="/design"
-              className="text-signal-limeInk underline-offset-4 hover:underline"
+              className="text-paper-900 underline underline-offset-4 hover:text-paper-700"
             >
-              print your own
+              design your own
             </Link>
             .
           </>
@@ -70,8 +70,8 @@ export default async function ShopPage() {
             </div>
           </div>
           <div className="flex flex-col justify-center border-t border-white/10 p-8 text-paper-50 lg:border-l lg:border-t-0 lg:p-10">
-            <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-lime/90">
-              // Featured
+            <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-paper-50/60">
+              Featured
             </div>
             <h2 className="mt-3 font-display text-3xl font-bold tracking-tight md:text-4xl">
               {featured.name}
@@ -83,8 +83,8 @@ export default async function ShopPage() {
               <span className="font-display text-2xl font-bold">
                 {formatINR(featured.price)}
               </span>
-              <span className="rounded-full bg-signal-coral px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-white transition group-hover:shadow-[0_8px_28px_-8px_rgba(225,29,46,0.7)]">
-                View piece →
+              <span className="rounded-full bg-paper-50 px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-paper-900">
+                View product →
               </span>
             </div>
           </div>
@@ -103,23 +103,32 @@ export default async function ShopPage() {
         </Suspense>
       </div>
 
-      <div className="mt-16 flex flex-col items-start justify-between gap-6 overflow-hidden rounded-[28px] border border-paper-200 bg-paper-50/80 p-6 md:flex-row md:items-center md:p-8">
+      <div className="mt-16 flex flex-col items-start justify-between gap-6 border-y border-paper-200 py-10 md:flex-row md:items-center">
         <div>
-          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
-            // Android
+          <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-500">
+            Design Studio
           </div>
           <h3 className="mt-2 font-display text-2xl font-bold tracking-tight">
-            Shop from the app
+            Don&apos;t see your design?
           </h3>
           <p className="mt-2 max-w-md text-sm text-paper-600">
-            Browse drops, design studio, and QR unlocks on Android. Direct APK
-            — no Play Store wait.
+            Upload artwork or type a line and print on any blank — one piece or a
+            full team order.
           </p>
         </div>
+        <Link href="/design" className="btn-primary shrink-0">
+          Open Design Studio
+        </Link>
+      </div>
+
+      <div className="mt-10 flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
+        <p className="text-sm text-paper-600">
+          Prefer the app? Download the Android APK for shop + studio on the go.
+        </p>
         <a
           href={ANDROID_APP_URL}
           download="thewearco-android.apk"
-          className="btn-primary shrink-0"
+          className="btn-ghost shrink-0"
         >
           Download Android app
         </a>

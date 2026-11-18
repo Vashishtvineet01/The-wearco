@@ -121,17 +121,17 @@ export default function LoginForm() {
           <div className="relative">
             <BrandLogo href={null} onDark />
             <h1 className="mt-10 font-display text-5xl font-bold leading-[0.95] tracking-tight text-[#fff8eb] xl:text-6xl">
-              Internet
+              Shop it.
               <br />
-              uniform.
+              Design it.
             </h1>
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-[#fff8eb]/80">
-              Sign in with your mobile. Orders stay guest-friendly — an account
-              just saves them for next time.
+              Sign in with your mobile. Guest checkout still works — an account
+              just saves orders for next time.
             </p>
           </div>
           <div className="relative font-mono text-[10px] uppercase tracking-[0.22em] text-[#fff8eb]/55">
-            Drop 03 · QR Layer · Live
+            Apparel · Prints · Custom studio
           </div>
         </aside>
 

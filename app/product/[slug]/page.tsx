@@ -54,11 +54,11 @@ export default async function ProductPage({ params }: Props) {
       <ProductBuyPanel product={product} />
 
       <div className="mt-20">
-        <div className="mb-6 font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
-          // More from the drop
+        <div className="mb-6 font-mono text-[11px] uppercase tracking-[0.28em] text-paper-500">
+          More from the shop
         </div>
         <h2 className="mb-6 font-display text-2xl font-bold tracking-tight md:text-3xl">
-          You might also wear
+          You might also like
         </h2>
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {related.map((p) => (

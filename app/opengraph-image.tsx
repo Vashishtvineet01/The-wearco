@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "TheWearCo — Internet Uniform";
+export const alt = "TheWearCo — Shop it. Design it. Wear it.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -68,7 +68,7 @@ export default function OpenGraphImage() {
               alignItems: "center",
               justifyContent: "center",
               background:
-                "linear-gradient(135deg, #7c5cff 0%, #ff5c3b 50%, #d8ff36 100%)",
+                "linear-gradient(145deg, #f59e0b 0%, #d97706 45%, #b45309 100%)",
             }}
           >
             <svg
@@ -76,10 +76,12 @@ export default function OpenGraphImage() {
               height="28"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="#0f0d0a"
+              stroke="#fff8eb"
               strokeWidth="2.2"
             >
-              <path d="M3 7l9-5 9 5-9 5-9-5zM3 12l9 5 9-5M3 17l9 5 9-5" />
+              <path d="M4 8.5 12 4l8 4.5-8 4.5-8-4.5Z" />
+              <path d="M4 12.5 12 17l8-4.5" />
+              <path d="M4 16 12 20.5 20 16" />
             </svg>
           </div>
           <div
@@ -105,10 +107,10 @@ export default function OpenGraphImage() {
               maxWidth: 900,
             }}
           >
-            Internet uniform for the people building it themselves.
+            Shop apparel & custom prints.
           </div>
           <div style={{ fontSize: 24, color: "#4a4737", maxWidth: 720 }}>
-            Drops · Design Studio · Bulk for teams
+            Shop · Design Studio · Team orders · No minimums
           </div>
         </div>
       </div>

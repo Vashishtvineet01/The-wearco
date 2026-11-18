@@ -227,8 +227,8 @@ export default async function AccountPage() {
               // Community
             </div>
             <p className="mt-2 text-sm text-paper-700">
-              Every QR-tagged piece unlocks the founder Discord and monthly
-              office hours.
+              Select QR-tagged pieces unlock optional member extras — nice to
+              have, not required to shop.
             </p>
             <Link href="/community" className="btn-ghost mt-4 inline-flex">
               Read how it works →
