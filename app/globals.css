@@ -188,18 +188,37 @@ body::after {
   background: #14110e;
   box-shadow: 0 10px 28px -12px rgba(20, 17, 14, 0.45);
 }
+.btn-primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(253, 230, 138, 0.28) 50%,
+    transparent 60%
+  );
+  transform: translateX(-120%);
+  pointer-events: none;
+}
 .btn-primary:hover {
-  transform: translateY(-1px);
+  transform: translateY(-1px) scale(1.01);
   background: #2a231d;
   box-shadow: 0 14px 36px -10px rgba(20, 17, 14, 0.4);
 }
+.btn-primary:hover::after {
+  animation: shimmer-sweep 0.85s ease-out;
+}
 .btn-primary:active {
-  transform: translateY(0);
+  transform: scale(0.98);
 }
 .btn-primary:disabled {
   opacity: 0.55;
   cursor: not-allowed;
   transform: none;
+}
+.btn-primary:disabled::after {
+  display: none;
 }
 
 .btn-lime {
@@ -224,8 +243,8 @@ body::after {
   @apply card;
 }
 .card-hover:hover {
-  transform: translateY(-4px);
-  border-color: rgba(225, 29, 46, 0.35);
+  transform: translateY(-5px);
+  border-color: #a9947c; /* paper-400 */
   box-shadow: 0 18px 40px -24px rgba(20, 17, 14, 0.28);
 }
 

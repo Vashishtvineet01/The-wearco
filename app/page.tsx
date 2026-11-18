@@ -2,8 +2,9 @@ import Link from "next/link";
 import Marquee from "@/components/Marquee";
 import ProductCard from "@/components/ProductCard";
 import ProductMockup from "@/components/ProductMockup";
-import ScrollReveal from "@/components/ScrollReveal";
+import ScrollReveal, { RevealStagger } from "@/components/ScrollReveal";
 import StudioStories from "@/components/StudioStories";
+import HeroMockups from "@/components/HeroMockups";
 import { getActiveProducts } from "@/lib/catalog";
 import {
   CATEGORY_PLURAL_LABELS,
@@ -72,18 +73,21 @@ function Hero() {
             </span>
           </div>
 
-          <h1
-            className="animate-fade-in-up font-display text-5xl font-bold leading-[0.92] tracking-tight text-paper-900 md:text-7xl lg:text-[86px]"
-            style={{ animationDelay: "120ms" }}
-          >
-            TheWearCo
-            <br />
-            <span className="gradient-text">Shop it. Design it.</span>
+          <h1 className="font-display text-5xl font-bold leading-[0.92] tracking-tight text-paper-900 md:text-7xl lg:text-[86px]">
+            <span className="block animate-fade-in-up" style={{ animationDelay: "80ms" }}>
+              TheWearCo
+            </span>
+            <span
+              className="gradient-text mt-1 block animate-fade-in-up"
+              style={{ animationDelay: "200ms" }}
+            >
+              Shop it. Design it.
+            </span>
           </h1>
 
           <p
             className="mt-6 max-w-xl animate-fade-in-up text-base leading-relaxed text-paper-600 md:text-lg"
-            style={{ animationDelay: "240ms" }}
+            style={{ animationDelay: "320ms" }}
           >
             Premium tees, hoodies, caps, mugs and posters — ready to buy, or open
             the Design Studio and print your own. No minimums. Ships in 5–7 days.
@@ -91,14 +95,14 @@ function Hero() {
 
           <p
             className="mt-3 animate-fade-in-up font-mono text-[11px] uppercase tracking-[0.18em] text-paper-500"
-            style={{ animationDelay: "300ms" }}
+            style={{ animationDelay: "400ms" }}
           >
             Free shipping over ₹1,499 · Guest checkout
           </p>
 
           <div
             className="mt-9 flex animate-fade-in-up flex-wrap items-center gap-3"
-            style={{ animationDelay: "360ms" }}
+            style={{ animationDelay: "480ms" }}
           >
             <Link href="/shop" className="btn-primary">
               Shop now
@@ -113,7 +117,7 @@ function Hero() {
 
           <div
             className="mt-12 flex animate-fade-in-up items-center gap-8 border-t border-paper-200 pt-8 text-xs text-paper-600"
-            style={{ animationDelay: "480ms" }}
+            style={{ animationDelay: "600ms" }}
           >
             <Stat label="Categories" value="07+" />
             <Stat label="Custom print" value="5–7d" />
@@ -121,56 +125,9 @@ function Hero() {
           </div>
         </div>
 
-        <div className="relative lg:col-span-5">
-          <div className="absolute -inset-4 rounded-[2rem] bg-paper-100/70 md:-inset-6" aria-hidden />
-          <div className="relative grid grid-cols-2 gap-4">
-            <HeroCard fabric="#0e0e10" tagline="Shop" badge="Tee" tilt="-rotate-1" cat="tee" delay={200} />
-            <HeroCard fabric="#ece7dd" tagline="Design" badge="Hoodie" tilt="rotate-2 mt-8" cat="hoodie" delay={320} />
-            <HeroCard fabric="#0e0e10" tagline="Print" badge="Mug" tilt="rotate-1" cat="mug" shape="cylinder" delay={440} />
-            <HeroCard fabric="#ece7dd" tagline="ART" badge="Poster" tilt="-rotate-2" cat="poster" shape="full" delay={560} />
-          </div>
-        </div>
+        <HeroMockups />
       </div>
     </section>
-  );
-}
-
-function HeroCard({
-  fabric,
-  tagline,
-  badge,
-  tilt,
-  cat,
-  shape,
-  delay = 0,
-}: {
-  fabric: string;
-  tagline: string;
-  badge: string;
-  tilt: string;
-  cat: ProductCategory;
-  shape?: PrintShape;
-  delay?: number;
-}) {
-  return (
-    <div
-      className={`relative animate-fade-in-up rounded-2xl border border-paper-200/80 bg-paper-50/90 p-3 transition-transform duration-500 ${tilt} hover:rotate-0 hover:-translate-y-2 hover:scale-[1.02]`}
-      style={{ animationDelay: `${delay}ms` }}
-    >
-      <div className="absolute left-3 top-3 z-10 rounded-full border border-paper-300 bg-paper-50 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-paper-700">
-        {badge}
-      </div>
-      <div className="w-full animate-float-soft" style={{ animationDelay: `${delay % 600}ms` }}>
-        <ProductMockup
-          category={cat}
-          fabric={fabric}
-          printShape={shape}
-          printText={tagline}
-          printColor={isLight(fabric) ? "#0a0a0a" : "#f7f7f7"}
-          className="mx-auto max-h-[260px]"
-        />
-      </div>
-    </div>
   );
 }
 
@@ -221,38 +178,40 @@ function CategoryPosters() {
           </div>
         </ScrollReveal>
 
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4">
-          {HOME_CATEGORIES.map((cat, i) => (
-            <ScrollReveal key={cat.id} delay={i * 50}>
-              <Link
-                href={`/shop?cat=${cat.id}`}
-                className="group flex flex-col overflow-hidden rounded-2xl border border-paper-200 bg-paper-50/80 transition hover:border-paper-400"
+        <RevealStagger
+          step={55}
+          className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4"
+        >
+          {HOME_CATEGORIES.map((cat) => (
+            <Link
+              key={cat.id}
+              href={`/shop?cat=${cat.id}`}
+              className="group flex flex-col overflow-hidden rounded-2xl border border-paper-200 bg-paper-50/80 transition duration-300 hover:-translate-y-1 hover:border-paper-400"
+            >
+              <div
+                className="relative grid min-h-[140px] place-items-center px-3 pt-6 sm:min-h-[160px]"
+                style={{ background: isLight(cat.fabric) ? "#efe7db" : "#1a1511" }}
               >
-                <div
-                  className="relative grid min-h-[140px] place-items-center px-3 pt-6 sm:min-h-[160px]"
-                  style={{ background: isLight(cat.fabric) ? "#efe7db" : "#1a1511" }}
-                >
-                  <ProductMockup
-                    category={cat.id}
-                    fabric={cat.fabric}
-                    printShape={cat.shape}
-                    printText={cat.sample}
-                    printColor={cat.print}
-                    className="mx-auto max-h-[130px] transition duration-500 group-hover:scale-[1.04]"
-                  />
-                </div>
-                <div className="flex items-center justify-between gap-2 border-t border-paper-200 px-4 py-3">
-                  <span className="font-display text-sm font-semibold text-paper-900 sm:text-base">
-                    {CATEGORY_PLURAL_LABELS[cat.id]}
-                  </span>
-                  <span className="text-xs text-paper-500 transition group-hover:text-paper-900">
-                    Shop →
-                  </span>
-                </div>
-              </Link>
-            </ScrollReveal>
+                <ProductMockup
+                  category={cat.id}
+                  fabric={cat.fabric}
+                  printShape={cat.shape}
+                  printText={cat.sample}
+                  printColor={cat.print}
+                  className="mx-auto max-h-[130px] transition duration-500 group-hover:scale-[1.05]"
+                />
+              </div>
+              <div className="flex items-center justify-between gap-2 border-t border-paper-200 px-4 py-3">
+                <span className="font-display text-sm font-semibold text-paper-900 sm:text-base">
+                  {CATEGORY_PLURAL_LABELS[cat.id]}
+                </span>
+                <span className="translate-y-0.5 text-xs text-paper-500 transition duration-300 group-hover:translate-y-0 group-hover:text-paper-900">
+                  Shop →
+                </span>
+              </div>
+            </Link>
           ))}
-        </div>
+        </RevealStagger>
       </div>
     </section>
   );
@@ -280,13 +239,15 @@ function FeaturedProducts({ featured }: { featured: Product[] }) {
             </Link>
           </div>
         </ScrollReveal>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {featured.map((p, i) => (
-            <ScrollReveal key={p.slug} delay={i * 90}>
-              <ProductCard product={p} />
-            </ScrollReveal>
+        <RevealStagger
+          step={90}
+          variant="scale"
+          className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
+        >
+          {featured.map((p) => (
+            <ProductCard key={p.slug} product={p} />
           ))}
-        </div>
+        </RevealStagger>
       </div>
     </section>
   );
@@ -332,12 +293,12 @@ function PrintYourOwnSection() {
           </div>
         </ScrollReveal>
 
-        <ScrollReveal delay={150}>
+        <ScrollReveal delay={150} variant="scale">
           <div className="relative rounded-2xl border border-paper-200 bg-paper-900 p-6 text-paper-50">
             <div className="absolute left-6 top-6 rounded-full border border-white/15 bg-white/10 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.18em]">
               Live preview
             </div>
-            <div className="mt-12 w-full">
+            <div className="mt-12 w-full animate-float-soft">
               <ProductMockup
                 category="tee"
                 fabric="#0e0e10"
@@ -398,70 +359,72 @@ function DropsTimeline({ drops }: { drops: string[] }) {
           </div>
         </ScrollReveal>
 
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <RevealStagger
+          step={70}
+          className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
+        >
           {drops.map((d, i) => {
             const status =
               i === 2 ? "Live now" : i === 1 ? "Sold out" : "In shop";
             const live = status === "Live now";
             return (
-              <ScrollReveal key={d} delay={i * 70}>
-                <Link
-                  href="/shop"
-                  className={`group flex h-full flex-col rounded-2xl border p-5 transition ${
-                    live
-                      ? "border-paper-900 bg-paper-900 text-paper-50"
-                      : "border-paper-200 bg-paper-50/70 hover:border-paper-400"
+              <Link
+                key={d}
+                href="/shop"
+                className={`group flex h-full flex-col rounded-2xl border p-5 transition duration-300 hover:-translate-y-1 ${
+                  live
+                    ? "border-paper-900 bg-paper-900 text-paper-50"
+                    : "border-paper-200 bg-paper-50/70 hover:border-paper-400"
+                }`}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span
+                    className={`font-mono text-xs ${
+                      live ? "text-paper-50/50" : "text-paper-400"
+                    }`}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span
+                    className={`inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.18em] ${
+                      live ? "text-[#fde68a]" : "text-paper-500"
+                    }`}
+                  >
+                    <span
+                      className={`h-1.5 w-1.5 rounded-full ${
+                        live ? "animate-pulse bg-[#fde68a]" : "bg-paper-300"
+                      }`}
+                    />
+                    {status}
+                  </span>
+                </div>
+                <h3
+                  className={`mt-5 font-display text-lg font-semibold leading-snug tracking-tight ${
+                    live ? "text-paper-50" : "text-paper-900"
                   }`}
                 >
-                  <div className="flex items-center justify-between gap-2">
-                    <span
-                      className={`font-mono text-xs ${
-                        live ? "text-paper-50/50" : "text-paper-400"
-                      }`}
-                    >
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span
-                      className={`inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.18em] ${
-                        live ? "text-[#fde68a]" : "text-paper-500"
-                      }`}
-                    >
-                      <span
-                        className={`h-1.5 w-1.5 rounded-full ${
-                          live ? "animate-pulse bg-[#fde68a]" : "bg-paper-300"
-                        }`}
-                      />
-                      {status}
-                    </span>
-                  </div>
-                  <h3
-                    className={`mt-5 font-display text-lg font-semibold leading-snug tracking-tight ${
-                      live ? "text-paper-50" : "text-paper-900"
-                    }`}
-                  >
-                    {shortDropName(d)}
-                  </h3>
-                  <p
-                    className={`mt-2 flex-1 text-sm leading-relaxed ${
-                      live ? "text-paper-50/70" : "text-paper-600"
-                    }`}
-                  >
-                    {dropDescription(d)}
-                  </p>
-                  <div
-                    className={`mt-5 text-sm font-semibold transition ${
-                      live
-                        ? "text-[#fde68a] group-hover:underline"
-                        : "text-paper-900 group-hover:underline"
-                    }`}
-                  >
-                    Shop →
-                  </div>
-                </Link>
-              </ScrollReveal>
+                  {shortDropName(d)}
+                </h3>
+                <p
+                  className={`mt-2 flex-1 text-sm leading-relaxed ${
+                    live ? "text-paper-50/70" : "text-paper-600"
+                  }`}
+                >
+                  {dropDescription(d)}
+                </p>
+                <div
+                  className={`mt-5 translate-y-0.5 text-sm font-semibold transition duration-300 group-hover:translate-y-0 ${
+                    live
+                      ? "text-[#fde68a] group-hover:underline"
+                      : "text-paper-900 group-hover:underline"
+                  }`}
+                >
+                  Shop →
+                </div>
+              </Link>
             );
           })}
-        </div>
+        </RevealStagger>
       </div>
     </section>
   );
@@ -487,7 +450,7 @@ function dropDescription(drop: string) {
 function CommunityBand() {
   return (
     <section className="relative overflow-hidden border-t border-paper-200">
-      <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 px-5 py-12 md:flex-row md:items-center lg:px-8">
+      <ScrollReveal className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 px-5 py-12 md:flex-row md:items-center lg:px-8">
         <div className="max-w-xl">
           <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-500">
             Optional extras
@@ -508,7 +471,7 @@ function CommunityBand() {
             Back to shop
           </Link>
         </div>
-      </div>
+      </ScrollReveal>
     </section>
   );
 }

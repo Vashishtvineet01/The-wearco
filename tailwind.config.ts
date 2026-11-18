@@ -105,6 +105,31 @@ const config: Config = {
           "0%": { transform: "rotate(0deg)" },
           "100%": { transform: "rotate(360deg)" },
         },
+        "reveal-blur": {
+          "0%": { opacity: "0", filter: "blur(6px)", transform: "translateY(12px)" },
+          "100%": { opacity: "1", filter: "blur(0)", transform: "translateY(0)" },
+        },
+        "slide-in-left": {
+          "0%": { opacity: "0", transform: "translateX(12px)" },
+          "100%": { opacity: "1", transform: "translateX(0)" },
+        },
+        "slide-in-right": {
+          "0%": { opacity: "0", transform: "translateX(-12px)" },
+          "100%": { opacity: "1", transform: "translateX(0)" },
+        },
+        "badge-pop": {
+          "0%": { transform: "scale(0.6)" },
+          "60%": { transform: "scale(1.15)" },
+          "100%": { transform: "scale(1)" },
+        },
+        "diamond-pulse": {
+          "0%, 100%": { opacity: "0.55" },
+          "50%": { opacity: "1" },
+        },
+        "progress-fill": {
+          "0%": { transform: "scaleX(0)" },
+          "100%": { transform: "scaleX(1)" },
+        },
       },
       animation: {
         marquee: "marquee 32s linear infinite",
@@ -117,6 +142,12 @@ const config: Config = {
         "fade-in-up": "fade-in-up 0.7s ease-out both",
         "fade-in": "fade-in 0.6s ease-out both",
         "spin-slow": "spin-slow 18s linear infinite",
+        "reveal-blur": "reveal-blur 0.65s ease-out both",
+        "slide-in-left": "slide-in-left 0.45s ease-out both",
+        "slide-in-right": "slide-in-right 0.45s ease-out both",
+        "badge-pop": "badge-pop 0.35s ease-out both",
+        "diamond-pulse": "diamond-pulse 2.8s ease-in-out infinite",
+        "progress-fill": "progress-fill 6s linear both",
       },
     },
   },

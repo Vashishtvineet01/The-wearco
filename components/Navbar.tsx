@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCart } from "./CartProvider";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import BrandLogo from "./BrandLogo";
 
 const NAV_ITEMS = [
@@ -22,14 +22,29 @@ export default function Navbar() {
   const { count } = useCart();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [accountLabel, setAccountLabel] = useState<string | null>(null);
+  const [badgeKey, setBadgeKey] = useState(0);
+  const prevCount = useRef(count);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 8);
+      const doc = document.documentElement;
+      const max = doc.scrollHeight - window.innerHeight;
+      setProgress(max > 0 ? Math.min(1, window.scrollY / max) : 0);
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    if (count > prevCount.current) {
+      setBadgeKey((k) => k + 1);
+    }
+    prevCount.current = count;
+  }, [count]);
 
   useEffect(() => {
     let cancelled = false;
@@ -48,7 +63,6 @@ export default function Navbar() {
     };
   }, []);
 
-  // Close mobile drawer on route change.
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
@@ -57,8 +71,8 @@ export default function Navbar() {
     <header
       className={`sticky top-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "glass border-b border-paper-200"
-          : "border-b border-transparent bg-transparent"
+          ? "relative glass border-b border-paper-200"
+          : "relative border-b border-transparent bg-transparent"
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
@@ -112,7 +126,10 @@ export default function Navbar() {
               <circle cx="18" cy="20" r="1.5" />
             </svg>
             {count > 0 && (
-              <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-signal-coral px-1 font-mono text-[10px] font-bold text-white">
+              <span
+                key={badgeKey}
+                className="absolute -right-1 -top-1 grid h-5 min-w-5 animate-badge-pop place-items-center rounded-full bg-[#b45309] px-1 font-mono text-[10px] font-bold text-white"
+              >
                 {count}
               </span>
             )}
@@ -128,6 +145,12 @@ export default function Navbar() {
           </button>
         </div>
       </div>
+
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] origin-left bg-[#b45309]/90 transition-transform duration-150 ease-out"
+        style={{ transform: `scaleX(${progress})` }}
+      />
 
       {open && (
         <div className="border-t border-paper-200 bg-paper-50/95 backdrop-blur md:hidden">

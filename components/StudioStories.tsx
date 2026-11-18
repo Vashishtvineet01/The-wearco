@@ -51,20 +51,36 @@ const AUTO_MS = 6000;
 
 export default function StudioStories() {
   const [index, setIndex] = useState(0);
+  const [dir, setDir] = useState<"next" | "prev">("next");
+  const [paused, setPaused] = useState(false);
+  const [progressKey, setProgressKey] = useState(0);
   const total = STUDIO_STORIES.length;
   const story = STUDIO_STORIES[index];
 
   const go = useCallback(
-    (next: number) => {
-      setIndex(((next % total) + total) % total);
+    (next: number, direction?: "next" | "prev") => {
+      const normalized = ((next % total) + total) % total;
+      const inferred =
+        direction ??
+        (normalized === (index + 1) % total
+          ? "next"
+          : normalized === (index - 1 + total) % total
+            ? "prev"
+            : normalized > index
+              ? "next"
+              : "prev");
+      setDir(inferred);
+      setIndex(normalized);
+      setProgressKey((k) => k + 1);
     },
-    [total],
+    [index, total],
   );
 
   useEffect(() => {
-    const id = window.setInterval(() => go(index + 1), AUTO_MS);
+    if (paused) return;
+    const id = window.setInterval(() => go(index + 1, "next"), AUTO_MS);
     return () => window.clearInterval(id);
-  }, [go, index]);
+  }, [go, index, paused]);
 
   return (
     <section id="worn-by" className="relative overflow-hidden border-y border-paper-200">
@@ -94,10 +110,22 @@ export default function StudioStories() {
           </div>
         </ScrollReveal>
 
-        <div className="relative mx-auto mt-10 max-w-xl">
+        <div
+          className="relative mx-auto mt-10 max-w-xl"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+          onFocusCapture={() => setPaused(true)}
+          onBlurCapture={(e) => {
+            if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+              setPaused(false);
+            }
+          }}
+        >
           <blockquote
-            key={story.handle}
-            className="animate-fade-in-up flex flex-col rounded-2xl border border-paper-200 bg-paper-50/90 p-6 sm:p-8"
+            key={`${story.handle}-${progressKey}`}
+            className={`flex flex-col rounded-2xl border border-paper-200 bg-paper-50/90 p-6 sm:p-8 ${
+              dir === "next" ? "animate-slide-in-left" : "animate-slide-in-right"
+            }`}
           >
             <div className="flex items-center gap-3">
               <span
@@ -124,11 +152,21 @@ export default function StudioStories() {
             </div>
           </blockquote>
 
+          <div className="mt-4 h-1 overflow-hidden rounded-full bg-paper-200">
+            <div
+              key={`bar-${progressKey}`}
+              className="h-full origin-left animate-progress-fill rounded-full bg-[#b45309]"
+              style={{
+                animationPlayState: paused ? "paused" : "running",
+              }}
+            />
+          </div>
+
           <div className="mt-6 flex items-center justify-between gap-4">
             <button
               type="button"
-              onClick={() => go(index - 1)}
-              className="rounded-full border border-paper-300 bg-white/70 px-4 py-2 text-sm font-semibold text-paper-900 transition hover:border-paper-900 hover:bg-white"
+              onClick={() => go(index - 1, "prev")}
+              className="rounded-full border border-paper-300 bg-white/70 px-4 py-2 text-sm font-semibold text-paper-900 transition hover:border-paper-900 hover:bg-white active:scale-[0.98]"
               aria-label="Previous story"
             >
               ← Prev
@@ -142,7 +180,7 @@ export default function StudioStories() {
                   role="tab"
                   aria-selected={i === index}
                   aria-label={`Show ${s.name}`}
-                  onClick={() => go(i)}
+                  onClick={() => go(i, i > index ? "next" : "prev")}
                   className={`h-2 rounded-full transition-all ${
                     i === index
                       ? "w-6 bg-[#b45309]"
@@ -154,8 +192,8 @@ export default function StudioStories() {
 
             <button
               type="button"
-              onClick={() => go(index + 1)}
-              className="rounded-full border border-paper-300 bg-white/70 px-4 py-2 text-sm font-semibold text-paper-900 transition hover:border-paper-900 hover:bg-white"
+              onClick={() => go(index + 1, "next")}
+              className="rounded-full border border-paper-300 bg-white/70 px-4 py-2 text-sm font-semibold text-paper-900 transition hover:border-paper-900 hover:bg-white active:scale-[0.98]"
               aria-label="Next story"
             >
               Next →

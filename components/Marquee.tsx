@@ -3,8 +3,7 @@ export default function Marquee({ items }: { items: string[] }) {
   const all = [...items, ...items, ...items];
 
   return (
-    <div className="relative overflow-hidden border-y border-paper-300/80 bg-paper-100 py-6 md:py-7">
-      {/* Soft ink wash for depth */}
+    <div className="group/marquee relative overflow-hidden border-y border-paper-300/80 bg-paper-100 py-6 md:py-7">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 opacity-90"
@@ -37,7 +36,8 @@ export default function Marquee({ items }: { items: string[] }) {
               </span>
               <span
                 aria-hidden
-                className="inline-flex h-2 w-2 rotate-45 bg-[#d97706]/80 md:h-2.5 md:w-2.5"
+                className="inline-flex h-2 w-2 rotate-45 animate-diamond-pulse bg-[#d97706]/80 md:h-2.5 md:w-2.5"
+                style={{ animationDelay: `${(i % 5) * 0.35}s` }}
               />
             </div>
           );

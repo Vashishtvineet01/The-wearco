@@ -1,6 +1,17 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  Children,
+  cloneElement,
+  isValidElement,
+  useEffect,
+  useRef,
+  useState,
+  type ReactElement,
+  type ReactNode,
+} from "react";
+
+type RevealVariant = "up" | "fade" | "scale";
 
 type Props = {
   children: ReactNode;
@@ -11,12 +22,26 @@ type Props = {
   className?: string;
   /** Tailwind utility for the hidden-state transform. Default: translate-y-4 */
   offsetClass?: string;
+  /** Reveal motion style. Default: up */
+  variant?: RevealVariant;
   as?: "div" | "section" | "article";
 };
 
+const HIDDEN: Record<RevealVariant, string> = {
+  up: "opacity-0 translate-y-4",
+  fade: "opacity-0",
+  scale: "opacity-0 scale-[0.98]",
+};
+
+const VISIBLE: Record<RevealVariant, string> = {
+  up: "opacity-100 translate-y-0",
+  fade: "opacity-100",
+  scale: "opacity-100 scale-100",
+};
+
 /**
- * Lightweight IntersectionObserver-powered fade-in-up wrapper.
- * No deps — uses CSS transition on opacity + translate.
+ * Lightweight IntersectionObserver-powered reveal wrapper.
+ * No deps — uses CSS transition on opacity + transform.
  *
  * Respects `prefers-reduced-motion` via the global stylesheet rule which
  * collapses transition-duration to near-zero.
@@ -26,8 +51,9 @@ export default function ScrollReveal({
   rootMargin = "0px 0px -80px 0px",
   delay = 0,
   className = "",
-  offsetClass = "translate-y-4",
-  as: Tag = "div"
+  offsetClass,
+  variant = "up",
+  as: Tag = "div",
 }: Props) {
   const ref = useRef<HTMLDivElement | null>(null);
   const [visible, setVisible] = useState(false);
@@ -44,21 +70,76 @@ export default function ScrollReveal({
           }
         }
       },
-      { rootMargin, threshold: 0.05 }
+      { rootMargin, threshold: 0.05 },
     );
     io.observe(el);
     return () => io.disconnect();
   }, [rootMargin]);
+
+  const hidden =
+    variant === "up" && offsetClass
+      ? `opacity-0 ${offsetClass}`
+      : HIDDEN[variant];
 
   return (
     <Tag
       ref={ref as never}
       style={{ transitionDelay: delay ? `${delay}ms` : undefined }}
       className={`transition-all duration-700 ease-out will-change-transform ${
-        visible ? "opacity-100 translate-y-0" : `opacity-0 ${offsetClass}`
+        visible ? VISIBLE[variant] : hidden
       } ${className}`}
     >
       {children}
     </Tag>
+  );
+}
+
+type StaggerProps = {
+  children: ReactNode;
+  /** Base delay between children in ms. Default 70. */
+  step?: number;
+  /** Starting delay for the first child. Default 0. */
+  start?: number;
+  className?: string;
+  variant?: RevealVariant;
+};
+
+/**
+ * Cascades ScrollReveal across direct children by injecting increasing delays.
+ * Children that are already ScrollReveal keep their props and get delay merged.
+ */
+export function RevealStagger({
+  children,
+  step = 70,
+  start = 0,
+  className = "",
+  variant = "up",
+}: StaggerProps) {
+  return (
+    <div className={className}>
+      {Children.map(children, (child, i) => {
+        if (!isValidElement(child)) {
+          return (
+            <ScrollReveal delay={start + i * step} variant={variant}>
+              {child}
+            </ScrollReveal>
+          );
+        }
+
+        const el = child as ReactElement<{ delay?: number; variant?: RevealVariant }>;
+        if (el.type === ScrollReveal) {
+          return cloneElement(el, {
+            delay: el.props.delay ?? start + i * step,
+            variant: el.props.variant ?? variant,
+          });
+        }
+
+        return (
+          <ScrollReveal delay={start + i * step} variant={variant}>
+            {child}
+          </ScrollReveal>
+        );
+      })}
+    </div>
   );
 }
