@@ -170,6 +170,10 @@ export default function LoginForm() {
                   Join us now to be a part of TheWearCo family.
                 </p>
 
+                <p className="mt-4 rounded-lg border border-[#fde68a] bg-[#fff8eb] px-3 py-2 text-xs text-[#92400e]">
+                  Test mode: any 10-digit number + any 6-digit code signs you in.
+                </p>
+
                 {otpStep === "phone" ? (
                   <form onSubmit={onSendOtp} className="mt-8 flex flex-col gap-4">
                     <div className="flex h-12 items-stretch overflow-hidden rounded-lg border border-paper-300 bg-white transition focus-within:border-paper-900">
@@ -212,6 +216,9 @@ export default function LoginForm() {
                       Enter the code sent to{" "}
                       <span className="font-semibold text-paper-900">
                         +91 {phoneDigits}
+                      </span>
+                      <span className="mt-1 block text-xs text-[#b45309]">
+                        Test mode — type any 6 digits (e.g. 123456).
                       </span>
                     </p>
                     <input
