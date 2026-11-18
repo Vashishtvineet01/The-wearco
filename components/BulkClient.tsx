@@ -22,7 +22,13 @@ type UploadState =
   | { status: "done"; url: string; name: string }
   | { status: "error"; message: string };
 
-export default function BulkClient({ products }: { products: Product[] }) {
+export default function BulkClient({
+  products,
+  embedded = false,
+}: {
+  products: Product[];
+  embedded?: boolean;
+}) {
   // Pick a sensible first product — prefer a hoodie (highest-ticket + popular for bulk)
   const defaultProduct =
     products.find((p) => p.category === "hoodie") || products[0] || null;
@@ -173,102 +179,97 @@ export default function BulkClient({ products }: { products: Product[] }) {
   }
 
   return (
-    <div className="relative mx-auto max-w-7xl px-5 py-12 lg:px-8 lg:py-16">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -top-40 left-[-120px] h-[520px] w-[520px] animate-drift rounded-full bg-signal-violet/15 blur-3xl"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -top-20 right-[-80px] h-[440px] w-[440px] animate-drift-slow rounded-full bg-signal-coral/10 blur-3xl"
-      />
-      <header className="relative mb-10 flex animate-fade-in-up flex-wrap items-end justify-between gap-4">
-        <div>
-          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
-            // Bulk orders
+    <div
+      className={
+        embedded
+          ? "relative"
+          : "relative mx-auto max-w-7xl px-5 py-12 lg:px-8 lg:py-16"
+      }
+    >
+      {!embedded && (
+        <header className="relative mb-10 flex animate-fade-in-up flex-wrap items-end justify-between gap-4">
+          <div>
+            <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-500">
+              Bulk orders
+            </div>
+            <h1 className="mt-2 font-display text-4xl font-bold tracking-tight md:text-6xl">
+              Kit out your <span className="gradient-text">team.</span>
+            </h1>
+            <p className="mt-3 max-w-2xl text-base text-paper-700 md:text-lg">
+              Tees, hoodies, sweatshirts, caps, mugs, pins, posters — printed with
+              your artwork. Volume pricing from 10 units, discounts up to{" "}
+              <span className="gradient-text font-semibold">50%</span>.
+            </p>
           </div>
-          <h1 className="mt-2 font-display text-4xl font-bold tracking-tight md:text-6xl">
-            Kit out your <span className="gradient-text">team.</span>
-          </h1>
-          <p className="mt-3 max-w-2xl text-base text-paper-700 md:text-lg">
-            Tees, hoodies, sweatshirts, caps, mugs, pins, posters — printed with
-            your artwork. Volume pricing from 10 units, discounts up to{" "}
-            <span className="gradient-text font-semibold">50%</span>. Teams,
-            launches, conferences, YC batches, Discord drops.
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="tag">
-            <span className="h-1.5 w-1.5 animate-glow rounded-full bg-signal-lime" />
-            Replies in &lt; 1 business day
+          <span className="tag">Replies in &lt; 1 business day</span>
+        </header>
+      )}
+
+      {embedded && (
+        <div className="mb-6 flex items-center justify-between gap-3">
+          <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-500">
+            Team · pick products
+          </div>
+          <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-paper-500">
+            {products.length} available
           </span>
         </div>
-      </header>
+      )}
 
       <div className="relative grid gap-6 lg:grid-cols-12">
         {/* LEFT — product + calc */}
         <section className="lg:col-span-7">
-          <div className="card p-5">
-            <div className="mb-4 flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2">
-                <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-paper-600">
-                  01 · Pick a product
-                </div>
-                <span className="font-mono text-[10px] text-paper-500">
-                  · {products.length} available
-                </span>
+          <div className="border-y border-paper-200 py-5">
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+              <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-paper-500">
+                01 · Pick a product
               </div>
               {product && (
-                <span className="tag shrink-0">
+                <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-paper-600">
                   {CATEGORY_LABELS[product.category]} · from{" "}
                   {formatINR(product.price)}
                 </span>
               )}
             </div>
 
-            {/* Scrollable product picker — shows ~2 rows at a time with a soft
-                bottom fade hint so the whole hub fits on one screen. */}
-            <div className="relative">
-              <div className="studio-scroll max-h-[260px] overflow-y-auto pr-1 sm:max-h-[280px]">
-                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                  {products.map((p) => (
-                    <button
-                      key={p.slug}
-                      type="button"
-                      onClick={() => onPickProduct(p.slug)}
-                      className={`card group flex items-center gap-2.5 p-2 text-left transition ${
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+              {products.map((p) => (
+                <button
+                  key={p.slug}
+                  type="button"
+                  onClick={() => onPickProduct(p.slug)}
+                  className={`group flex items-center gap-2.5 rounded-xl border p-2.5 text-left transition ${
+                    product?.slug === p.slug
+                      ? "border-paper-900 bg-paper-900 text-paper-50"
+                      : "border-paper-200 bg-paper-50/80 hover:border-paper-400"
+                  }`}
+                >
+                  <div className="h-12 w-12 shrink-0 overflow-hidden rounded-md bg-paper-100">
+                    <ProductMockup
+                      category={p.category}
+                      fabric={p.colors[0].fabric}
+                      printArea={p.printArea}
+                      printShape={p.printShape}
+                      printText={p.name.split(" ")[0]}
+                      printColor={p.colors[0].printDefault}
+                    />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="font-display text-xs font-semibold leading-snug">
+                      {p.name}
+                    </div>
+                    <div
+                      className={`mt-0.5 font-mono text-[10px] ${
                         product?.slug === p.slug
-                          ? "border-signal-lime/60 bg-signal-lime/5"
-                          : "hover:border-paper-400"
+                          ? "text-paper-50/70"
+                          : "text-paper-500"
                       }`}
                     >
-                      <div className="h-12 w-12 shrink-0 overflow-hidden rounded-md bg-paper-100">
-                        <ProductMockup
-                          category={p.category}
-                          fabric={p.colors[0].fabric}
-                          printArea={p.printArea}
-                          printShape={p.printShape}
-                          printText={p.name.split(" ")[0]}
-                          printColor={p.colors[0].printDefault}
-                        />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="truncate font-display text-xs font-semibold leading-tight">
-                          {p.name}
-                        </div>
-                        <div className="mt-0.5 font-mono text-[10px] text-paper-500">
-                          {formatINR(p.price)}
-                        </div>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-              {/* Soft fade hint so the grid reads as scrollable rather than clipped. */}
-              <div
-                aria-hidden
-                className="pointer-events-none absolute inset-x-0 bottom-0 h-8 rounded-b-xl bg-gradient-to-t from-paper-50 to-transparent"
-              />
+                      {formatINR(p.price)}
+                    </div>
+                  </div>
+                </button>
+              ))}
             </div>
           </div>
 

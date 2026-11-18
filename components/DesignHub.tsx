@@ -5,15 +5,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import type { Product } from "@/lib/products";
 import StudioClient from "./StudioClient";
 import BulkClient from "./BulkClient";
+
 /**
- * Design hub — merges the old /studio (Just for me) and /bulk (For my team)
- * flows into a single page with a tab toggle.
- *
- * - "Just for me" (default) → full Studio flow, exactly as before
- * - "For my team"           → full Bulk quote flow, exactly as before
- *
- * The active tab is reflected in the URL (?view=me|team) so deep links
- * continue to work and the /studio + /bulk redirects land on the right tab.
+ * Design hub — merges /studio (Just for me) and /bulk (For my team)
+ * into one page. Active path is in the URL (?view=me|team).
  */
 type View = "me" | "team";
 
@@ -24,8 +19,6 @@ export default function DesignHub({ products }: { products: Product[] }) {
   const initial: View = params.get("view") === "team" ? "team" : "me";
   const [view, setView] = useState<View>(initial);
 
-  // When the user toggles, reflect the choice in the URL. Replace (not push)
-  // so the browser back button still returns them to wherever they came from.
   useEffect(() => {
     const next = new URLSearchParams(Array.from(params.entries()));
     if (view === "me") next.delete("view");
@@ -40,7 +33,7 @@ export default function DesignHub({ products }: { products: Product[] }) {
 
   return (
     <div className="relative mx-auto max-w-7xl px-5 pb-16 pt-8 lg:px-8 lg:pt-12">
-      <section className="relative mb-10 pb-10 pt-2 text-center md:mb-14 md:pb-14">
+      <section className="relative mb-10 pb-8 pt-2 text-center md:mb-12">
         <div className="flex items-center justify-center gap-3">
           <span aria-hidden className="h-px w-8 bg-paper-400" />
           <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-500">
@@ -52,99 +45,99 @@ export default function DesignHub({ products }: { products: Product[] }) {
           Print your idea <span className="gradient-text">on anything.</span>
         </h1>
         <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-paper-600 md:text-lg">
-          Two paths — print one for yourself, or kit out the whole team. Same
-          premium fabric, same DTG print, same 5–7 day turnaround.
+          Choose how you want to print — one piece for yourself, or a full team
+          order. Same fabric, same DTG print, same 5–7 day turnaround.
         </p>
-        <div aria-hidden className="mx-auto mt-10 h-px max-w-md bg-paper-200" />
       </section>
 
-      {/* Tabs */}
-      <div className="mb-10 flex justify-center">
-        <div
-          role="tablist"
-          aria-label="Design mode"
-          className="inline-flex items-center gap-1 rounded-full border border-paper-200 bg-paper-100/80 p-1 shadow-[0_12px_32px_-16px_rgba(124,92,255,0.35)]"
-        >
-          <TabButton
-            active={view === "me"}
-            onClick={() => setView("me")}
-            label="Just for me"
-            sub="1+ piece"
-          />
-          <TabButton
-            active={view === "team"}
-            onClick={() => setView("team")}
-            label="For my team"
-            sub="10+ pieces"
-          />
-        </div>
+      {/* Clear two-path chooser — no clipped pill toggle */}
+      <div
+        role="tablist"
+        aria-label="Design mode"
+        className="mx-auto mb-12 grid max-w-3xl gap-3 sm:grid-cols-2"
+      >
+        <PathCard
+          active={view === "me"}
+          onClick={() => setView("me")}
+          eyebrow="Solo"
+          title="Just for me"
+          detail="1+ piece · design & buy now"
+        />
+        <PathCard
+          active={view === "team"}
+          onClick={() => setView("team")}
+          eyebrow="Bulk"
+          title="For my team"
+          detail="10+ pieces · volume quote"
+        />
       </div>
 
-      {/* Active view */}
       <div aria-live="polite">
         {view === "me" ? (
-          <StudioClient products={studioProducts} />
+          <StudioClient products={studioProducts} embedded />
         ) : (
-          <BulkClient products={products} />
+          <BulkClient products={products} embedded />
         )}
       </div>
 
-      {/* Cross-link strip */}
-      <div className="card-violet aurora-border mt-20 p-6 text-center md:p-10">
-        <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
-          // Also worth knowing
-        </div>
-        <h3 className="mt-3 font-display text-2xl font-bold tracking-tight md:text-3xl">
-          {view === "me" ? "Need 25 or more?" : "Just testing one piece?"}
-        </h3>
-        <p className="mx-auto mt-2 max-w-xl text-sm text-paper-600 md:text-base">
+      <div className="mt-16 border-t border-paper-200 pt-10 text-center">
+        <p className="text-sm text-paper-600">
           {view === "me"
-            ? "Volume pricing kicks in at 10 units, with up to 50% off at 100+. Switch to the team view to see tier breakdowns."
-            : "Try a single piece in the Studio first — same print, same fabric. If it looks right on one, it'll look right on a hundred."}
+            ? "Need 10 or more? Volume pricing starts at 10 units."
+            : "Want to test one piece first? Same print and fabric in solo mode."}
         </p>
-        <div className="mt-5">
-          <button
-            onClick={() => setView(view === "me" ? "team" : "me")}
-            className="btn-primary"
-          >
-            {view === "me" ? "Switch to team view →" : "Switch to solo view →"}
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={() => setView(view === "me" ? "team" : "me")}
+          className="mt-3 text-sm font-semibold text-paper-900 underline-offset-4 hover:underline"
+        >
+          {view === "me" ? "Switch to team orders →" : "Switch to solo design →"}
+        </button>
       </div>
     </div>
   );
 }
 
-function TabButton({
+function PathCard({
   active,
   onClick,
-  label,
-  sub,
+  eyebrow,
+  title,
+  detail,
 }: {
   active: boolean;
   onClick: () => void;
-  label: string;
-  sub: string;
+  eyebrow: string;
+  title: string;
+  detail: string;
 }) {
   return (
     <button
+      type="button"
       role="tab"
       aria-selected={active}
       onClick={onClick}
-      className={`relative rounded-full px-5 py-2.5 text-sm font-semibold transition md:px-6 md:py-3 ${
+      className={`rounded-2xl border px-5 py-5 text-left transition ${
         active
-          ? "bg-paper-900 text-paper-50 shadow-[0_6px_20px_-6px_rgba(20,17,14,0.35)]"
-          : "text-paper-700 hover:text-paper-900"
+          ? "border-paper-900 bg-paper-900 text-paper-50"
+          : "border-paper-300 bg-transparent text-paper-800 hover:border-paper-500"
       }`}
     >
-      <span className="block leading-none">{label}</span>
-      <span
-        className={`mt-1 block font-mono text-[9px] uppercase tracking-[0.18em] ${
-          active ? "text-ink-800/70" : "text-paper-500"
+      <div
+        className={`font-mono text-[10px] uppercase tracking-[0.22em] ${
+          active ? "text-paper-50/60" : "text-paper-500"
         }`}
       >
-        {sub}
-      </span>
+        {eyebrow}
+      </div>
+      <div className="mt-2 font-display text-xl font-semibold tracking-tight">
+        {title}
+      </div>
+      <div
+        className={`mt-1 text-sm ${active ? "text-paper-50/75" : "text-paper-600"}`}
+      >
+        {detail}
+      </div>
     </button>
   );
 }

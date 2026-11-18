@@ -33,8 +33,8 @@ export default function AdminShell({
     <div className="min-h-screen lg:grid lg:grid-cols-[240px_1fr]">
       <aside className="border-b border-paper-200 bg-paper-100/50 lg:border-b-0 lg:border-r">
         <div className="px-5 py-5">
-          <Link href="/admin" className="font-display text-lg font-bold">
-            TheWearCo
+          <Link href="/admin" className="font-display text-lg font-bold tracking-tight">
+            The<span className="text-[#b45309]">Wear</span>Co
           </Link>
           <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-paper-500">
             Admin console

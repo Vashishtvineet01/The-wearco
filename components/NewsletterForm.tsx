@@ -66,12 +66,12 @@ export default function NewsletterForm({
             onChange={(e) => setEmail(e.target.value)}
             placeholder={placeholder}
             disabled={status === "loading"}
-            className="w-full rounded-xl border border-paper-300 bg-white px-3 py-2.5 text-sm text-paper-900 outline-none placeholder:text-paper-400 focus:border-paper-500 disabled:opacity-50"
+            className="w-full border-b border-paper-300 bg-transparent px-0 py-2.5 text-sm text-paper-900 outline-none placeholder:text-paper-400 focus:border-paper-700 disabled:opacity-50"
           />
           <button
             type="submit"
             disabled={status === "loading"}
-            className="w-full rounded-xl border border-paper-900 bg-paper-900 px-4 py-2.5 text-sm font-semibold text-paper-50 transition hover:bg-paper-800 disabled:opacity-60"
+            className="mt-1 w-fit border-b border-paper-900 pb-0.5 text-sm font-semibold text-paper-900 transition hover:border-paper-600 hover:text-paper-700 disabled:opacity-60"
           >
             {label}
           </button>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCart } from "./CartProvider";
 import { useEffect, useState } from "react";
+import BrandLogo from "./BrandLogo";
 
 const NAV_ITEMS = [
   { href: "/shop", label: "Shop" },
@@ -61,20 +62,7 @@ export default function Navbar() {
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
-        <Link href="/" className="group flex items-center gap-2.5">
-          <span className="relative grid h-9 w-9 place-items-center overflow-hidden rounded-xl bg-paper-900 text-paper-50 shadow-[0_6px_24px_-6px_rgba(20,17,14,0.4)] transition-transform duration-300 group-hover:scale-105">
-            <span className="absolute inset-0 bg-paper-900" />
-            <svg viewBox="0 0 24 24" className="relative h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.2">
-              <path d="M3 7l9-5 9 5-9 5-9-5zM3 12l9 5 9-5M3 17l9 5 9-5" />
-            </svg>
-          </span>
-          <div className="leading-none">
-            <div className="font-display text-lg font-bold tracking-tight">TheWearCo</div>
-            <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-paper-600">
-              Internet Uniform
-            </div>
-          </div>
-        </Link>
+        <BrandLogo />
 
         <nav className="hidden items-center gap-1 md:flex">
           {NAV_ITEMS.map((item) => (
@@ -92,11 +80,14 @@ export default function Navbar() {
           {accountLabel ? (
             <Link
               href="/account"
-              className="relative grid h-9 w-9 place-items-center overflow-hidden rounded-full bg-paper-900 text-sm font-bold text-paper-50 shadow-[0_4px_16px_-4px_rgba(20,17,14,0.4)]"
+              className="relative grid h-9 w-9 place-items-center overflow-hidden rounded-full text-sm font-bold text-[#fff8eb] shadow-[0_4px_16px_-4px_rgba(180,83,9,0.45)]"
+              style={{
+                background:
+                  "linear-gradient(145deg, #f59e0b 0%, #b45309 100%)",
+              }}
               aria-label={`Account · ${accountLabel}`}
               title={accountLabel}
             >
-              <span className="absolute inset-0 bg-paper-900" />
               <span className="relative uppercase">
                 {accountLabel.charAt(0)}
               </span>

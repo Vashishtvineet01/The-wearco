@@ -27,6 +27,7 @@ export default async function HomePage() {
         ]}
       />
       <FeaturedProducts featured={featured} />
+      <FoundersWearing />
       <PrintYourOwnSection />
       <DropsTimeline drops={drops} />
       <CommunitySection />
@@ -233,7 +234,7 @@ function PrintYourOwnSection() {
               ["04", "We DTG-print and ship in 5–7 days"]
             ].map(([n, t]) => (
               <li key={n} className="flex items-start gap-3">
-                <span className="font-mono text-xs text-signal-limeInk">{n}</span>
+                <span className="font-mono text-xs text-paper-500">{n}</span>
                 <span>{t}</span>
               </li>
             ))}
@@ -291,57 +292,61 @@ function PrintYourOwnSection() {
 }
 
 function DropsTimeline({ drops }: { drops: string[] }) {
-  const tint = ["card-violet", "card-coral", "card-lime", "card-sky"] as const;
   return (
-    <section className="band-ocean relative overflow-hidden">
+    <section className="relative overflow-hidden border-y border-paper-200">
       <div className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
-      <ScrollReveal>
-        <div className="mb-10">
-          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
-            // Drops
-          </div>
-          <h2 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-5xl">
-            Limited drops, <span className="gradient-text">monthly.</span>
-          </h2>
-          <p className="mt-3 max-w-xl text-paper-700">
-            Each drop is themed, AI-curated, and capped. When it&apos;s gone, it&apos;s gone.
-          </p>
-        </div>
-      </ScrollReveal>
-      <div className="grid gap-4 lg:grid-cols-3">
-        {drops.map((d, i) => (
-          <ScrollReveal key={d} delay={i * 120}>
-            <div className={`${tint[i % tint.length]} aurora-border group relative p-6`}>
-              <div className="font-mono text-xs text-paper-500">
-                DROP / {String(i + 1).padStart(2, "0")}
-              </div>
-              <div className="mt-2 font-display text-2xl font-semibold">{d}</div>
-              <p className="mt-2 text-sm text-paper-600">{dropDescription(d)}</p>
-              <div className="mt-6 flex items-center gap-2 text-xs">
-                <span
-                  className={`tag ${
-                    i === 2
-                      ? "border-signal-lime/50 bg-signal-lime/20 text-signal-limeInk"
-                      : i === 1
-                        ? "border-signal-coral/40 bg-signal-coral/10 text-signal-coral"
-                        : ""
-                  }`}
-                >
-                  <span
-                    className={`h-1.5 w-1.5 rounded-full ${
-                      i === 2 ? "animate-glow bg-signal-lime" : i === 1 ? "bg-signal-coral" : "bg-ink-300"
-                    }`}
-                  />
-                  {i === 2 ? "Live now" : i === 1 ? "Sold out" : "Archived"}
-                </span>
-                <Link href="/shop" className="ml-auto text-paper-700 transition hover:text-signal-limeInk">
-                  Browse →
-                </Link>
+        <ScrollReveal>
+          <div className="mb-12 max-w-2xl">
+            <div className="flex items-center gap-3">
+              <span aria-hidden className="h-px w-8 bg-paper-400" />
+              <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-500">
+                Drops
               </div>
             </div>
-          </ScrollReveal>
-        ))}
-      </div>
+            <h2 className="mt-4 font-display text-3xl font-bold tracking-tight md:text-5xl">
+              Limited drops, <span className="gradient-text">monthly.</span>
+            </h2>
+            <p className="mt-4 text-paper-600">
+              Each drop is themed, AI-curated, and capped. When it&apos;s gone,
+              it&apos;s gone.
+            </p>
+          </div>
+        </ScrollReveal>
+
+        <div className="divide-y divide-paper-200 border-y border-paper-200">
+          {drops.map((d, i) => {
+            const status =
+              i === 2 ? "Live now" : i === 1 ? "Sold out" : "Archived";
+            return (
+              <ScrollReveal key={d} delay={i * 80}>
+                <div className="group grid gap-3 py-7 md:grid-cols-[4.5rem_1fr_auto] md:items-baseline md:gap-8">
+                  <div className="font-mono text-sm text-paper-400">
+                    {String(i + 1).padStart(2, "0")}
+                  </div>
+                  <div>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <h3 className="font-display text-xl font-semibold tracking-tight text-paper-900 md:text-2xl">
+                        {d}
+                      </h3>
+                      <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-paper-500">
+                        {status}
+                      </span>
+                    </div>
+                    <p className="mt-2 max-w-xl text-sm text-paper-600">
+                      {dropDescription(d)}
+                    </p>
+                  </div>
+                  <Link
+                    href="/shop"
+                    className="text-sm text-paper-700 transition group-hover:text-paper-900"
+                  >
+                    Browse →
+                  </Link>
+                </div>
+              </ScrollReveal>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
@@ -355,57 +360,157 @@ function dropDescription(drop: string) {
   return "";
 }
 
-function CommunitySection() {
-  const perks = [
-    { label: "Late Night Founders Discord", surface: "card-violet" },
-    { label: "Monthly office hours", surface: "card-coral" },
-    { label: "Early drops", surface: "card-lime" },
-    { label: "AI-curated playlists", surface: "card-sky" },
-  ] as const;
-
+function FoundersWearing() {
   return (
-    <section className="band-violet relative overflow-hidden">
+    <section id="worn-by" className="relative overflow-hidden border-y border-paper-200">
       <div className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
         <ScrollReveal>
-          <div className="card-feature aurora-border relative grid gap-10 overflow-hidden p-8 md:p-14 lg:grid-cols-2">
-            <div className="absolute -right-32 -top-32 h-72 w-72 animate-drift rounded-full bg-signal-violet/35 blur-3xl" />
-            <div className="absolute -bottom-32 -left-32 h-72 w-72 animate-drift-slow rounded-full bg-signal-coral/25 blur-3xl" />
-
-            <div className="relative">
-              <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
-                // Members only
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div className="max-w-xl">
+              <div className="flex items-center gap-3">
+                <span aria-hidden className="h-px w-8 bg-paper-400" />
+                <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-500">
+                  Worn by builders
+                </div>
               </div>
-              <h3 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-5xl">
-                Every piece is a <span className="gradient-text">key.</span>
-              </h3>
-              <p className="mt-4 max-w-md text-paper-700">
-                Scan the QR on your hoodie or cap to unlock the founder Discord,
-                monthly office hours with builders we love, and early access to
-                every drop.
+              <h2 className="mt-4 font-display text-3xl font-bold tracking-tight md:text-5xl">
+                Real founders. <span className="gradient-text">Real ships.</span>
+              </h2>
+              <p className="mt-4 text-paper-600">
+                Not influencer quotes — operators wearing the drop while they
+                ship. That&apos;s the whole brand.
               </p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <Link href="/community" className="btn-primary">
-                  Join the room
-                </Link>
-                <Link href="/shop" className="btn-ghost">
-                  Find your key
-                </Link>
-              </div>
             </div>
+            <Link
+              href="/shop"
+              className="text-sm font-semibold text-paper-900 underline-offset-4 hover:underline"
+            >
+              Shop what they wear →
+            </Link>
+          </div>
+        </ScrollReveal>
 
-            <div className="relative grid grid-cols-2 gap-3">
-              {perks.map((perk, i) => (
-                <ScrollReveal key={perk.label} delay={i * 80}>
-                  <div className={`${perk.surface} p-4`}>
-                    <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-signal-limeInk">
-                      PERK
-                    </div>
-                    <div className="mt-2 font-display text-base font-semibold">{perk.label}</div>
+        <div className="mt-12 divide-y divide-paper-200 border-y border-paper-200">
+          {FOUNDER_STORIES.map((f, i) => (
+            <ScrollReveal key={f.handle} delay={i * 80}>
+              <blockquote className="grid gap-4 py-8 md:grid-cols-[auto_1fr_12rem] md:gap-10 md:py-10">
+                <div className="font-mono text-sm text-paper-400">
+                  {String(i + 1).padStart(2, "0")}
+                </div>
+                <div>
+                  <p className="font-display text-xl font-semibold leading-snug tracking-tight text-paper-900 md:text-2xl md:leading-snug">
+                    “{f.quote}”
+                  </p>
+                  <footer className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-paper-600">
+                    <span className="font-semibold text-paper-900">{f.name}</span>
+                    <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-paper-500">
+                      {f.handle}
+                    </span>
+                    <span className="text-paper-400">·</span>
+                    <span>{f.role}</span>
+                  </footer>
+                </div>
+                <div className="md:text-right">
+                  <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-paper-500">
+                    Wearing
                   </div>
-                </ScrollReveal>
-              ))}
+                  <div className="mt-1 font-display text-base font-semibold text-paper-900">
+                    {f.piece}
+                  </div>
+                </div>
+              </blockquote>
+            </ScrollReveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const FOUNDER_STORIES = [
+  {
+    name: "Kavya Rao",
+    handle: "@kavyabuilds",
+    role: "Payments infra",
+    piece: "v1.0 Hoodie",
+    quote:
+      "Shipped v1 last month for Indian freelancers. The hoodie came with us into every late-night deploy.",
+  },
+  {
+    name: "Arjun Nair",
+    handle: "@arjunwrites",
+    role: "4,200 newsletter readers",
+    piece: "Offline Mode Tee",
+    quote:
+      "Operator mindset weekly. Offline Mode is the tee I write in when the feed gets too loud.",
+  },
+  {
+    name: "Priya Mehta",
+    handle: "@priyacreates",
+    role: "30 restaurant customers",
+    piece: "QR Secret Hoodie",
+    quote:
+      "Bootstrapped a no-code studio for small restaurants. The QR unlock felt like our own private office.",
+  },
+  {
+    name: "Zaid Sheikh",
+    handle: "@zaidbuilds",
+    role: "280 beta developers",
+    piece: "Late Night Cap",
+    quote:
+      "AI code-review for small teams. Cap stays on for every release train past midnight.",
+  },
+];
+
+function CommunitySection() {
+  const perks = [
+    "Late Night Founders Discord",
+    "Monthly office hours",
+    "Early drops",
+    "AI-curated playlists",
+  ];
+
+  return (
+    <section className="relative overflow-hidden">
+      <div className="mx-auto grid max-w-7xl gap-12 px-5 py-20 lg:grid-cols-2 lg:items-end lg:gap-16 lg:px-8">
+        <ScrollReveal>
+          <div className="flex items-center gap-3">
+            <span aria-hidden className="h-px w-8 bg-paper-400" />
+            <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-500">
+              Members only
             </div>
           </div>
+          <h3 className="mt-4 font-display text-3xl font-bold tracking-tight md:text-5xl">
+            Every piece is a <span className="gradient-text">key.</span>
+          </h3>
+          <p className="mt-5 max-w-md text-base leading-relaxed text-paper-600">
+            Scan the QR on your hoodie or cap to unlock the founder Discord,
+            monthly office hours with builders we love, and early access to every
+            drop.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href="/community" className="btn-primary">
+              How community works
+            </Link>
+            <Link href="/shop" className="btn-ghost">
+              Find your key
+            </Link>
+          </div>
+        </ScrollReveal>
+
+        <ScrollReveal delay={120}>
+          <ul className="divide-y divide-paper-200 border-y border-paper-200">
+            {perks.map((perk, i) => (
+              <li key={perk} className="flex items-baseline gap-5 py-5">
+                <span className="font-mono text-xs text-paper-400">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span className="font-display text-lg font-semibold tracking-tight text-paper-900 md:text-xl">
+                  {perk}
+                </span>
+              </li>
+            ))}
+          </ul>
         </ScrollReveal>
       </div>
     </section>

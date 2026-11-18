@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import BrandLogo from "./BrandLogo";
 
 type Method = "phone" | "password";
 type Mode = "signin" | "signup";
@@ -108,23 +109,28 @@ export default function LoginForm() {
     <div className="relative min-h-[calc(100vh-5rem)]">
       <div className="mx-auto grid min-h-[calc(100vh-5rem)] max-w-6xl lg:grid-cols-2">
         {/* Brand strip */}
-        <aside className="relative hidden overflow-hidden bg-ink-950 text-paper-50 lg:flex lg:flex-col lg:justify-between lg:p-12 xl:p-16">
-          <div aria-hidden className="absolute inset-0 bg-paper-900" />
+        <aside className="relative hidden overflow-hidden text-paper-50 lg:flex lg:flex-col lg:justify-between lg:p-12 xl:p-16">
+          <div
+            aria-hidden
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(160deg, #b45309 0%, #92400e 45%, #7c2d12 100%)",
+            }}
+          />
           <div className="relative">
-            <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-50/70">
-              // TheWearCo
-            </div>
-            <h1 className="mt-6 font-display text-5xl font-bold leading-[0.95] tracking-tight xl:text-6xl">
+            <BrandLogo href={null} onDark />
+            <h1 className="mt-10 font-display text-5xl font-bold leading-[0.95] tracking-tight text-[#fff8eb] xl:text-6xl">
               Internet
               <br />
               uniform.
             </h1>
-            <p className="mt-5 max-w-sm text-sm leading-relaxed text-paper-50/80">
+            <p className="mt-5 max-w-sm text-sm leading-relaxed text-[#fff8eb]/80">
               Sign in with your mobile. Orders stay guest-friendly — an account
               just saves them for next time.
             </p>
           </div>
-          <div className="relative font-mono text-[10px] uppercase tracking-[0.22em] text-paper-50/50">
+          <div className="relative font-mono text-[10px] uppercase tracking-[0.22em] text-[#fff8eb]/55">
             Drop 03 · QR Layer · Live
           </div>
         </aside>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import NewsletterForm from "./NewsletterForm";
+import BrandLogo from "./BrandLogo";
 import { ANDROID_APP_URL } from "@/lib/android-app";
 
 export default function Footer() {
@@ -7,10 +8,8 @@ export default function Footer() {
     <footer className="relative mt-32 border-t border-paper-200 bg-paper-100/80">
       <div className="relative mx-auto grid max-w-7xl gap-12 px-5 py-16 lg:grid-cols-4 lg:gap-10 lg:px-8">
         <div>
-          <div className="font-display text-2xl font-bold tracking-tight text-paper-900">
-            TheWearCo
-          </div>
-          <p className="mt-2 max-w-xs text-sm text-paper-600">
+          <BrandLogo size="lg" />
+          <p className="mt-3 max-w-xs text-sm text-paper-600">
             Internet uniform for founders, creators and builders. Wear what
             you&apos;re shipping.
           </p>
@@ -137,18 +136,14 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Last column — soft cream panel, no red accents */}
-        <div className="rounded-2xl border border-paper-200 bg-paper-50 p-5">
-          <div className="mb-2 font-mono text-[11px] uppercase tracking-[0.22em] text-paper-500">
+        <div>
+          <div className="mb-3 font-mono text-[11px] uppercase tracking-[0.22em] text-paper-500">
             Stay close
           </div>
-          <h3 className="font-display text-lg font-semibold tracking-tight text-paper-900">
-            Early access to every drop.
-          </h3>
-          <p className="mt-2 text-sm text-paper-600">
-            One email when a drop goes live. Plus office-hours invites — no spam.
+          <p className="max-w-xs text-sm text-paper-600">
+            One email when a drop goes live. Office-hours invites too — no spam.
           </p>
-          <div className="mt-4">
+          <div className="mt-4 max-w-xs">
             <NewsletterForm variant="stacked" buttonLabel="Join list" />
           </div>
           <Link

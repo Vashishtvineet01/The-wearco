@@ -41,7 +41,13 @@ const PRESET_COLORS = [
   "#ec4899"
 ];
 
-export default function StudioClient({ products }: { products: Product[] }) {
+export default function StudioClient({
+  products,
+  embedded = false,
+}: {
+  products: Product[];
+  embedded?: boolean;
+}) {
   const router = useRouter();
   const search = useSearchParams();
   const { add } = useCart();
@@ -281,50 +287,63 @@ export default function StudioClient({ products }: { products: Product[] }) {
   const previewSrc = imageUrl || localPreview;
 
   return (
-    <div className="relative mx-auto max-w-7xl px-5 py-10 lg:px-8 lg:py-14">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -top-32 left-1/2 h-[480px] w-[720px] -translate-x-1/2 animate-drift-slow rounded-full bg-signal-violet/10 blur-3xl"
-      />
-      <header className="relative mb-8 flex animate-fade-in-up flex-wrap items-end justify-between gap-4">
-        <div>
-          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
-            // Design Studio
+    <div
+      className={
+        embedded
+          ? "relative"
+          : "relative mx-auto max-w-7xl px-5 py-10 lg:px-8 lg:py-14"
+      }
+    >
+      {!embedded && (
+        <header className="relative mb-8 flex animate-fade-in-up flex-wrap items-end justify-between gap-4">
+          <div>
+            <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-500">
+              Design Studio
+            </div>
+            <h1 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-5xl">
+              Print your <span className="gradient-text">own</span>
+            </h1>
+            <p className="mt-2 max-w-xl text-sm text-paper-600">
+              Drop your art, type your line, drag it into place — and we print it
+              on a premium garment in 5-7 days. No minimums.
+            </p>
           </div>
-          <h1 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-5xl">
-            Print your <span className="gradient-text">own</span>
-          </h1>
-          <p className="mt-2 max-w-xl text-sm text-paper-600">
-            Drop your art, type your line, drag it into place — and we print it
-            on a premium garment in 5-7 days. No minimums.
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="tag">
-            <span className="h-1.5 w-1.5 animate-glow rounded-full bg-signal-lime" />
-            Live preview · drag to position
+          <div className="flex items-center gap-2">
+            <span className="tag">Live preview · drag to position</span>
+          </div>
+        </header>
+      )}
+
+      {embedded && (
+        <div className="mb-6 flex items-center justify-between gap-3">
+          <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-500">
+            Solo · pick a garment
+          </div>
+          <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-paper-500">
+            {products.length} options
           </span>
         </div>
-      </header>
+      )}
 
       <div className="grid gap-6 lg:grid-cols-12">
-        {/* LEFT — product picker */}
-        <aside className="card studio-scroll order-2 max-h-[640px] overflow-y-auto p-3 lg:order-1 lg:col-span-3">
-          <div className="px-1 pb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-paper-600">
+        {/* LEFT — full product list, no max-height clip */}
+        <aside className="order-2 border-y border-paper-200 py-3 lg:order-1 lg:col-span-3 lg:border-y-0 lg:border-r lg:border-paper-200 lg:py-0 lg:pr-4">
+          <div className="px-1 pb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-paper-500">
             01 · Garment
           </div>
           <div className="grid grid-cols-2 gap-2 lg:grid-cols-1">
             {products.map((p) => (
               <button
                 key={p.slug}
+                type="button"
                 onClick={() => setProduct(p)}
-                className={`card group flex items-center gap-3 p-2 text-left transition ${
+                className={`group flex w-full items-center gap-3 rounded-xl border p-2.5 text-left transition ${
                   p.slug === product.slug
-                    ? "border-signal-lime/60 bg-signal-lime/5"
-                    : "hover:border-paper-400"
+                    ? "border-paper-900 bg-paper-900 text-paper-50"
+                    : "border-paper-200 bg-paper-50/80 hover:border-paper-400"
                 }`}
               >
-                <div className="h-16 w-16 shrink-0 overflow-hidden rounded-md bg-paper-100">
+                <div className="h-14 w-14 shrink-0 overflow-hidden rounded-md bg-paper-100">
                   <ProductMockup
                     category={p.category}
                     fabric={p.colors[0].fabric}
@@ -335,8 +354,16 @@ export default function StudioClient({ products }: { products: Product[] }) {
                   />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <div className="truncate font-display text-sm font-semibold">{p.name}</div>
-                  <div className="font-mono text-[10px] text-paper-500">
+                  <div className="font-display text-sm font-semibold leading-snug">
+                    {p.name}
+                  </div>
+                  <div
+                    className={`mt-0.5 font-mono text-[10px] ${
+                      p.slug === product.slug
+                        ? "text-paper-50/70"
+                        : "text-paper-500"
+                    }`}
+                  >
                     from {formatINR(p.price)}
                   </div>
                 </div>

@@ -22,39 +22,43 @@ export default function AboutPage() {
       <ScrollReveal>
         <div className="prose-styles space-y-6 text-lg leading-relaxed text-paper-700">
           <p>
-            TheWearCo is not a fashion brand. It’s an{" "}
+            TheWearCo is not a fashion brand. It&apos;s an{" "}
             <span className="text-paper-900">internet uniform</span> — quiet,
             identity-first clothing for founders, creators, freelancers and the
             terminally online.
           </p>
           <p>
             We design slowly, drop in small batches, and embed culture into every
-            piece — from a chest typeline to a hidden QR on a sleeve that
-            unlocks a private community.
+            piece — from a chest typeline to a hidden QR on a sleeve that unlocks
+            a private community.
           </p>
           <p>
-            And if our drops don’t say what you’re trying to say, you can{" "}
-            <Link href="/design" className="text-signal-limeInk underline-offset-4 hover:underline">
+            And if our drops don&apos;t say what you&apos;re trying to say, you
+            can{" "}
+            <Link
+              href="/design"
+              className="text-paper-900 underline underline-offset-4 hover:text-paper-700"
+            >
               print your own
             </Link>
-            . That’s the whole point.
+            . That&apos;s the whole point.
           </p>
         </div>
       </ScrollReveal>
 
       <ScrollReveal delay={100}>
-        <div className="card-feature aurora-border mt-14 p-6 md:p-8">
-          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
-            // Members-only layer
+        <div className="mt-16 border-y border-paper-200 py-10">
+          <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-500">
+            Members-only layer
           </div>
           <h2 className="mt-3 font-display text-2xl font-bold tracking-tight md:text-3xl">
             Every piece is a <span className="gradient-text">key.</span>
           </h2>
-          <p className="mt-3 max-w-2xl text-sm text-paper-700 md:text-base">
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-paper-600 md:text-base">
             Hidden QR on every hoodie, cap and badge. Scan it to unlock the
             founder Discord, monthly office hours and early access to every drop.
           </p>
-          <div className="mt-5">
+          <div className="mt-6">
             <Link href="/community" className="btn-primary">
               See how the community works →
             </Link>
@@ -63,32 +67,48 @@ export default function AboutPage() {
       </ScrollReveal>
 
       <div className="mt-16" id="shipping">
-        <h2 className="font-display text-2xl font-bold">Shipping & returns</h2>
-        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        <div className="flex items-center gap-3">
+          <span aria-hidden className="h-px w-8 bg-paper-400" />
+          <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-500">
+            Logistics
+          </div>
+        </div>
+        <h2 className="mt-4 font-display text-2xl font-bold tracking-tight md:text-3xl">
+          Shipping & returns
+        </h2>
+        <dl className="mt-8 divide-y divide-paper-200 border-y border-paper-200">
           {SHIPPING_FACTS.map((f, i) => (
-            <ScrollReveal key={f.t} delay={i * 80}>
-              <div className={`${f.surface} p-4`}>
-                <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-signal-limeInk">
+            <ScrollReveal key={f.t} delay={i * 60}>
+              <div className="grid gap-2 py-5 sm:grid-cols-[11rem_1fr] sm:gap-8">
+                <dt className="font-mono text-[11px] uppercase tracking-[0.2em] text-paper-500">
                   {f.t}
-                </div>
-                <p className="mt-2 text-sm text-paper-800">{f.d}</p>
+                </dt>
+                <dd className="text-sm leading-relaxed text-paper-800 md:text-base">
+                  {f.d}
+                </dd>
               </div>
             </ScrollReveal>
           ))}
-        </div>
+        </dl>
       </div>
 
       <ScrollReveal delay={100}>
-        <div className="mt-20">
-          <div className="card-lime aurora-border overflow-hidden p-8 text-center md:p-14">
-            <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
-              // Drop alerts
+        <div className="mt-20 border-t border-paper-200 pt-14 text-center">
+          <div className="flex items-center justify-center gap-3">
+            <span aria-hidden className="h-px w-8 bg-paper-400" />
+            <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-500">
+              Drop alerts
             </div>
-            <h3 className="mt-3 font-display text-3xl font-bold tracking-tight">
-              Be the first to wear it.
-            </h3>
-            <p className="mt-3 text-paper-600">No spam. New drops + community invites only.</p>
-            <NewsletterForm variant="centered" buttonLabel="Join" />
+            <span aria-hidden className="h-px w-8 bg-paper-400" />
+          </div>
+          <h3 className="mt-4 font-display text-3xl font-bold tracking-tight md:text-4xl">
+            Be the first to <span className="gradient-text">wear it.</span>
+          </h3>
+          <p className="mx-auto mt-3 max-w-md text-paper-600">
+            No spam. New drops + community invites only.
+          </p>
+          <div className="mx-auto mt-8 max-w-sm">
+            <NewsletterForm variant="stacked" buttonLabel="Join the list" />
           </div>
         </div>
       </ScrollReveal>
@@ -100,21 +120,17 @@ const SHIPPING_FACTS = [
   {
     t: "Free shipping",
     d: "Free shipping above ₹1,499 across India.",
-    surface: "card-violet",
   },
   {
     t: "Standard delivery",
     d: "48 hours metro, 3–5 days elsewhere.",
-    surface: "card-coral",
   },
   {
     t: "Custom prints",
     d: "Design Studio pieces ship in 5–7 working days.",
-    surface: "card-lime",
   },
   {
     t: "Easy exchange",
     d: "7-day exchange on standard drops. Custom pieces are non-refundable.",
-    surface: "card-sky",
   },
 ];
