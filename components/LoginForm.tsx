@@ -4,13 +4,14 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import BrandLogo from "./BrandLogo";
+import ProductMockup from "./ProductMockup";
 
 type Method = "phone" | "password";
 type Mode = "signin" | "signup";
 type OtpStep = "phone" | "code";
 
 /**
- * Phone SMS OTP (default) or email + password. No magic links / email OTP.
+ * Bewakoof-style split login: promo panel + phone-first OTP, with email fallback.
  */
 export default function LoginForm() {
   const router = useRouter();
@@ -34,6 +35,7 @@ export default function LoginForm() {
   const [error, setError] = useState("");
 
   const phoneDigits = phone.replace(/\D/g, "").slice(0, 10);
+  const canContinue = phoneDigits.length === 10;
 
   const finish = () => {
     router.push(next);
@@ -106,166 +108,137 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="relative min-h-[calc(100vh-5rem)]">
-      <div className="mx-auto grid min-h-[calc(100vh-5rem)] max-w-6xl lg:grid-cols-2">
-        {/* Brand strip */}
-        <aside className="relative hidden overflow-hidden text-paper-50 lg:flex lg:flex-col lg:justify-between lg:p-12 xl:p-16">
+    <div className="relative min-h-[calc(100vh-5rem)] bg-white">
+      <div className="mx-auto grid min-h-[calc(100vh-5rem)] max-w-7xl lg:grid-cols-2">
+        {/* Left promo — lifestyle panel */}
+        <aside className="relative hidden overflow-hidden bg-[#1a1511] lg:block">
           <div
             aria-hidden
-            className="absolute inset-0"
+            className="absolute inset-0 opacity-90"
             style={{
               background:
-                "linear-gradient(160deg, #b45309 0%, #92400e 45%, #7c2d12 100%)",
+                "radial-gradient(ellipse at 30% 20%, rgba(180,83,9,0.35), transparent 55%), radial-gradient(ellipse at 80% 80%, rgba(124,45,18,0.4), transparent 50%), #14110e",
             }}
           />
-          <div className="relative">
-            <BrandLogo href={null} onDark />
-            <h1 className="mt-10 font-display text-5xl font-bold leading-[0.95] tracking-tight text-[#fff8eb] xl:text-6xl">
-              Shop it.
-              <br />
-              Design it.
-            </h1>
-            <p className="mt-5 max-w-sm text-sm leading-relaxed text-[#fff8eb]/80">
-              Sign in with your mobile. Guest checkout still works — an account
-              just saves orders for next time.
+          <div className="relative flex h-full flex-col p-10 xl:p-12">
+            <div className="flex items-start gap-4">
+              <div className="rounded-md bg-[#f59e0b] px-3 py-2 shadow-lg">
+                <BrandLogo href={null} size="sm" showWordmark={false} />
+              </div>
+              <p className="pt-1 font-display text-3xl font-bold uppercase leading-none tracking-tight text-[#fff8eb] xl:text-4xl">
+                All eyes{" "}
+                <span className="text-[#fde68a]">on you</span>
+              </p>
+            </div>
+
+            <div className="mt-auto grid grid-cols-2 gap-4 pb-4 pt-16">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-3 backdrop-blur-sm">
+                <ProductMockup
+                  category="tee"
+                  fabric="#0e0e10"
+                  printText="WEAR"
+                  printColor="#fde68a"
+                  className="mx-auto max-h-[220px]"
+                />
+              </div>
+              <div className="mt-10 rounded-2xl border border-white/10 bg-white/5 p-3 backdrop-blur-sm">
+                <ProductMockup
+                  category="hoodie"
+                  fabric="#ece7dd"
+                  printText="CO"
+                  printColor="#0a0a0a"
+                  className="mx-auto max-h-[220px]"
+                />
+              </div>
+            </div>
+
+            <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.22em] text-[#fff8eb]/55">
+              Shop it · Design it · Wear it
             </p>
-          </div>
-          <div className="relative font-mono text-[10px] uppercase tracking-[0.22em] text-[#fff8eb]/55">
-            Apparel · Prints · Custom studio
           </div>
         </aside>
 
-        {/* Form panel */}
-        <section className="relative flex flex-col justify-center bg-paper-50 px-5 py-12 sm:px-10 lg:px-14 lg:py-16">
-          {/* Mobile brand header */}
-          <div className="mb-8 lg:hidden">
-            <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
-              // Sign in
-            </div>
-            <h1 className="mt-2 font-display text-3xl font-bold tracking-tight">
-              Your <span className="gradient-text">mobile.</span>
-            </h1>
-            <p className="mt-2 text-sm text-paper-700">
-              Phone OTP by default. Guest checkout still works.
-            </p>
-          </div>
+        {/* Right form */}
+        <section className="relative flex flex-col justify-center bg-white px-6 py-12 sm:px-12 lg:px-16 xl:px-20">
+          <div className="mx-auto w-full max-w-[380px]">
+            {method === "phone" ? (
+              <>
+                <h1 className="font-display text-3xl font-bold tracking-tight text-paper-900 sm:text-[2rem]">
+                  Login / Signup
+                </h1>
+                <p className="mt-2 text-sm text-paper-500">
+                  Join us now to be a part of TheWearCo family.
+                </p>
 
-          <div className="card-feature aurora-border mx-auto w-full max-w-md p-6 sm:p-8">
-            <div className="hidden lg:block">
-              <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
-                // {method === "phone" ? "Phone OTP" : mode === "signup" ? "Create account" : "Email & password"}
-              </div>
-              <h2 className="mt-2 font-display text-3xl font-bold tracking-tight">
-                {method === "phone" ? (
-                  <>
-                    Enter your <span className="gradient-text">number.</span>
-                  </>
-                ) : mode === "signup" ? (
-                  <>
-                    Join <span className="gradient-text">TheWearCo.</span>
-                  </>
-                ) : (
-                  <>
-                    Welcome <span className="gradient-text">back.</span>
-                  </>
-                )}
-              </h2>
-            </div>
-
-            {/* Method switch */}
-            <div className="mt-6 flex rounded-full border border-paper-200 bg-white/70 p-1 shadow-[0_8px_24px_-14px_rgba(124,92,255,0.35)]">
-              {(
-                [
-                  ["phone", "Phone OTP"],
-                  ["password", "Email & password"],
-                ] as const
-              ).map(([id, label]) => (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => {
-                    setMethod(id);
-                    setError("");
-                    setOtpStep("phone");
-                    setCode("");
-                  }}
-                  className={`flex-1 rounded-full px-3 py-2.5 text-xs font-semibold uppercase tracking-[0.12em] transition sm:text-[11px] ${
-                    method === id
-                      ? "bg-ink-950 text-paper-50 shadow-[0_8px_20px_-8px_rgba(124,92,255,0.5)]"
-                      : "text-paper-600 hover:text-paper-900"
-                  }`}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-
-            {/* Phone OTP */}
-            {method === "phone" && (
-              <div className="mt-6">
                 {otpStep === "phone" ? (
-                  <form onSubmit={onSendOtp} className="flex flex-col gap-4">
-                    <Field label="Mobile number">
-                      <div className="flex overflow-hidden rounded-2xl border border-signal-violet/25 bg-white shadow-[0_8px_24px_-16px_rgba(124,92,255,0.35)] transition focus-within:border-signal-violetInk/60 focus-within:shadow-[0_12px_28px_-14px_rgba(124,92,255,0.45)]">
-                        <span className="flex items-center border-r border-paper-200 bg-signal-violet/5 px-4 font-mono text-sm text-paper-700">
-                          +91
-                        </span>
-                        <input
-                          type="tel"
-                          inputMode="numeric"
-                          required
-                          autoFocus
-                          value={phoneDigits}
-                          onChange={(e) =>
-                            setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))
-                          }
-                          placeholder="98xxxxxxxx"
-                          className="w-full bg-transparent px-4 py-3.5 text-base outline-none"
-                          autoComplete="tel-national"
-                          maxLength={10}
-                        />
-                      </div>
-                    </Field>
+                  <form onSubmit={onSendOtp} className="mt-8 flex flex-col gap-4">
+                    <div className="flex h-12 items-stretch overflow-hidden rounded-lg border border-paper-300 bg-white transition focus-within:border-paper-900">
+                      <span className="flex items-center gap-1.5 border-r border-paper-200 bg-paper-50 px-3 text-sm text-paper-800">
+                        <IndiaFlag />
+                        <span className="font-medium">+91</span>
+                      </span>
+                      <input
+                        type="tel"
+                        inputMode="numeric"
+                        required
+                        autoFocus
+                        value={phoneDigits}
+                        onChange={(e) =>
+                          setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))
+                        }
+                        placeholder="Enter Mobile Number"
+                        className="w-full bg-transparent px-3 text-[15px] text-paper-900 outline-none placeholder:text-paper-400"
+                        autoComplete="tel-national"
+                        maxLength={10}
+                        aria-label="Mobile number"
+                      />
+                    </div>
+
                     <button
                       type="submit"
-                      disabled={submitting || phoneDigits.length !== 10}
-                      className="btn-primary w-full py-3.5 disabled:opacity-60"
+                      disabled={submitting || !canContinue}
+                      className={`h-12 w-full rounded-lg text-sm font-bold uppercase tracking-[0.08em] transition ${
+                        canContinue && !submitting
+                          ? "bg-paper-900 text-white hover:bg-paper-800 active:scale-[0.99]"
+                          : "cursor-not-allowed bg-paper-200 text-paper-500"
+                      }`}
                     >
-                      {submitting ? "Sending…" : "Send OTP"}
+                      {submitting ? "Sending…" : "Continue"}
                     </button>
                   </form>
                 ) : (
-                  <form onSubmit={onVerifyOtp} className="flex flex-col gap-4">
-                    <p className="text-sm text-paper-700">
-                      Code sent to{" "}
+                  <form onSubmit={onVerifyOtp} className="mt-8 flex flex-col gap-4">
+                    <p className="text-sm text-paper-600">
+                      Enter the code sent to{" "}
                       <span className="font-semibold text-paper-900">
                         +91 {phoneDigits}
                       </span>
-                      . Expires in 10 minutes.
                     </p>
-                    <Field label="6-digit code">
-                      <input
-                        type="text"
-                        inputMode="numeric"
-                        pattern="[0-9]{6}"
-                        maxLength={6}
-                        required
-                        autoFocus
-                        value={code}
-                        onChange={(e) =>
-                          setCode(e.target.value.replace(/\D/g, "").slice(0, 6))
-                        }
-                        placeholder="••••••"
-                        className="w-full rounded-2xl border border-signal-violet/25 bg-white px-4 py-3.5 text-center font-mono text-2xl tracking-[0.4em] outline-none shadow-[0_8px_24px_-16px_rgba(124,92,255,0.35)] transition focus:border-signal-violetInk/60"
-                        autoComplete="one-time-code"
-                      />
-                    </Field>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]{6}"
+                      maxLength={6}
+                      required
+                      autoFocus
+                      value={code}
+                      onChange={(e) =>
+                        setCode(e.target.value.replace(/\D/g, "").slice(0, 6))
+                      }
+                      placeholder="Enter OTP"
+                      className="h-12 w-full rounded-lg border border-paper-300 px-4 text-center font-mono text-xl tracking-[0.35em] outline-none transition focus:border-paper-900"
+                      autoComplete="one-time-code"
+                    />
                     <button
                       type="submit"
                       disabled={submitting || code.length !== 6}
-                      className="btn-primary w-full py-3.5 disabled:opacity-60"
+                      className={`h-12 w-full rounded-lg text-sm font-bold uppercase tracking-[0.08em] transition ${
+                        code.length === 6 && !submitting
+                          ? "bg-paper-900 text-white hover:bg-paper-800"
+                          : "cursor-not-allowed bg-paper-200 text-paper-500"
+                      }`}
                     >
-                      {submitting ? "Verifying…" : "Verify & continue"}
+                      {submitting ? "Verifying…" : "Continue"}
                     </button>
                     <button
                       type="button"
@@ -274,92 +247,115 @@ export default function LoginForm() {
                         setCode("");
                         setError("");
                       }}
-                      className="text-sm text-signal-violetInk underline underline-offset-4"
+                      className="text-sm text-paper-600 underline underline-offset-4 hover:text-paper-900"
                     >
                       Use a different number
                     </button>
                   </form>
                 )}
-              </div>
-            )}
 
-            {/* Email + password */}
-            {method === "password" && (
-              <div className="mt-6">
-                <div className="mb-4 flex rounded-full border border-paper-200 bg-white/70 p-1">
-                  {(
-                    [
-                      ["signin", "Sign in"],
-                      ["signup", "Create account"],
-                    ] as const
-                  ).map(([id, label]) => (
-                    <button
-                      key={id}
-                      type="button"
-                      onClick={() => {
-                        setMode(id);
-                        setError("");
-                      }}
-                      className={`flex-1 rounded-full px-3 py-2 text-sm font-semibold transition ${
-                        mode === id
-                          ? "bg-signal-lime text-ink-950 shadow-[0_8px_20px_-8px_rgba(216,255,54,0.55)]"
-                          : "text-paper-600 hover:text-paper-900"
-                      }`}
-                    >
-                      {label}
-                    </button>
-                  ))}
+                <div className="my-8 flex items-center gap-3">
+                  <span className="h-px flex-1 bg-paper-200" />
+                  <span className="text-xs font-medium uppercase tracking-wider text-paper-400">
+                    Or
+                  </span>
+                  <span className="h-px flex-1 bg-paper-200" />
                 </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMethod("password");
+                      setMode("signin");
+                      setError("");
+                    }}
+                    className="flex h-11 items-center justify-center gap-2 rounded-lg border border-paper-300 bg-white text-sm font-semibold text-paper-800 transition hover:border-paper-500 hover:bg-paper-50"
+                  >
+                    <EmailIcon />
+                    Email
+                  </button>
+                  <Link
+                    href="/shop"
+                    className="flex h-11 items-center justify-center gap-2 rounded-lg border border-paper-300 bg-white text-sm font-semibold text-paper-800 transition hover:border-paper-500 hover:bg-paper-50"
+                  >
+                    <BagIcon />
+                    Guest
+                  </Link>
+                </div>
+              </>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMethod("phone");
+                    setError("");
+                  }}
+                  className="mb-4 text-sm font-medium text-paper-600 underline-offset-4 hover:text-paper-900 hover:underline"
+                >
+                  ← Back to mobile
+                </button>
+                <h1 className="font-display text-3xl font-bold tracking-tight text-paper-900">
+                  {mode === "signup" ? "Create account" : "Login with email"}
+                </h1>
+                <p className="mt-2 text-sm text-paper-500">
+                  Or use{" "}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMode(mode === "signup" ? "signin" : "signup");
+                      setError("");
+                    }}
+                    className="font-semibold text-[#b45309] underline-offset-2 hover:underline"
+                  >
+                    {mode === "signup" ? "sign in" : "create an account"}
+                  </button>
+                  .
+                </p>
+
                 <form
                   onSubmit={onPasswordSubmit}
-                  className="flex flex-col gap-3"
+                  className="mt-8 flex flex-col gap-3"
                 >
                   {mode === "signup" && (
-                    <Field label="Name (optional)">
-                      <input
-                        type="text"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        placeholder="Aarav"
-                        className={inputClass}
-                        autoComplete="name"
-                      />
-                    </Field>
-                  )}
-                  <Field label="Email">
                     <input
-                      type="email"
-                      required
-                      autoFocus
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="you@startup.in"
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Name (optional)"
                       className={inputClass}
-                      autoComplete="email"
+                      autoComplete="name"
                     />
-                  </Field>
-                  <Field
-                    label={
+                  )}
+                  <input
+                    type="email"
+                    required
+                    autoFocus
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Email"
+                    className={inputClass}
+                    autoComplete="email"
+                  />
+                  <input
+                    type="password"
+                    required
+                    minLength={8}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder={
                       mode === "signup" ? "Password (min 8 chars)" : "Password"
                     }
-                  >
-                    <input
-                      type="password"
-                      required
-                      minLength={8}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="••••••••"
-                      className={inputClass}
-                      autoComplete={
-                        mode === "signup" ? "new-password" : "current-password"
-                      }
-                    />
-                  </Field>
+                    className={inputClass}
+                    autoComplete={
+                      mode === "signup" ? "new-password" : "current-password"
+                    }
+                  />
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="btn-primary mt-1 w-full py-3.5 disabled:opacity-60"
+                    className="mt-1 h-12 w-full rounded-lg bg-paper-900 text-sm font-bold uppercase tracking-[0.08em] text-white transition hover:bg-paper-800 disabled:opacity-60"
                   >
                     {submitting
                       ? mode === "signup"
@@ -367,20 +363,30 @@ export default function LoginForm() {
                         : "Signing in…"
                       : mode === "signup"
                         ? "Create account"
-                        : "Sign in"}
+                        : "Continue"}
                   </button>
                 </form>
-              </div>
+              </>
             )}
 
             {error && (
-              <p className="mt-4 text-center text-sm text-signal-coral">{error}</p>
+              <p className="mt-4 text-center text-sm text-[#c2410c]">{error}</p>
             )}
 
-            <p className="mt-10 text-center text-xs text-paper-500">
-              No account needed to shop —{" "}
-              <Link href="/shop" className="underline underline-offset-2">
-                check out as a guest
+            <p className="mt-10 text-center text-[11px] leading-relaxed text-paper-500">
+              By creating an account or logging in, you agree with TheWearCo&apos;s{" "}
+              <Link
+                href="/terms"
+                className="font-semibold text-[#0ea5e9] hover:underline"
+              >
+                T&amp;C
+              </Link>{" "}
+              and{" "}
+              <Link
+                href="/privacy"
+                className="font-semibold text-[#0ea5e9] hover:underline"
+              >
+                Privacy Policy
               </Link>
               .
             </p>
@@ -392,21 +398,37 @@ export default function LoginForm() {
 }
 
 const inputClass =
-  "w-full rounded-2xl border border-signal-violet/25 bg-white px-4 py-3 text-sm outline-none shadow-[0_8px_24px_-16px_rgba(124,92,255,0.3)] transition focus:border-signal-violetInk/60 focus:shadow-[0_12px_28px_-14px_rgba(124,92,255,0.4)]";
+  "h-12 w-full rounded-lg border border-paper-300 bg-white px-4 text-[15px] outline-none transition placeholder:text-paper-400 focus:border-paper-900";
 
-function Field({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
+function IndiaFlag() {
   return (
-    <label className="block text-left">
-      <div className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-paper-600">
-        {label}
-      </div>
-      {children}
-    </label>
+    <svg
+      viewBox="0 0 24 16"
+      className="h-3.5 w-5 shrink-0 overflow-hidden rounded-[2px] shadow-sm"
+      aria-hidden
+    >
+      <rect width="24" height="16" fill="#FF9933" />
+      <rect y="5.33" width="24" height="5.34" fill="#fff" />
+      <rect y="10.67" width="24" height="5.33" fill="#138808" />
+      <circle cx="12" cy="8" r="1.6" fill="#000080" />
+    </svg>
+  );
+}
+
+function EmailIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+      <rect x="3" y="5" width="18" height="14" rx="2" />
+      <path d="m3 7 9 7 9-7" />
+    </svg>
+  );
+}
+
+function BagIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M6 7h12l1 14H5L6 7Z" />
+      <path d="M9 7a3 3 0 0 1 6 0" />
+    </svg>
   );
 }

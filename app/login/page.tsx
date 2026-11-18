@@ -3,9 +3,9 @@ import LoginForm from "@/components/LoginForm";
 import BrandLoader from "@/components/BrandLoader";
 
 export const metadata = {
-  title: "Sign in — TheWearCo",
+  title: "Login / Signup — TheWearCo",
   description:
-    "Sign in with phone OTP or email and password. Guest checkout still available.",
+    "Login or signup with mobile OTP. Email and guest checkout also available.",
 };
 
 export default function LoginPage() {
