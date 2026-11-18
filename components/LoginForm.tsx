@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import BrandLogo from "./BrandLogo";
@@ -8,10 +8,13 @@ import ProductMockup from "./ProductMockup";
 
 type Method = "phone" | "password";
 type Mode = "signin" | "signup";
-type OtpStep = "phone" | "code";
+type OtpStep = "phone" | "code" | "profile";
+type Gender = "male" | "female" | "other";
 
 /**
- * Bewakoof-style split login: promo panel + phone-first OTP, with email fallback.
+ * Bewakoof-style split login:
+ *  - existing phone → OTP only
+ *  - new phone → complete profile (name, email, gender) + OTP
  */
 export default function LoginForm() {
   const router = useRouter();
@@ -30,17 +33,28 @@ export default function LoginForm() {
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [gender, setGender] = useState<Gender>("male");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [resendIn, setResendIn] = useState(0);
 
   const phoneDigits = phone.replace(/\D/g, "").slice(0, 10);
   const canContinue = phoneDigits.length === 10;
+  const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const finish = () => {
     router.push(next);
     router.refresh();
   };
+
+  useEffect(() => {
+    if (resendIn <= 0) return;
+    const id = window.setTimeout(() => setResendIn((s) => s - 1), 1000);
+    return () => window.clearTimeout(id);
+  }, [resendIn]);
+
+  const startResendTimer = () => setResendIn(30);
 
   const onSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,7 +68,29 @@ export default function LoginForm() {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "Could not send code");
-      setOtpStep("code");
+      setCode("");
+      setOtpStep(data.isNew ? "profile" : "code");
+      startResendTimer();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not send code");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const onResend = async () => {
+    if (resendIn > 0 || submitting) return;
+    setSubmitting(true);
+    setError("");
+    try {
+      const res = await fetch("/api/auth/otp/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: phoneDigits }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Could not send code");
+      startResendTimer();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not send code");
     } finally {
@@ -67,10 +103,19 @@ export default function LoginForm() {
     setSubmitting(true);
     setError("");
     try {
+      const payload: Record<string, string> = {
+        phone: phoneDigits,
+        code,
+      };
+      if (otpStep === "profile") {
+        payload.name = name.trim();
+        payload.email = email.trim();
+        payload.gender = gender;
+      }
       const res = await fetch("/api/auth/otp/verify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone: phoneDigits, code }),
+        body: JSON.stringify(payload),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "Invalid code");
@@ -107,10 +152,48 @@ export default function LoginForm() {
     }
   };
 
+  const setOtpDigit = (index: number, value: string) => {
+    const digit = value.replace(/\D/g, "").slice(-1);
+    setCode((prev) => {
+      const chars = prev.padEnd(6, " ").split("");
+      chars[index] = digit || " ";
+      return chars.join("").replace(/ /g, "").slice(0, 6);
+    });
+    if (digit && index < 5) otpRefs.current[index + 1]?.focus();
+  };
+
+  const applyOtpPaste = (pasted: string) => {
+    const digits = pasted.replace(/\D/g, "").slice(0, 6);
+    setCode(digits);
+    otpRefs.current[Math.min(digits.length, 5)]?.focus();
+  };
+
+  const onOtpKeyDown = (
+    index: number,
+    e: React.KeyboardEvent<HTMLInputElement>,
+  ) => {
+    if (e.key === "Backspace" && !code[index] && index > 0) {
+      otpRefs.current[index - 1]?.focus();
+    }
+  };
+
+  const profileReady =
+    name.trim().length >= 2 &&
+    email.includes("@") &&
+    code.length === 6;
+
+  const resetToPhone = () => {
+    setOtpStep("phone");
+    setCode("");
+    setName("");
+    setEmail("");
+    setGender("male");
+    setError("");
+  };
+
   return (
     <div className="relative w-full bg-white">
       <div className="grid min-h-[calc(100vh-5rem)] w-full lg:grid-cols-2">
-        {/* Left promo — lifestyle panel (full-bleed, no max-width gutters) */}
         <aside className="relative hidden min-h-[calc(100vh-5rem)] overflow-hidden bg-[#1a1511] lg:block">
           <div
             aria-hidden
@@ -126,8 +209,7 @@ export default function LoginForm() {
                 <BrandLogo href={null} size="sm" showWordmark={false} />
               </div>
               <p className="pt-1 font-display text-3xl font-bold uppercase leading-none tracking-tight text-[#fff8eb] xl:text-4xl">
-                All eyes{" "}
-                <span className="text-[#fde68a]">on you</span>
+                All eyes <span className="text-[#fde68a]">on you</span>
               </p>
             </div>
 
@@ -158,138 +240,204 @@ export default function LoginForm() {
           </div>
         </aside>
 
-        {/* Right form */}
         <section className="relative flex flex-col justify-center bg-white px-6 py-12 sm:px-12 lg:px-16 xl:px-20">
-          <div className="mx-auto w-full max-w-[380px]">
+          <div className="mx-auto w-full max-w-[400px]">
             {method === "phone" ? (
               <>
-                <h1 className="font-display text-3xl font-bold tracking-tight text-paper-900 sm:text-[2rem]">
-                  Login / Signup
-                </h1>
-                <p className="mt-2 text-sm text-paper-500">
-                  Join us now to be a part of TheWearCo family.
-                </p>
+                {otpStep === "phone" && (
+                  <>
+                    <h1 className="font-display text-3xl font-bold tracking-tight text-paper-900 sm:text-[2rem]">
+                      Login / Signup
+                    </h1>
+                    <p className="mt-2 text-sm text-paper-500">
+                      Join us now to be a part of TheWearCo family.
+                    </p>
+                    <p className="mt-4 rounded-lg border border-[#fde68a] bg-[#fff8eb] px-3 py-2 text-xs text-[#92400e]">
+                      Test mode: any 10-digit number + any 6-digit code works.
+                    </p>
 
-                <p className="mt-4 rounded-lg border border-[#fde68a] bg-[#fff8eb] px-3 py-2 text-xs text-[#92400e]">
-                  Test mode: any 10-digit number + any 6-digit code signs you in.
-                </p>
-
-                {otpStep === "phone" ? (
-                  <form onSubmit={onSendOtp} className="mt-8 flex flex-col gap-4">
-                    <div className="flex h-12 items-stretch overflow-hidden rounded-lg border border-paper-300 bg-white transition focus-within:border-paper-900">
-                      <span className="flex items-center gap-1.5 border-r border-paper-200 bg-paper-50 px-3 text-sm text-paper-800">
-                        <IndiaFlag />
-                        <span className="font-medium">+91</span>
-                      </span>
-                      <input
-                        type="tel"
-                        inputMode="numeric"
-                        required
-                        autoFocus
+                    <form onSubmit={onSendOtp} className="mt-8 flex flex-col gap-4">
+                      <FieldLabel>Mobile Number</FieldLabel>
+                      <PhoneInput
                         value={phoneDigits}
-                        onChange={(e) =>
-                          setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))
-                        }
-                        placeholder="Enter Mobile Number"
-                        className="w-full bg-transparent px-3 text-[15px] text-paper-900 outline-none placeholder:text-paper-400"
-                        autoComplete="tel-national"
-                        maxLength={10}
-                        aria-label="Mobile number"
+                        onChange={setPhone}
+                        autoFocus
                       />
-                    </div>
+                      <button
+                        type="submit"
+                        disabled={submitting || !canContinue}
+                        className={primaryBtn(canContinue && !submitting)}
+                      >
+                        {submitting ? "Sending…" : "Continue"}
+                      </button>
+                    </form>
+                  </>
+                )}
 
-                    <button
-                      type="submit"
-                      disabled={submitting || !canContinue}
-                      className={`h-12 w-full rounded-lg text-sm font-bold uppercase tracking-[0.08em] transition ${
-                        canContinue && !submitting
-                          ? "bg-paper-900 text-white hover:bg-paper-800 active:scale-[0.99]"
-                          : "cursor-not-allowed bg-paper-200 text-paper-500"
-                      }`}
-                    >
-                      {submitting ? "Sending…" : "Continue"}
-                    </button>
-                  </form>
-                ) : (
-                  <form onSubmit={onVerifyOtp} className="mt-8 flex flex-col gap-4">
-                    <p className="text-sm text-paper-600">
-                      Enter the code sent to{" "}
+                {otpStep === "code" && (
+                  <>
+                    <h1 className="font-display text-3xl font-bold tracking-tight text-paper-900">
+                      Welcome back
+                    </h1>
+                    <p className="mt-2 text-sm text-paper-500">
+                      Enter the OTP sent to{" "}
                       <span className="font-semibold text-paper-900">
                         +91 {phoneDigits}
                       </span>
-                      <span className="mt-1 block text-xs text-[#b45309]">
-                        Test mode — type any 6 digits (e.g. 123456).
-                      </span>
                     </p>
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      pattern="[0-9]{6}"
-                      maxLength={6}
-                      required
-                      autoFocus
-                      value={code}
-                      onChange={(e) =>
-                        setCode(e.target.value.replace(/\D/g, "").slice(0, 6))
-                      }
-                      placeholder="Enter OTP"
-                      className="h-12 w-full rounded-lg border border-paper-300 px-4 text-center font-mono text-xl tracking-[0.35em] outline-none transition focus:border-paper-900"
-                      autoComplete="one-time-code"
-                    />
-                    <button
-                      type="submit"
-                      disabled={submitting || code.length !== 6}
-                      className={`h-12 w-full rounded-lg text-sm font-bold uppercase tracking-[0.08em] transition ${
-                        code.length === 6 && !submitting
-                          ? "bg-paper-900 text-white hover:bg-paper-800"
-                          : "cursor-not-allowed bg-paper-200 text-paper-500"
-                      }`}
-                    >
-                      {submitting ? "Verifying…" : "Continue"}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setOtpStep("phone");
-                        setCode("");
-                        setError("");
-                      }}
-                      className="text-sm text-paper-600 underline underline-offset-4 hover:text-paper-900"
-                    >
-                      Use a different number
-                    </button>
-                  </form>
+                    <form onSubmit={onVerifyOtp} className="mt-8 flex flex-col gap-5">
+                      <OtpBoxes
+                        code={code}
+                        refs={otpRefs}
+                        onDigit={setOtpDigit}
+                        onPaste={applyOtpPaste}
+                        onKeyDown={onOtpKeyDown}
+                      />
+                      <ResendRow resendIn={resendIn} onResend={onResend} />
+                      <button
+                        type="submit"
+                        disabled={submitting || code.length !== 6}
+                        className={primaryBtn(code.length === 6 && !submitting)}
+                      >
+                        {submitting ? "Verifying…" : "Continue"}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={resetToPhone}
+                        className="text-sm text-paper-600 underline underline-offset-4 hover:text-paper-900"
+                      >
+                        Use a different number
+                      </button>
+                    </form>
+                  </>
                 )}
 
-                <div className="my-8 flex items-center gap-3">
-                  <span className="h-px flex-1 bg-paper-200" />
-                  <span className="text-xs font-medium uppercase tracking-wider text-paper-400">
-                    Or
-                  </span>
-                  <span className="h-px flex-1 bg-paper-200" />
-                </div>
+                {otpStep === "profile" && (
+                  <>
+                    <p className="text-sm text-paper-500">
+                      We need few more details to personalize your experience.
+                    </p>
+                    <form
+                      onSubmit={onVerifyOtp}
+                      className="mt-6 flex flex-col gap-4"
+                    >
+                      <div>
+                        <FieldLabel>Full Name</FieldLabel>
+                        <input
+                          type="text"
+                          required
+                          autoFocus
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          placeholder="Ex - Jhon Sharma"
+                          className={inputClass}
+                          autoComplete="name"
+                        />
+                      </div>
 
-                <div className="grid grid-cols-2 gap-3">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setMethod("password");
-                      setMode("signin");
-                      setError("");
-                    }}
-                    className="flex h-11 items-center justify-center gap-2 rounded-lg border border-paper-300 bg-white text-sm font-semibold text-paper-800 transition hover:border-paper-500 hover:bg-paper-50"
-                  >
-                    <EmailIcon />
-                    Email
-                  </button>
-                  <Link
-                    href="/shop"
-                    className="flex h-11 items-center justify-center gap-2 rounded-lg border border-paper-300 bg-white text-sm font-semibold text-paper-800 transition hover:border-paper-500 hover:bg-paper-50"
-                  >
-                    <BagIcon />
-                    Guest
-                  </Link>
-                </div>
+                      <div>
+                        <FieldLabel>Mobile Number</FieldLabel>
+                        <PhoneInput value={phoneDigits} onChange={() => {}} readOnly />
+                      </div>
+
+                      <div>
+                        <FieldLabel>Email ID</FieldLabel>
+                        <input
+                          type="email"
+                          required
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          placeholder="ex: yourmailid@gmail.com"
+                          className={inputClass}
+                          autoComplete="email"
+                        />
+                      </div>
+
+                      <div>
+                        <FieldLabel>Gender</FieldLabel>
+                        <div className="mt-1.5 grid grid-cols-3 gap-2">
+                          {(["male", "female", "other"] as const).map((g) => (
+                            <button
+                              key={g}
+                              type="button"
+                              onClick={() => setGender(g)}
+                              className={`h-11 rounded-lg border text-sm font-semibold capitalize transition ${
+                                gender === g
+                                  ? "border-[#f59e0b] bg-[#fff8eb] text-paper-900"
+                                  : "border-paper-300 bg-white text-paper-700 hover:border-paper-500"
+                              }`}
+                            >
+                              {g}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div>
+                        <FieldLabel>OTP</FieldLabel>
+                        <OtpBoxes
+                          code={code}
+                          refs={otpRefs}
+                          onDigit={setOtpDigit}
+                          onPaste={applyOtpPaste}
+                          onKeyDown={onOtpKeyDown}
+                        />
+                        <ResendRow resendIn={resendIn} onResend={onResend} />
+                        <p className="mt-1 text-[11px] text-[#b45309]">
+                          Test mode — any 6 digits (e.g. 123456).
+                        </p>
+                      </div>
+
+                      <button
+                        type="submit"
+                        disabled={submitting || !profileReady}
+                        className={primaryBtn(profileReady && !submitting)}
+                      >
+                        {submitting ? "Creating…" : "Continue"}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={resetToPhone}
+                        className="text-sm text-paper-600 underline underline-offset-4 hover:text-paper-900"
+                      >
+                        Use a different number
+                      </button>
+                    </form>
+                  </>
+                )}
+
+                {otpStep === "phone" && (
+                  <>
+                    <div className="my-8 flex items-center gap-3">
+                      <span className="h-px flex-1 bg-paper-200" />
+                      <span className="text-xs font-medium uppercase tracking-wider text-paper-400">
+                        Or
+                      </span>
+                      <span className="h-px flex-1 bg-paper-200" />
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMethod("password");
+                          setMode("signin");
+                          setError("");
+                        }}
+                        className="flex h-11 items-center justify-center gap-2 rounded-lg border border-paper-300 bg-white text-sm font-semibold text-paper-800 transition hover:border-paper-500 hover:bg-paper-50"
+                      >
+                        <EmailIcon />
+                        Email
+                      </button>
+                      <Link
+                        href="/shop"
+                        className="flex h-11 items-center justify-center gap-2 rounded-lg border border-paper-300 bg-white text-sm font-semibold text-paper-800 transition hover:border-paper-500 hover:bg-paper-50"
+                      >
+                        <BagIcon />
+                        Guest
+                      </Link>
+                    </div>
+                  </>
+                )}
               </>
             ) : (
               <>
@@ -405,7 +553,125 @@ export default function LoginForm() {
 }
 
 const inputClass =
-  "h-12 w-full rounded-lg border border-paper-300 bg-white px-4 text-[15px] outline-none transition placeholder:text-paper-400 focus:border-paper-900";
+  "mt-1.5 h-12 w-full rounded-lg border border-paper-300 bg-white px-4 text-[15px] outline-none transition placeholder:text-paper-400 focus:border-paper-900";
+
+function primaryBtn(ready: boolean) {
+  return `h-12 w-full rounded-lg text-sm font-bold uppercase tracking-[0.08em] transition ${
+    ready
+      ? "bg-paper-900 text-white hover:bg-paper-800 active:scale-[0.99]"
+      : "cursor-not-allowed bg-paper-200 text-paper-500"
+  }`;
+}
+
+function FieldLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="text-xs font-medium text-paper-500">{children}</div>
+  );
+}
+
+function PhoneInput({
+  value,
+  onChange,
+  autoFocus,
+  readOnly,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  autoFocus?: boolean;
+  readOnly?: boolean;
+}) {
+  return (
+    <div
+      className={`mt-1.5 flex h-12 items-stretch overflow-hidden rounded-lg border border-paper-300 bg-white transition ${
+        readOnly ? "bg-paper-50" : "focus-within:border-paper-900"
+      }`}
+    >
+      <span className="flex items-center gap-1.5 border-r border-paper-200 bg-paper-50 px-3 text-sm text-paper-800">
+        <IndiaFlag />
+        <span className="font-medium">+91</span>
+      </span>
+      <input
+        type="tel"
+        inputMode="numeric"
+        required
+        autoFocus={autoFocus}
+        readOnly={readOnly}
+        value={value}
+        onChange={(e) =>
+          onChange(e.target.value.replace(/\D/g, "").slice(0, 10))
+        }
+        placeholder="Enter Mobile Number"
+        className="w-full bg-transparent px-3 text-[15px] text-paper-900 outline-none placeholder:text-paper-400 read-only:cursor-default"
+        autoComplete="tel-national"
+        maxLength={10}
+        aria-label="Mobile number"
+      />
+    </div>
+  );
+}
+
+function OtpBoxes({
+  code,
+  refs,
+  onDigit,
+  onPaste,
+  onKeyDown,
+}: {
+  code: string;
+  refs: React.MutableRefObject<(HTMLInputElement | null)[]>;
+  onDigit: (index: number, value: string) => void;
+  onPaste: (pasted: string) => void;
+  onKeyDown: (index: number, e: React.KeyboardEvent<HTMLInputElement>) => void;
+}) {
+  return (
+    <div className="mt-1.5 flex justify-between gap-2">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <input
+          key={i}
+          ref={(el) => {
+            refs.current[i] = el;
+          }}
+          type="text"
+          inputMode="numeric"
+          maxLength={1}
+          value={code[i] || ""}
+          onChange={(e) => onDigit(i, e.target.value)}
+          onKeyDown={(e) => onKeyDown(i, e)}
+          onPaste={(e) => {
+            e.preventDefault();
+            onPaste(e.clipboardData.getData("text"));
+          }}
+          className="h-12 w-11 rounded-lg border border-paper-300 text-center font-mono text-lg outline-none transition focus:border-paper-900 sm:w-12"
+          aria-label={`OTP digit ${i + 1}`}
+        />
+      ))}
+    </div>
+  );
+}
+
+function ResendRow({
+  resendIn,
+  onResend,
+}: {
+  resendIn: number;
+  onResend: () => void;
+}) {
+  return (
+    <div className="mt-2 text-xs text-paper-500">
+      {resendIn > 0 ? (
+        <>Resend OTP in {resendIn} sec</>
+      ) : (
+        <button
+          type="button"
+          onClick={onResend}
+          className="font-semibold text-[#b45309] underline-offset-2 hover:underline"
+        >
+          Resend OTP
+        </button>
+      )}
+    </div>
+  );
+}
 
 function IndiaFlag() {
   return (

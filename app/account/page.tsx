@@ -1,292 +1,170 @@
-import { redirect } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { getCustomerSession } from "@/lib/customer-session";
-import { formatINR } from "@/lib/products";
-import LogoutButton from "@/components/LogoutButton";
-
-export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Your account — TheWearCo",
-  description: "Your orders, saved details and community access.",
+  title: "My Account — TheWearCo",
+  description: "Your orders, profile, addresses and more.",
 };
 
-/**
- * Protected by middleware — redirects to /login?next=/account for anyone
- * without a customer session. We still do a server-side guard here as a
- * belt-and-braces measure.
- */
-export default async function AccountPage() {
+export default async function AccountOverviewPage() {
   const session = await getCustomerSession();
-  if (!session.isLoggedIn || !session.customerId) {
-    redirect("/login?next=/account");
-  }
-
-  const email = session.email || null;
-  const phone = session.phone || null;
-  const displayName =
-    email?.split("@")[0] ||
-    (phone ? phone.replace(/^\+91/, "") : "member");
-
-  // Orders join by email when the account has one; phone-only accounts
-  // start empty until they place an order while signed in (or add email).
-  const orders = email
-    ? await prisma.order.findMany({
-        where: { email },
-        orderBy: { createdAt: "desc" },
-        take: 50,
-        include: {
-          items: {
-            select: {
-              name: true,
-              qty: true,
-              size: true,
-              color: true,
-              price: true,
-            },
-          },
-        },
+  const customer = session.customerId
+    ? await prisma.customer.findUnique({
+        where: { id: session.customerId },
+        select: { name: true, email: true, phone: true },
       })
-    : phone
-      ? await prisma.order.findMany({
-          where: { phone },
-          orderBy: { createdAt: "desc" },
-          take: 50,
-          include: {
-            items: {
-              select: {
-                name: true,
-                qty: true,
-                size: true,
-                color: true,
-                price: true,
-              },
-            },
-          },
-        })
-      : [];
+    : null;
 
-  // Pull the most-recent address as the "default" shown in the sidebar.
-  const lastAddress = (() => {
-    const o = orders.find((o) => o.address);
-    if (!o?.address) return null;
-    try {
-      return JSON.parse(o.address) as {
-        line1?: string;
-        line2?: string;
-        city?: string;
-        state?: string;
-        pincode?: string;
-        country?: string;
-      };
-    } catch {
-      return null;
-    }
-  })();
-
-  const totalSpent = orders
-    .filter((o) => o.paymentStatus === "paid" || o.paymentMethod === "cod")
-    .reduce((s, o) => s + o.total, 0);
+  const email = customer?.email || session.email || null;
+  const phone = customer?.phone || session.phone || null;
+  const phoneDisplay = phone
+    ? phone.replace(/^\+91/, "").replace(/^91/, "")
+    : null;
+  const displayName =
+    customer?.name?.trim() ||
+    (email ? email.split("@")[0] : null) ||
+    phoneDisplay ||
+    "Member";
+  const initial = displayName.slice(0, 1).toUpperCase();
 
   return (
-    <div className="relative mx-auto max-w-6xl px-5 py-12 lg:px-8 lg:py-16">
-      {/* Hero */}
-      <section className="relative mb-10 pb-8 pt-2">
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <div>
-            <div className="flex items-center gap-3">
-              <span aria-hidden className="hidden h-px w-8 bg-paper-400 sm:block" />
-              <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-500">
-                Your account
-              </div>
-            </div>
-            <h1 className="mt-5 font-display text-3xl font-bold tracking-tight text-paper-900 md:text-5xl">
-              Welcome back, <span className="gradient-text">{displayName}.</span>
-            </h1>
-            <p className="mt-2 text-sm text-paper-600">
-              Signed in as {email || phone || "your account"}.
-            </p>
+    <div className="space-y-5">
+      <div className="overflow-hidden rounded-xl bg-[#fff3c4] px-6 pb-5 pt-6 sm:px-8">
+        <div className="flex items-center gap-4">
+          <div className="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-[#facc15] text-2xl font-bold text-paper-900">
+            {initial}
           </div>
-          <LogoutButton />
-        </div>
-        <div aria-hidden className="mt-8 h-px max-w-3xl bg-paper-200" />
-      </section>
-
-      <div className="grid gap-6 lg:grid-cols-[1fr_300px]">
-        {/* Orders */}
-        <div>
-          <div className="mb-4 flex items-end justify-between">
-            <div>
-              <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-paper-600">
-                // Orders
-              </div>
-              <h2 className="mt-1 font-display text-xl font-semibold">
-                {orders.length === 0 ? "No orders yet." : `${orders.length} order${orders.length === 1 ? "" : "s"}`}
-              </h2>
+          <div className="min-w-0">
+            <div className="truncate text-lg font-bold text-paper-900">
+              {displayName}
             </div>
-            {orders.length === 0 && (
-              <Link href="/shop" className="btn-ghost">Browse the drops →</Link>
+            {email && (
+              <div className="mt-0.5 truncate text-sm text-paper-700">{email}</div>
+            )}
+            {phoneDisplay && (
+              <div className="mt-0.5 text-sm text-paper-700">{phoneDisplay}</div>
             )}
           </div>
-
-          {orders.length > 0 ? (
-            <ul className="space-y-3">
-              {orders.map((o) => {
-                const first = o.items[0];
-                return (
-                  <li key={o.id}>
-                    <Link
-                      href={`/track?order=${encodeURIComponent(o.orderNumber)}&email=${encodeURIComponent(email || o.email)}`}
-                      className="card group block p-5 transition hover:border-paper-400 hover:shadow-[0_12px_40px_-24px_rgba(124,92,255,0.45)]"
-                    >
-                      <div className="flex flex-wrap items-start justify-between gap-3">
-                        <div className="min-w-0">
-                          <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-paper-500">
-                            {new Date(o.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })} · {o.orderNumber}
-                          </div>
-                          <div className="mt-1 truncate font-display text-base font-semibold">
-                            {first?.name || "Order"}
-                            {o.items.length > 1 && (
-                              <span className="ml-1 text-paper-500">
-                                + {o.items.length - 1} more
-                              </span>
-                            )}
-                          </div>
-                          <div className="mt-1 flex flex-wrap items-center gap-2">
-                            <StatusChip status={o.status} />
-                            <PayChip paymentStatus={o.paymentStatus} method={o.paymentMethod} />
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <div className="font-display text-lg font-bold">
-                            {formatINR(o.total)}
-                          </div>
-                          <div className="mt-1 text-xs text-signal-violetInk group-hover:underline">
-                            Track →
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          ) : (
-            <div className="card border-dashed p-10 text-center">
-              <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-signal-limeInk">
-                // Empty shelf
-              </div>
-              <p className="mx-auto mt-3 max-w-sm text-sm text-paper-600">
-                When you place an order, it&apos;ll show up here — including any you
-                placed as a guest with this email in the past.
-              </p>
-              <Link href="/shop" className="btn-primary mt-5 inline-flex">
-                Browse drops
-              </Link>
-            </div>
-          )}
         </div>
+        <Link
+          href="/account/profile"
+          className="mt-5 flex h-12 w-full items-center justify-center rounded-lg bg-[#facc15] text-sm font-bold uppercase tracking-[0.06em] text-paper-900 transition hover:bg-[#f59e0b]"
+        >
+          Edit Profile
+        </Link>
+      </div>
 
-        {/* Sidebar */}
-        <aside className="space-y-4">
-          <div className="card p-5">
-            <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-paper-500">
-              // Lifetime
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        {TILES.map((tile) => (
+          <Link
+            key={tile.href}
+            href={tile.href}
+            className="flex flex-col items-center rounded-xl border border-[#e8e8e8] bg-white px-5 py-8 text-center transition hover:border-paper-400 hover:shadow-[0_8px_24px_-16px_rgba(20,17,14,0.35)]"
+          >
+            <TileIcon name={tile.icon} />
+            <div className="mt-4 text-[15px] font-bold text-paper-900">
+              {tile.title}
             </div>
-            <div className="mt-1 font-display text-2xl font-bold">
-              {formatINR(totalSpent)}
-            </div>
-            <div className="mt-0.5 text-xs text-paper-600">
-              across {orders.length} order{orders.length === 1 ? "" : "s"}
-            </div>
-          </div>
-
-          <div className="card p-5">
-            <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-paper-500">
-              // Default address
-            </div>
-            {lastAddress ? (
-              <div className="mt-2 text-sm text-paper-800">
-                <div>{lastAddress.line1}{lastAddress.line2 ? ", " + lastAddress.line2 : ""}</div>
-                <div>{lastAddress.city}, {lastAddress.state} {lastAddress.pincode}</div>
-                <div>{lastAddress.country || "India"}</div>
-                <p className="mt-2 text-xs text-paper-500">
-                  Pulled from your last order. Update it at checkout next time.
-                </p>
-              </div>
-            ) : (
-              <p className="mt-2 text-sm text-paper-600">
-                We&apos;ll save your address automatically from your first order.
-              </p>
-            )}
-          </div>
-
-          <div className="card p-5">
-            <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-paper-500">
-              // Community
-            </div>
-            <p className="mt-2 text-sm text-paper-700">
-              Select QR-tagged pieces unlock optional member extras — nice to
-              have, not required to shop.
+            <p className="mt-1.5 max-w-[220px] text-[13px] leading-snug text-paper-500">
+              {tile.subtitle}
             </p>
-            <Link href="/community" className="btn-ghost mt-4 inline-flex">
-              Read how it works →
-            </Link>
-          </div>
-
-          <div className="card p-5">
-            <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-paper-500">
-              // Need help?
-            </div>
-            <p className="mt-2 text-sm text-paper-700">
-              Order problem, exchange, custom brief — reply to any
-              confirmation email or write to{" "}
-              <a href="mailto:hi@thewearco.com" className="text-signal-violetInk underline">hi@thewearco.com</a>.
-            </p>
-          </div>
-        </aside>
+          </Link>
+        ))}
       </div>
     </div>
   );
 }
 
-function StatusChip({ status }: { status: string }) {
-  const label = status.charAt(0).toUpperCase() + status.slice(1);
-  const classes =
-    status === "delivered"
-      ? "border-signal-lime/50 bg-signal-lime/10 text-signal-limeInk"
-      : status === "shipped"
-        ? "border-signal-violetInk/40 bg-signal-violet/10 text-signal-violetInk"
-        : status === "cancelled"
-          ? "border-signal-coral/40 bg-signal-coral/10 text-signal-coral"
-          : "";
-  return <span className={`tag ${classes}`}>{label}</span>;
-}
+const TILES = [
+  {
+    href: "/account/orders",
+    title: "My Orders",
+    subtitle: "View, Modify And Track Orders",
+    icon: "orders",
+  },
+  {
+    href: "/account/payments",
+    title: "My Payments",
+    subtitle: "View And Modify Payment Methods",
+    icon: "payments",
+  },
+  {
+    href: "/account/wallet",
+    title: "My Wallet",
+    subtitle: "TheWearCo Wallet History And Gift Cards",
+    icon: "wallet",
+  },
+  {
+    href: "/account/addresses",
+    title: "My Addresses",
+    subtitle: "Edit, Add Or Remove Addresses",
+    icon: "addresses",
+  },
+  {
+    href: "/account/profile",
+    title: "My Profile",
+    subtitle: "Edit Personal Info And Change Password",
+    icon: "profile",
+  },
+  {
+    href: "/account/help",
+    title: "Help & Support",
+    subtitle: "Reach Out To Us",
+    icon: "help",
+  },
+] as const;
 
-function PayChip({
-  paymentStatus,
-  method,
-}: {
-  paymentStatus: string;
-  method: string;
-}) {
-  if (method === "cod" && paymentStatus !== "paid") {
-    return <span className="tag">COD on delivery</span>;
+function TileIcon({ name }: { name: string }) {
+  const cls = "h-10 w-10 text-paper-800";
+  switch (name) {
+    case "orders":
+      return (
+        <svg viewBox="0 0 24 24" className={cls} fill="none" stroke="currentColor" strokeWidth="1.5">
+          <path d="M4 7h16v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7Z" />
+          <path d="M8 7V5a4 4 0 0 1 8 0v2" />
+          <path d="M9 12h6M9 16h4" />
+        </svg>
+      );
+    case "payments":
+      return (
+        <svg viewBox="0 0 24 24" className={cls} fill="none" stroke="currentColor" strokeWidth="1.5">
+          <rect x="2" y="6" width="20" height="13" rx="2" />
+          <path d="M2 11h20" />
+          <path d="M6 16h4" />
+        </svg>
+      );
+    case "wallet":
+      return (
+        <svg viewBox="0 0 24 24" className={cls} fill="none" stroke="currentColor" strokeWidth="1.5">
+          <path d="M3 8h18v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8Z" />
+          <path d="M3 8V6a2 2 0 0 1 2-2h12l4 4" />
+          <circle cx="16.5" cy="14" r="1.5" fill="currentColor" stroke="none" />
+        </svg>
+      );
+    case "addresses":
+      return (
+        <svg viewBox="0 0 24 24" className={cls} fill="none" stroke="currentColor" strokeWidth="1.5">
+          <path d="M12 21s7-4.5 7-11a7 7 0 1 0-14 0c0 6.5 7 11 7 11Z" />
+          <circle cx="12" cy="10" r="2.5" />
+        </svg>
+      );
+    case "profile":
+      return (
+        <svg viewBox="0 0 24 24" className={cls} fill="none" stroke="currentColor" strokeWidth="1.5">
+          <circle cx="12" cy="8" r="4" />
+          <path d="M4 20c1.5-3.5 4.5-5 8-5s6.5 1.5 8 5" />
+        </svg>
+      );
+    case "help":
+      return (
+        <svg viewBox="0 0 24 24" className={cls} fill="none" stroke="currentColor" strokeWidth="1.5">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 16v.01" />
+          <path d="M12 13a2 2 0 1 0-1.5-3.3" />
+        </svg>
+      );
+    default:
+      return null;
   }
-  const label =
-    paymentStatus === "paid"
-      ? "Paid"
-      : paymentStatus === "failed"
-        ? "Payment failed"
-        : paymentStatus === "refunded"
-          ? "Refunded"
-          : "Payment pending";
-  const classes =
-    paymentStatus === "failed"
-      ? "border-signal-coral/40 bg-signal-coral/10 text-signal-coral"
-      : paymentStatus === "paid"
-        ? "border-signal-lime/50 bg-signal-lime/10 text-signal-limeInk"
-        : "";
-  return <span className={`tag ${classes}`}>{label}</span>;
 }

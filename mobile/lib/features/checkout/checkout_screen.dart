@@ -300,10 +300,10 @@ class CheckoutSuccessScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 14),
                 Text('// Order confirmed',
-                    style: Theme.of(context)
-                        .textTheme
-                        .labelMedium
-                        ?.copyWith(color: AppColors.signalLime)),
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          color: AppColors.paper700,
+                          fontWeight: FontWeight.w700,
+                        )),
                 const SizedBox(height: 8),
                 Text('You\'re shipping',
                     style: Theme.of(context).textTheme.displayMedium),

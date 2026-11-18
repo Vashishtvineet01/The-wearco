@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useCart } from "./CartProvider";
-import { useEffect, useRef, useState } from "react";
+import { useWishlist } from "./WishlistProvider";
+import { useCallback, useEffect, useRef, useState } from "react";
 import BrandLogo from "./BrandLogo";
 
 const NAV_ITEMS = [
@@ -13,19 +14,46 @@ const NAV_ITEMS = [
   { href: "/about", label: "About" },
 ] as const;
 
+type AuthUser = {
+  loggedIn: boolean;
+  label: string | null;
+  initials: string | null;
+  email: string | null;
+  phone: string | null;
+  name: string | null;
+};
+
 function pathMatches(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
 export default function Navbar() {
   const pathname = usePathname() || "/";
+  const router = useRouter();
   const { count } = useCart();
+  const { count: wishCount } = useWishlist();
   const [open, setOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [accountLabel, setAccountLabel] = useState<string | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [signingOut, setSigningOut] = useState(false);
   const [badgeKey, setBadgeKey] = useState(0);
   const prevCount = useRef(count);
+  const menuRef = useRef<HTMLDivElement | null>(null);
+
+  const refreshAuth = useCallback(() => {
+    fetch("/api/auth/me")
+      .then((r) => r.json())
+      .then((d: AuthUser) => {
+        if (d?.loggedIn && d.label) {
+          setUser(d);
+        } else {
+          setUser(null);
+        }
+      })
+      .catch(() => setUser(null));
+  }, []);
 
   useEffect(() => {
     const onScroll = () => {
@@ -46,26 +74,51 @@ export default function Navbar() {
     prevCount.current = count;
   }, [count]);
 
+  // Re-check session on every route change (login → account, etc.).
   useEffect(() => {
-    let cancelled = false;
-    fetch("/api/auth/me")
-      .then((r) => r.json())
-      .then((d: { label?: string | null; email?: string | null; phone?: string | null }) => {
-        if (!cancelled) {
-          setAccountLabel(d.label ?? d.email ?? d.phone ?? null);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) setAccountLabel(null);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+    refreshAuth();
+  }, [pathname, refreshAuth]);
 
   useEffect(() => {
     setOpen(false);
+    setMenuOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onDoc = (e: MouseEvent) => {
+      if (!menuRef.current?.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    document.addEventListener("mousedown", onDoc);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDoc);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [menuOpen]);
+
+  const signOut = async () => {
+    setSigningOut(true);
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } catch {
+      // still clear local UI
+    } finally {
+      setUser(null);
+      setMenuOpen(false);
+      setOpen(false);
+      setSigningOut(false);
+      router.push("/");
+      router.refresh();
+    }
+  };
+
+  const loggedIn = Boolean(user?.loggedIn && user.label);
 
   return (
     <header
@@ -90,40 +143,99 @@ export default function Navbar() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-2">
-          {accountLabel ? (
-            <Link
-              href="/account"
-              className="relative grid h-9 w-9 place-items-center overflow-hidden rounded-full text-sm font-bold text-[#fff8eb] shadow-[0_4px_16px_-4px_rgba(180,83,9,0.45)]"
-              style={{
-                background:
-                  "linear-gradient(145deg, #f59e0b 0%, #b45309 100%)",
-              }}
-              aria-label={`Account · ${accountLabel}`}
-              title={accountLabel}
-            >
-              <span className="relative uppercase">
-                {accountLabel.charAt(0)}
-              </span>
-            </Link>
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          {loggedIn ? (
+            <div className="relative hidden md:block" ref={menuRef}>
+              <button
+                type="button"
+                onClick={() => setMenuOpen((v) => !v)}
+                className="btn-icon"
+                aria-label="Account menu"
+                aria-expanded={menuOpen}
+                aria-haspopup="menu"
+              >
+                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 20c1.5-3.5 4.5-5 8-5s6.5 1.5 8 5" />
+                </svg>
+              </button>
+
+              {menuOpen && (
+                <div
+                  role="menu"
+                  className="absolute right-0 z-50 mt-2 w-48 overflow-hidden rounded-md border border-paper-200 bg-white py-2 shadow-[0_12px_32px_-12px_rgba(20,17,14,0.35)]"
+                >
+                  <div className="px-4 py-2 text-sm italic text-paper-800">
+                    Hi , {user!.label}
+                  </div>
+                  <Link
+                    href="/account"
+                    role="menuitem"
+                    className="block px-4 py-2 text-sm italic text-paper-800 hover:bg-paper-50"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    My Account
+                  </Link>
+                  <Link
+                    href="/wishlist"
+                    role="menuitem"
+                    className="block px-4 py-2 text-sm italic text-paper-800 hover:bg-paper-50"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    My Wishlist
+                  </Link>
+                  <Link
+                    href="/account/orders"
+                    role="menuitem"
+                    className="block px-4 py-2 text-sm italic text-paper-800 hover:bg-paper-50"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    My Orders
+                  </Link>
+                  <Link
+                    href="/account/wallet"
+                    role="menuitem"
+                    className="block px-4 py-2 text-sm italic text-paper-800 hover:bg-paper-50"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    My Wallet
+                  </Link>
+                  <button
+                    type="button"
+                    role="menuitem"
+                    onClick={signOut}
+                    disabled={signingOut}
+                    className="block w-full px-4 py-2 text-left text-sm italic text-paper-800 hover:bg-paper-50 disabled:opacity-60"
+                  >
+                    {signingOut ? "Logging out…" : "Logout"}
+                  </button>
+                </div>
+              )}
+            </div>
           ) : (
             <Link
               href="/login"
-              className="btn-icon"
-              aria-label="Sign in"
-              title="Sign in"
+              className="hidden px-2 py-2 text-xs font-bold uppercase tracking-[0.12em] text-paper-900 transition hover:text-[#b45309] md:inline-flex"
             >
-              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="8" r="4" />
-                <path d="M4 21a8 8 0 0116 0" />
-              </svg>
+              Login
             </Link>
           )}
+
+          <Link href="/wishlist" className="btn-icon relative" aria-label="Wishlist">
+            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <path d="M20.8 5.6a4.6 4.6 0 0 0-6.5 0L12 7.9l-2.3-2.3a4.6 4.6 0 1 0-6.5 6.5l2.3 2.3L12 21l6.5-6.6 2.3-2.3a4.6 4.6 0 0 0 0-6.5Z" />
+            </svg>
+            {wishCount > 0 && (
+              <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-[#b45309] px-1 font-mono text-[10px] font-bold text-white">
+                {wishCount}
+              </span>
+            )}
+          </Link>
+
           <Link href="/cart" className="btn-icon relative" aria-label="Cart">
-            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M3 3h2l2.4 12.4a2 2 0 002 1.6h8.2a2 2 0 002-1.6L22 7H6" />
-              <circle cx="9" cy="20" r="1.5" />
-              <circle cx="18" cy="20" r="1.5" />
+            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <path d="M6 7h12l1 14H5L6 7Z" />
+              <path d="M9 7a3 3 0 0 1 6 0" />
             </svg>
             {count > 0 && (
               <span
@@ -168,12 +280,37 @@ export default function Navbar() {
             <MobileLink onClick={() => setOpen(false)} href="/cart">
               Cart ({count})
             </MobileLink>
-            <MobileLink
-              onClick={() => setOpen(false)}
-              href={accountLabel ? "/account" : "/login"}
-            >
-              {accountLabel ? "Your account" : "Sign in"}
-            </MobileLink>
+            {loggedIn ? (
+              <>
+                <div className="border-b border-paper-200 py-3 text-sm italic text-paper-800">
+                  Hi , {user!.label}
+                </div>
+                <MobileLink onClick={() => setOpen(false)} href="/account">
+                  My Account
+                </MobileLink>
+                <MobileLink onClick={() => setOpen(false)} href="/wishlist">
+                  My Wishlist
+                </MobileLink>
+                <MobileLink onClick={() => setOpen(false)} href="/account/orders">
+                  My Orders
+                </MobileLink>
+                <MobileLink onClick={() => setOpen(false)} href="/account/wallet">
+                  My Wallet
+                </MobileLink>
+                <button
+                  type="button"
+                  onClick={signOut}
+                  disabled={signingOut}
+                  className="border-b border-paper-200 py-3 text-left text-sm italic text-paper-800 last:border-b-0 disabled:opacity-60"
+                >
+                  {signingOut ? "Logging out…" : "Logout"}
+                </button>
+              </>
+            ) : (
+              <MobileLink onClick={() => setOpen(false)} href="/login">
+                Login
+              </MobileLink>
+            )}
           </div>
         </div>
       )}

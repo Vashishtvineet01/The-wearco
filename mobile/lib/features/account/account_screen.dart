@@ -119,8 +119,8 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                       child: FilledButton(
                         onPressed: _loading ? null : _lookUp,
                         style: FilledButton.styleFrom(
-                          backgroundColor: AppColors.signalViolet,
-                          foregroundColor: AppColors.ink50,
+                          backgroundColor: AppColors.paper900,
+                          foregroundColor: AppColors.brandCream,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(999),
                           ),
@@ -134,7 +134,7 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
                                   valueColor: AlwaysStoppedAnimation(
-                                      AppColors.ink50),
+                                      AppColors.brandCream),
                                 ),
                               )
                             : const Icon(Icons.search, size: 20),
@@ -296,7 +296,8 @@ class _SectionLabel extends StatelessWidget {
   Widget build(BuildContext context) => Text(
         '// ${text.toUpperCase()}',
         style: Theme.of(context).textTheme.labelMedium?.copyWith(
-              color: AppColors.signalLime,
+              color: AppColors.paper700,
+              fontWeight: FontWeight.w700,
             ),
       );
 }
@@ -364,11 +365,9 @@ class _OrderCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.03),
+        color: Colors.white.withValues(alpha: 0.85),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: AppColors.signalLime.withValues(alpha: 0.4),
-        ),
+        border: Border.all(color: AppColors.paper300),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -380,7 +379,7 @@ class _OrderCard extends StatelessWidget {
                 style: const TextStyle(
                   fontFamily: 'Source Code Pro',
                   fontSize: 14,
-                  color: AppColors.signalLime,
+                  color: AppColors.paper900,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -389,18 +388,17 @@ class _OrderCard extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: AppColors.signalLime.withValues(alpha: 0.1),
+                  color: AppColors.brandCream,
                   borderRadius: BorderRadius.circular(999),
-                  border: Border.all(
-                    color: AppColors.signalLime.withValues(alpha: 0.4),
-                  ),
+                  border: Border.all(color: AppColors.brandAmberInk),
                 ),
                 child: Text(
                   order.status.toUpperCase(),
                   style: const TextStyle(
                     fontFamily: 'Source Code Pro',
                     fontSize: 10,
-                    color: AppColors.signalLime,
+                    color: AppColors.brandAmberInk,
+                    fontWeight: FontWeight.w700,
                     letterSpacing: 1.2,
                   ),
                 ),

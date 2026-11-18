@@ -204,7 +204,9 @@ class _NavButton extends StatelessWidget {
                   Icon(
                     selected ? activeIcon : icon,
                     size: 20,
-                    color: selected ? AppColors.ink50 : AppColors.ink300,
+                    color: selected
+                        ? AppColors.paper900
+                        : AppColors.paper600,
                   ),
                   if (badge != null)
                     Positioned(
@@ -242,7 +244,9 @@ class _NavButton extends StatelessWidget {
                   fontSize: 10,
                   fontWeight:
                       selected ? FontWeight.w700 : FontWeight.w500,
-                  color: selected ? AppColors.ink50 : AppColors.ink300,
+                  color: selected
+                      ? AppColors.paper900
+                      : AppColors.paper600,
                   letterSpacing: 0.2,
                 ),
               ),

@@ -115,6 +115,8 @@ model Customer {
   /// E.164 e.g. +9198xxxxxxxx — unique when set.
   phone        String?  @unique
   name         String?
+  /// male | female | other — collected on first signup.
+  gender       String?
   /// bcrypt hash — null for OTP-only accounts until they set a password.
   passwordHash String?
   createdAt    DateTime @default(now())

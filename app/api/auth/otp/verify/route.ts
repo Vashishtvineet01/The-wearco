@@ -8,11 +8,16 @@ export async function POST(req: Request) {
     const body = await req.json();
     const phone = String(body?.phone ?? "");
     const code = String(body?.code ?? "");
-    const customer = await verifyPhoneOtp(phone, code);
+    const customer = await verifyPhoneOtp(phone, code, {
+      name: body?.name ? String(body.name) : undefined,
+      email: body?.email ? String(body.email) : undefined,
+      gender: body?.gender ? String(body.gender) : undefined,
+    });
     return NextResponse.json({
       ok: true,
       phone: customer.phone,
       email: customer.email,
+      name: customer.name,
     });
   } catch (e) {
     const message =

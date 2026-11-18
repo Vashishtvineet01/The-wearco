@@ -192,6 +192,16 @@ export function generateOtpCode(): string {
   return String(crypto.randomInt(100000, 999999));
 }
 
+export async function phoneAccountExists(rawPhone: string): Promise<boolean> {
+  const phone = normalizePhone(rawPhone);
+  if (!isValidIndianPhone(phone)) return false;
+  const existing = await prisma.customer.findUnique({
+    where: { phone },
+    select: { id: true },
+  });
+  return Boolean(existing);
+}
+
 export async function sendPhoneOtp(rawPhone: string) {
   const phone = normalizePhone(rawPhone);
   if (!isValidIndianPhone(phone)) {
@@ -199,11 +209,12 @@ export async function sendPhoneOtp(rawPhone: string) {
   }
 
   const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+  const isNew = !(await phoneAccountExists(phone));
 
   // Test bypass: no SMS / no token table — any OTP will verify.
   if (isAuthTestBypass()) {
     console.info(`[otp] TEST BYPASS — any 6-digit code works for ${phone}`);
-    return { phone, expiresAt, bypass: true as const };
+    return { phone, expiresAt, bypass: true as const, isNew };
   }
 
   const code = generateOtpCode();
@@ -219,10 +230,20 @@ export async function sendPhoneOtp(rawPhone: string) {
   });
 
   await sendOtpSms(phone, code);
-  return { phone, expiresAt };
+  return { phone, expiresAt, isNew };
 }
 
-export async function verifyPhoneOtp(rawPhone: string, rawCode: string) {
+type PhoneProfile = {
+  name?: string;
+  email?: string;
+  gender?: string;
+};
+
+export async function verifyPhoneOtp(
+  rawPhone: string,
+  rawCode: string,
+  profile?: PhoneProfile,
+) {
   const phone = normalizePhone(rawPhone);
   const code = String(rawCode || "").replace(/\s+/g, "");
   if (!isValidIndianPhone(phone)) {
@@ -230,36 +251,70 @@ export async function verifyPhoneOtp(rawPhone: string, rawCode: string) {
   }
   if (!/^\d{6}$/.test(code)) throw new Error("Enter the 6-digit code.");
 
-  if (isAuthTestBypass()) {
-    const customer = await prisma.customer.upsert({
-      where: { phone },
-      update: {},
-      create: { phone },
+  const name = profile?.name?.trim() || null;
+  const emailRaw = profile?.email?.trim() || "";
+  const email = emailRaw ? normalizeEmail(emailRaw) : null;
+  if (email && !isValidEmail(email)) {
+    throw new Error("Enter a valid email.");
+  }
+  const genderRaw = (profile?.gender || "").toLowerCase().trim();
+  const gender =
+    genderRaw === "male" || genderRaw === "female" || genderRaw === "other"
+      ? genderRaw
+      : null;
+
+  const existing = await prisma.customer.findUnique({ where: { phone } });
+  const isNew = !existing;
+
+  // New accounts need a name (and preferably email/gender from the profile form).
+  if (isNew && !name) {
+    throw new Error("Enter your full name.");
+  }
+
+  if (!isAuthTestBypass()) {
+    const tokenHash = hashToken(code);
+    const record = await prisma.magicLinkToken.findUnique({
+      where: { tokenHash },
     });
-    await establishCustomerSession(customer);
-    return customer;
+    if (!record || record.phone !== phone) {
+      throw new Error("Invalid or expired code.");
+    }
+    if (record.usedAt) throw new Error("Invalid or expired code.");
+    if (record.expiresAt < new Date()) {
+      throw new Error("Invalid or expired code.");
+    }
+
+    await prisma.magicLinkToken.update({
+      where: { id: record.id },
+      data: { usedAt: new Date() },
+    });
   }
 
-  const tokenHash = hashToken(code);
-  const record = await prisma.magicLinkToken.findUnique({
-    where: { tokenHash },
-  });
-  if (!record || record.phone !== phone) {
-    throw new Error("Invalid or expired code.");
+  // Guard unique email collisions for new/updated profiles.
+  if (email) {
+    const emailOwner = await prisma.customer.findUnique({ where: { email } });
+    if (emailOwner && emailOwner.phone !== phone) {
+      throw new Error("That email is already linked to another account.");
+    }
   }
-  if (record.usedAt) throw new Error("Invalid or expired code.");
-  if (record.expiresAt < new Date()) throw new Error("Invalid or expired code.");
 
-  await prisma.magicLinkToken.update({
-    where: { id: record.id },
-    data: { usedAt: new Date() },
-  });
-
-  const customer = await prisma.customer.upsert({
-    where: { phone },
-    update: {},
-    create: { phone },
-  });
+  const customer = existing
+    ? await prisma.customer.update({
+        where: { phone },
+        data: {
+          ...(name && !existing.name ? { name } : {}),
+          ...(email && !existing.email ? { email } : {}),
+          ...(gender && !existing.gender ? { gender } : {}),
+        },
+      })
+    : await prisma.customer.create({
+        data: {
+          phone,
+          name,
+          email,
+          gender,
+        },
+      });
 
   void prisma.magicLinkToken
     .deleteMany({ where: { expiresAt: { lt: new Date() } } })

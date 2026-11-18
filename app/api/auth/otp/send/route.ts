@@ -8,8 +8,8 @@ import {
 export const dynamic = "force-dynamic";
 
 /**
- * Send SMS OTP. Always 200 on valid phone shape (anti-enumeration),
- * unless SMS delivery hard-fails after creating the token.
+ * Send SMS OTP. Returns { isNew } so the client can show the
+ * complete-profile form for first-time numbers.
  */
 export async function POST(req: Request) {
   try {
@@ -18,11 +18,15 @@ export async function POST(req: Request) {
     if (!isValidIndianPhone(phone)) {
       return NextResponse.json(
         { error: "Enter a valid 10-digit Indian mobile number." },
-        { status: 400 }
+        { status: 400 },
       );
     }
-    await sendPhoneOtp(phone);
-    return NextResponse.json({ ok: true, phone });
+    const result = await sendPhoneOtp(phone);
+    return NextResponse.json({
+      ok: true,
+      phone: result.phone,
+      isNew: result.isNew,
+    });
   } catch (e) {
     console.error("[otp/send]", e);
     const message =
@@ -30,6 +34,6 @@ export async function POST(req: Request) {
     if (message.includes("Could not send")) {
       return NextResponse.json({ error: message }, { status: 502 });
     }
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true, isNew: true });
   }
 }

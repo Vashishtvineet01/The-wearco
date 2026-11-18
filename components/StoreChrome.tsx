@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { CartProvider } from "@/components/CartProvider";
+import { WishlistProvider } from "@/components/WishlistProvider";
 
 export default function StoreChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -16,10 +17,12 @@ export default function StoreChrome({ children }: { children: React.ReactNode })
 
   return (
     <CartProvider>
-      <Navbar />
-      <main>{children}</main>
-      {/* Auth is full-bleed split — skip footer so the panels fill the viewport */}
-      {!isAuth && <Footer />}
+      <WishlistProvider>
+        <Navbar />
+        <main>{children}</main>
+        {/* Auth is full-bleed split — skip footer so the panels fill the viewport */}
+        {!isAuth && <Footer />}
+      </WishlistProvider>
     </CartProvider>
   );
 }

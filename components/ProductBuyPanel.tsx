@@ -1,12 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { formatINR, type Product } from "@/lib/products";
 import ProductMockup from "@/components/ProductMockup";
 import { useCart } from "@/components/CartProvider";
-import { ANDROID_APP_URL } from "@/lib/android-app";
+import WishlistButton from "@/components/WishlistButton";
+import SizeGuideModal from "@/components/SizeGuideModal";
+import ProductExtras from "@/components/ProductExtras";
+import { hasApparelSizing, priceMeta } from "@/lib/size-guide";
 
 export default function ProductBuyPanel({ product }: { product: Product }) {
   const router = useRouter();
@@ -15,6 +18,17 @@ export default function ProductBuyPanel({ product }: { product: Product }) {
   const [size, setSize] = useState(product.sizes[1] ?? product.sizes[0]);
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
+  const [guideOpen, setGuideOpen] = useState(false);
+  const colorIndex = Math.max(
+    0,
+    product.colors.findIndex((c) => c.name === color.name),
+  );
+  const { mrp, off } = priceMeta(product.price);
+  const dealPrice = Math.round(product.price * 0.83);
+  const socialProof = useMemo(
+    () => 80 + (product.slug.length * 17) % 140,
+    [product.slug],
+  );
 
   const handleAdd = () => {
     add({
@@ -34,30 +48,28 @@ export default function ProductBuyPanel({ product }: { product: Product }) {
   };
 
   const printWord = product.name.split(" ")[0];
+  const apparel = hasApparelSizing(product.category);
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:gap-10">
-      {/* Viewer stage */}
+    <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
+      {/* Gallery */}
       <div className="space-y-4">
-        <div className="relative overflow-hidden rounded-[28px] border border-paper-200 bg-[#0a0b0f] shadow-[0_24px_80px_-40px_rgba(10,11,15,0.55)]">
-          <div className="absolute left-5 top-5 z-10 flex flex-wrap gap-2">
-            <span className="rounded-full border border-white/15 bg-black/40 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-white/80 backdrop-blur">
-              {product.drop}
+        <div className="relative overflow-hidden rounded-2xl border border-paper-200 bg-[#f3f3f3]">
+          <div className="absolute left-4 top-4 z-10 flex flex-wrap gap-2">
+            <span className="rounded-md bg-white/90 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-paper-700 shadow-sm">
+              {product.drop.split(/[—–-]/)[0].trim()}
             </span>
             {product.customizable && (
               <Link
                 href={`/design?product=${product.slug}`}
-                className="rounded-full border border-white/20 bg-white/10 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-paper-50 backdrop-blur"
+                className="rounded-md bg-paper-900/90 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-white"
               >
                 Customize
               </Link>
             )}
           </div>
-          <div className="absolute right-5 top-5 z-10 hidden font-mono text-[10px] uppercase tracking-[0.16em] text-white/45 sm:block">
-            [scale · 1:1]
-          </div>
-          <div className="relative grid min-h-[360px] place-items-center px-6 py-14 md:min-h-[460px]">
-            <div className="w-full max-w-md transition-transform duration-500 hover:scale-[1.03]">
+          <div className="relative grid min-h-[380px] place-items-center px-6 py-12 md:min-h-[520px]">
+            <div className="w-full max-w-md transition-transform duration-500 hover:scale-[1.02]">
               <ProductMockup
                 category={product.category}
                 fabric={color.fabric}
@@ -68,129 +80,166 @@ export default function ProductBuyPanel({ product }: { product: Product }) {
               />
             </div>
           </div>
-          <div className="absolute bottom-5 left-5 right-5 flex flex-wrap items-center justify-between gap-2">
-            <span className="rounded-full border border-signal-lime/35 bg-signal-lime/10 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-signal-lime">
-              QR layer · members key
-            </span>
-            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/40">
-              Drag-free preview
-            </span>
-          </div>
         </div>
 
-        {/* Color thumbs */}
-        <div className="flex flex-wrap gap-3">
-          {product.colors.map((c) => (
-            <button
-              key={c.name}
-              type="button"
-              onClick={() => setColor(c)}
-              className={`relative h-16 w-16 overflow-hidden rounded-full border-2 transition ${
-                color.name === c.name
-                  ? "border-signal-violetInk shadow-[0_0_0_3px_rgba(124,92,255,0.25)]"
-                  : "border-paper-200 hover:border-paper-400"
-              }`}
-              aria-label={c.name}
-              title={c.name}
-            >
-              <div
-                className="absolute inset-0"
-                style={{
-                  background: `linear-gradient(145deg, ${c.hex}, ${c.fabric})`,
-                }}
-              />
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Spec / buy panel */}
-      <div className="rounded-[28px] border border-paper-200 bg-paper-50/90 p-6 shadow-[0_20px_60px_-40px_rgba(15,13,10,0.35)] md:p-8">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-paper-500">
-            // Sys.spec · {product.slug}
-          </div>
-          <span className="rounded-full border border-signal-coral/30 bg-signal-coral/10 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-signal-coral">
-            Limited drop
-          </span>
-        </div>
-
-        <h1 className="mt-3 font-display text-3xl font-bold tracking-tight md:text-4xl">
-          {product.name}
-        </h1>
-        <p className="mt-2 text-sm text-paper-600 md:text-base">{product.tagline}</p>
-
-        <div className="mt-5 flex flex-wrap items-baseline gap-3">
-          <div className="font-display text-3xl font-bold">
-            {formatINR(product.price)}
-          </div>
-          <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-paper-500">
-            / {product.drop}
-          </div>
-        </div>
-
-        <div className="mt-8">
-          <div className="mb-3 font-mono text-[11px] uppercase tracking-[0.22em] text-paper-600">
-            Colorway · {color.name}
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {product.colors.map((c) => (
+        <div className="flex flex-wrap gap-2.5">
+          {product.colors.map((c) => {
+            const selected = color.name === c.name;
+            return (
               <button
                 key={c.name}
                 type="button"
                 onClick={() => setColor(c)}
-                className={`flex items-center gap-2 rounded-full border px-3 py-2 text-xs transition ${
-                  color.name === c.name
-                    ? "border-signal-violetInk/50 bg-signal-violet/10 text-signal-violetInk"
-                    : "border-paper-200 bg-white text-paper-800 hover:border-paper-400"
+                aria-label={c.name}
+                title={c.name}
+                className={`relative h-[72px] w-[72px] overflow-hidden rounded-lg border-2 transition ${
+                  selected
+                    ? "border-paper-900"
+                    : "border-transparent ring-1 ring-paper-200 hover:ring-paper-400"
                 }`}
               >
-                <span
-                  className="h-3.5 w-3.5 rounded-full border border-paper-300"
-                  style={{ backgroundColor: c.hex }}
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background: `linear-gradient(145deg, ${c.hex}, ${c.fabric})`,
+                  }}
                 />
-                {c.name}
+                {selected && (
+                  <span className="absolute bottom-1.5 right-1.5 grid h-5 w-5 place-items-center rounded-full bg-paper-900 text-white">
+                    <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="3">
+                      <path d="m5 12 5 5L20 7" />
+                    </svg>
+                  </span>
+                )}
               </button>
-            ))}
-          </div>
+            );
+          })}
         </div>
+      </div>
 
-        <div className="mt-6">
-          <div className="mb-3 flex items-baseline justify-between">
-            <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-paper-600">
-              Size · {size}
+      {/* Buy panel */}
+      <div>
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div className="flex flex-wrap items-baseline gap-2">
+            <span className="text-2xl font-bold text-paper-900 sm:text-[1.75rem]">
+              {formatINR(product.price)}
             </span>
-            <a
-              href="#sizing"
-              className="text-xs text-paper-500 underline-offset-2 hover:text-paper-800 hover:underline"
-            >
-              Size guide
-            </a>
+            <span className="text-base text-paper-400 line-through">
+              {formatINR(mrp)}
+            </span>
+            <span className="text-base font-semibold text-[#16a34a]">
+              {off}% OFF
+            </span>
           </div>
-          <div className="flex flex-wrap gap-2">
-            {product.sizes.map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() => setSize(s)}
-                className={`grid h-12 min-w-12 place-items-center rounded-full border text-sm font-semibold transition ${
-                  size === s
-                    ? "border-transparent bg-signal-coral text-white shadow-[0_8px_24px_-10px_rgba(225,29,46,0.7)]"
-                    : "border-paper-200 bg-white text-paper-800 hover:border-paper-900"
-                }`}
-              >
-                {s}
-              </button>
-            ))}
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-paper-200 bg-white px-2.5 py-1 text-sm font-semibold text-paper-800">
+            <span className="text-[#f59e0b]">★</span>
+            4.5
+            <span className="text-paper-300">|</span>
+            <span className="font-medium text-paper-500">{socialProof + 300}</span>
           </div>
         </div>
 
-        <div className="mt-8 flex flex-wrap items-center gap-3">
-          <div className="flex items-center rounded-full border border-paper-200 bg-white">
+        <h1 className="mt-3 font-display text-2xl font-bold tracking-tight text-paper-900 sm:text-3xl">
+          {product.name}
+        </h1>
+        <p className="mt-1.5 text-sm text-paper-600">{product.tagline}</p>
+
+        <div className="mt-5 flex flex-col gap-2.5">
+          <div className="inline-flex w-fit items-center gap-2 rounded-full bg-[#f3e8ff] px-3.5 py-1.5 text-sm font-medium text-[#6b21a8]">
+            Get it for as low as {formatINR(dealPrice)}
+            <span className="grid h-4 w-4 place-items-center rounded-full border border-[#6b21a8]/40 text-[10px]">
+              i
+            </span>
+          </div>
+          <div className="inline-flex w-fit items-center rounded-full bg-gradient-to-r from-[#dbeafe] to-white px-3.5 py-1.5 text-sm font-medium text-[#1d4ed8]">
+            {socialProof} people bought this in the last 7 days
+          </div>
+          {product.details[0] && (
+            <div className="inline-flex w-fit items-center rounded-full border border-paper-300 bg-white px-3.5 py-1.5 text-sm text-paper-700">
+              {product.details[0]}
+            </div>
+          )}
+        </div>
+
+        <div className="mt-7">
+          <div className="mb-3 text-sm font-semibold text-paper-900">
+            Colour: <span className="font-medium">{color.name}</span>
+          </div>
+          <div className="flex flex-wrap gap-2.5">
+            {product.colors.map((c) => {
+              const selected = color.name === c.name;
+              return (
+                <button
+                  key={c.name}
+                  type="button"
+                  onClick={() => setColor(c)}
+                  className={`relative h-14 w-14 overflow-hidden rounded-md border-2 transition ${
+                    selected
+                      ? "border-paper-900"
+                      : "border-transparent ring-1 ring-paper-200 hover:ring-paper-400"
+                  }`}
+                  aria-label={c.name}
+                >
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background: `linear-gradient(145deg, ${c.hex}, ${c.fabric})`,
+                    }}
+                  />
+                  {selected && (
+                    <span className="absolute bottom-1 right-1 grid h-4 w-4 place-items-center rounded-full bg-paper-900 text-white">
+                      <svg viewBox="0 0 24 24" className="h-2.5 w-2.5" fill="none" stroke="currentColor" strokeWidth="3">
+                        <path d="m5 12 5 5L20 7" />
+                      </svg>
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="mt-7">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <span className="text-sm font-semibold text-paper-900">Select Size</span>
+            {apparel && (
+              <button
+                type="button"
+                onClick={() => setGuideOpen(true)}
+                className="text-sm font-semibold text-[#0284c7] hover:underline"
+              >
+                Size guide &gt;
+              </button>
+            )}
+          </div>
+          <div className="flex flex-wrap gap-2.5">
+            {product.sizes.map((s) => {
+              const selected = size === s;
+              return (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => setSize(s)}
+                  className={`grid h-12 min-w-[3rem] place-items-center rounded-md border px-3 text-sm font-semibold transition ${
+                    selected
+                      ? "border-paper-900 bg-paper-900 text-white"
+                      : "border-paper-300 bg-white text-paper-800 hover:border-paper-900"
+                  }`}
+                >
+                  {s}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="mt-5 flex items-center gap-3">
+          <span className="text-sm text-paper-600">Qty</span>
+          <div className="inline-flex items-center rounded-md border border-paper-300 bg-white">
             <button
               type="button"
               onClick={() => setQty((q) => Math.max(1, q - 1))}
-              className="px-4 py-3 text-paper-700 hover:text-paper-900"
+              className="px-3 py-2 text-paper-700 hover:text-paper-900"
               aria-label="Decrease"
             >
               −
@@ -199,21 +248,29 @@ export default function ProductBuyPanel({ product }: { product: Product }) {
             <button
               type="button"
               onClick={() => setQty((q) => q + 1)}
-              className="px-4 py-3 text-paper-700 hover:text-paper-900"
+              className="px-3 py-2 text-paper-700 hover:text-paper-900"
               aria-label="Increase"
             >
               +
             </button>
           </div>
+        </div>
+
+        <div className="mt-6 flex items-stretch gap-3">
           <button
             type="button"
             onClick={handleAdd}
-            className="btn-primary flex-1 py-3.5"
+            className="flex h-14 flex-1 items-center justify-center gap-2 rounded-lg bg-[#facc15] text-sm font-bold uppercase tracking-[0.06em] text-paper-900 transition hover:bg-[#f59e0b] active:scale-[0.99]"
           >
-            {added
-              ? "Added to bag"
-              : `Add to bag — ${formatINR(product.price * qty)}`}
+            <BagIcon />
+            {added ? "Added to Bag" : "Add to Bag"}
           </button>
+          <WishlistButton
+            product={product}
+            colorIndex={colorIndex}
+            size="lg"
+            className="!h-14 !w-14 !rounded-lg border-paper-300 shadow-none"
+          />
         </div>
 
         <button
@@ -222,89 +279,45 @@ export default function ProductBuyPanel({ product }: { product: Product }) {
             handleAdd();
             router.push("/checkout");
           }}
-          className="btn-ghost mt-3 w-full py-3"
+          className="mt-3 w-full py-2 text-sm font-semibold text-paper-700 underline-offset-4 hover:text-paper-900 hover:underline"
         >
-          Fast checkout
+          Buy now
         </button>
 
         {product.customizable && (
           <button
             type="button"
             onClick={() => router.push(`/design?product=${product.slug}`)}
-            className="btn-ghost mt-3 w-full py-3"
+            className="mt-2 w-full rounded-lg border border-paper-300 py-3 text-sm font-semibold text-paper-800 transition hover:border-paper-900"
           >
-            Customize this in Design Studio →
+            Customize in Design Studio →
           </button>
         )}
-
-        <div className="mt-8 border-t border-paper-200 pt-5">
-          <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-paper-500">
-            Optional extras
-          </div>
-          <p className="mt-1 text-xs leading-relaxed text-paper-600">
-            Select pieces include a hidden QR for member perks. Nice to have —
-            not required to buy or customize.
-          </p>
-          <a
-            href={ANDROID_APP_URL}
-            download="thewearco-android.apk"
-            className="mt-2 inline-flex text-xs font-semibold text-paper-900 underline underline-offset-2"
-          >
-            Download Android app →
-          </a>
-        </div>
-
-        <div className="mt-6 flex flex-wrap gap-4 text-[10px] font-mono uppercase tracking-[0.16em] text-paper-500">
-          <span>Free ship ≥ ₹1,499</span>
-          <span>·</span>
-          <span>India dispatch</span>
-          <span>·</span>
-          <span>7-day exchange</span>
-        </div>
       </div>
 
-      {/* Details band */}
-      <div className="lg:col-span-2">
-        <div className="mt-4 font-mono text-[11px] uppercase tracking-[0.22em] text-signal-violetInk">
-          // Fabric & build
-        </div>
-        <h2 className="mt-2 font-display text-2xl font-bold tracking-tight md:text-3xl">
-          Hardware & textile notes
-        </h2>
-        <div className="mt-6 grid gap-4 md:grid-cols-2">
-          <div className="card p-6" id="sizing">
-            <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-paper-600">
-              Description
-            </div>
-            <p className="mt-3 text-sm leading-relaxed text-paper-800">
-              {product.description}
-            </p>
-            <ul className="mt-4 grid gap-2 text-sm text-paper-700">
-              {product.details.map((d) => (
-                <li key={d} className="flex items-start gap-2">
-                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-signal-lime" />
-                  {d}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="card p-6">
-            <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-paper-600">
-              Shipping
-            </div>
-            <p className="mt-3 text-sm leading-relaxed text-paper-800">
-              Free shipping over ₹1,499 across India. Average delivery in 48
-              hours metro, 5–7 days for custom Design Studio prints.
-            </p>
-            <Link
-              href="/shipping"
-              className="mt-4 inline-block text-sm text-signal-violetInk underline underline-offset-2"
-            >
-              Full shipping policy →
-            </Link>
-          </div>
-        </div>
-      </div>
+      {guideOpen && (
+        <SizeGuideModal
+          product={product}
+          color={color}
+          size={size}
+          onSelectSize={setSize}
+          onAddToBag={handleAdd}
+          onClose={() => setGuideOpen(false)}
+        />
+      )}
     </div>
+  );
+}
+
+export function ProductBelowFold({ product }: { product: Product }) {
+  return <ProductExtras product={product} />;
+}
+
+function BagIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M6 7h12l1 14H5L6 7Z" />
+      <path d="M9 7a3 3 0 0 1 6 0" />
+    </svg>
   );
 }

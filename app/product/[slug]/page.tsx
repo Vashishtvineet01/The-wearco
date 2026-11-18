@@ -2,7 +2,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import ProductCard from "@/components/ProductCard";
-import ProductBuyPanel from "@/components/ProductBuyPanel";
+import ProductBuyPanel, {
+  ProductBelowFold,
+} from "@/components/ProductBuyPanel";
 import { getActiveProducts, getProductBySlug } from "@/lib/catalog";
 import { formatINR } from "@/lib/products";
 
@@ -52,6 +54,7 @@ export default async function ProductPage({ params }: Props) {
       </nav>
 
       <ProductBuyPanel product={product} />
+      <ProductBelowFold product={product} />
 
       <div className="mt-20">
         <div className="mb-6 font-mono text-[11px] uppercase tracking-[0.28em] text-paper-500">

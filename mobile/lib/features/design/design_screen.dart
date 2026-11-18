@@ -526,9 +526,11 @@ class _DesignScreenState extends ConsumerState<DesignScreen> {
                     label: Text(s),
                     selected: s == _size,
                     onSelected: (_) => setState(() => _size = s),
-                    selectedColor: AppColors.signalLime,
+                    selectedColor: AppColors.paper900,
                     labelStyle: TextStyle(
-                      color: s == _size ? AppColors.ink950 : AppColors.ink100,
+                      color: s == _size
+                          ? AppColors.brandCream
+                          : AppColors.paper800,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -551,8 +553,8 @@ class _DesignScreenState extends ConsumerState<DesignScreen> {
             width: double.infinity,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.signalLime,
-                foregroundColor: AppColors.ink950,
+                backgroundColor: AppColors.paper900,
+                foregroundColor: AppColors.brandCream,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(999),
@@ -749,7 +751,8 @@ class _SectionLabel extends StatelessWidget {
   Widget build(BuildContext context) => Text(
         '// ${text.toUpperCase()}',
         style: Theme.of(context).textTheme.labelMedium?.copyWith(
-              color: AppColors.signalLime,
+              color: AppColors.paper700,
+              fontWeight: FontWeight.w700,
             ),
       );
 }

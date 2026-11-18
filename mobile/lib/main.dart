@@ -13,13 +13,14 @@ Future<void> main() async {
   // SharedPreferences BEFORE the first API call fires.
   await Env.load();
 
-  // Match the brand dark theme in the system chrome.
+  // Cream paper theme — dark status/nav icons for contrast.
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
-      statusBarColor: AppColors.ink950,
-      statusBarIconBrightness: Brightness.light,
-      systemNavigationBarColor: AppColors.ink950,
-      systemNavigationBarIconBrightness: Brightness.light,
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      statusBarBrightness: Brightness.light,
+      systemNavigationBarColor: AppColors.paper50,
+      systemNavigationBarIconBrightness: Brightness.dark,
     ),
   );
 

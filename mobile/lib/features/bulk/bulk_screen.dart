@@ -103,10 +103,10 @@ class _BulkScreenState extends ConsumerState<BulkScreen> {
                 ),
                 const SizedBox(height: 14),
                 Text('// Enquiry received',
-                    style: Theme.of(context)
-                        .textTheme
-                        .labelMedium
-                        ?.copyWith(color: AppColors.signalLime)),
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          color: AppColors.paper700,
+                          fontWeight: FontWeight.w700,
+                        )),
                 const SizedBox(height: 8),
                 Text('Got it.',
                     style: Theme.of(context).textTheme.displayMedium),
@@ -155,10 +155,10 @@ class _BulkScreenState extends ConsumerState<BulkScreen> {
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
           children: [
             Text('// Bulk orders',
-                style: Theme.of(context)
-                    .textTheme
-                    .labelMedium
-                    ?.copyWith(color: AppColors.signalLime)),
+                style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      color: AppColors.paper700,
+                      fontWeight: FontWeight.w700,
+                    )),
             const SizedBox(height: 6),
             Text('Kit out your team.',
                 style: Theme.of(context).textTheme.displayMedium),

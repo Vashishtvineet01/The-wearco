@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { formatINR, type Product, type ProductColor } from "@/lib/products";
 import ProductMockup from "./ProductMockup";
+import WishlistButton from "./WishlistButton";
 
 /** Perceptual-luminance check used to pick a contrasting backdrop per fabric. */
 function isDarkFabric(hex: string): boolean {
@@ -53,9 +54,16 @@ export default function ProductCard({ product }: { product: Product }) {
         <span className="tag max-w-[55%] min-w-0">
           <span className="truncate">{shortDrop(product.drop)}</span>
         </span>
-        {product.customizable && (
-          <span className="tag-aurora shrink-0">Printable</span>
-        )}
+        <div className="flex shrink-0 items-center gap-1.5">
+          {product.customizable && (
+            <span className="tag-aurora">Printable</span>
+          )}
+          <WishlistButton
+            product={product}
+            colorIndex={product.colors.findIndex((c) => c.name === color.name)}
+            size="sm"
+          />
+        </div>
       </div>
 
       <div
