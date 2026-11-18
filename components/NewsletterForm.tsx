@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 type Props = {
-  variant?: "footer" | "centered";
+  variant?: "footer" | "centered" | "stacked";
   buttonLabel?: string;
   placeholder?: string;
 };
@@ -11,10 +11,12 @@ type Props = {
 export default function NewsletterForm({
   variant = "footer",
   buttonLabel = "Notify me",
-  placeholder = "you@startup.in"
+  placeholder = "you@startup.in",
 }: Props) {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">(
+    "idle"
+  );
   const [error, setError] = useState("");
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -26,7 +28,7 @@ export default function NewsletterForm({
       const res = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ email }),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
@@ -42,10 +44,49 @@ export default function NewsletterForm({
     }
   };
 
+  const label =
+    status === "done"
+      ? "On the list"
+      : status === "loading"
+        ? "Saving..."
+        : buttonLabel;
+
+  if (variant === "stacked") {
+    return (
+      <div>
+        <form
+          onSubmit={onSubmit}
+          className="flex flex-col gap-2"
+          aria-label="Drop alerts signup"
+        >
+          <input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder={placeholder}
+            disabled={status === "loading"}
+            className="w-full rounded-xl border border-paper-300 bg-white px-3 py-2.5 text-sm text-paper-900 outline-none placeholder:text-paper-400 focus:border-paper-500 disabled:opacity-50"
+          />
+          <button
+            type="submit"
+            disabled={status === "loading"}
+            className="w-full rounded-xl border border-paper-900 bg-paper-900 px-4 py-2.5 text-sm font-semibold text-paper-50 transition hover:bg-paper-800 disabled:opacity-60"
+          >
+            {label}
+          </button>
+        </form>
+        {status === "error" && (
+          <p className="mt-2 text-xs text-paper-700">{error}</p>
+        )}
+      </div>
+    );
+  }
+
   const wrapperClass =
     variant === "centered"
-      ? "mx-auto mt-6 flex max-w-md items-center gap-2 rounded-full border border-paper-200 bg-white/90 p-1 shadow-[0_10px_28px_-16px_rgba(124,92,255,0.35)]"
-      : "flex items-center gap-2 rounded-full border border-paper-200 bg-white/90 p-1 shadow-[0_8px_20px_-14px_rgba(124,92,255,0.3)]";
+      ? "mx-auto mt-6 flex max-w-md items-center gap-2 rounded-full border border-paper-300 bg-white p-1"
+      : "flex items-center gap-2 rounded-full border border-paper-300 bg-white p-1";
 
   return (
     <div>
@@ -62,17 +103,13 @@ export default function NewsletterForm({
         <button
           type="submit"
           disabled={status === "loading"}
-          className="rounded-full bg-signal-lime px-4 py-2 text-xs font-medium text-ink-950 shadow-[0_8px_20px_-8px_rgba(216,255,54,0.55)] transition hover:scale-[1.03] disabled:opacity-60"
+          className="rounded-full bg-paper-900 px-4 py-2 text-xs font-semibold text-paper-50 transition hover:bg-paper-800 disabled:opacity-60"
         >
-          {status === "done"
-            ? "On the list"
-            : status === "loading"
-              ? "Saving..."
-              : buttonLabel}
+          {label}
         </button>
       </form>
       {status === "error" && (
-        <p className="mt-2 text-xs text-signal-coral">{error}</p>
+        <p className="mt-2 text-xs text-paper-700">{error}</p>
       )}
     </div>
   );

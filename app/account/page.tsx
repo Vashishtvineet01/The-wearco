@@ -92,14 +92,17 @@ export default async function AccountPage() {
   return (
     <div className="relative mx-auto max-w-6xl px-5 py-12 lg:px-8 lg:py-16">
       {/* Hero */}
-      <section className="relative mb-10 overflow-hidden rounded-3xl border border-paper-200 bg-white px-6 py-10 md:px-10 md:py-14">
-        <div className="relative flex flex-wrap items-end justify-between gap-6">
+      <section className="relative mb-10 pb-8 pt-2">
+        <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
-            <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-coral">
-              // Your account
+            <div className="flex items-center gap-3">
+              <span aria-hidden className="hidden h-px w-8 bg-paper-400 sm:block" />
+              <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-500">
+                Your account
+              </div>
             </div>
-            <h1 className="mt-3 font-display text-3xl font-bold tracking-tight text-paper-900 md:text-5xl">
-              Welcome back, <span className="text-signal-coral">{displayName}.</span>
+            <h1 className="mt-5 font-display text-3xl font-bold tracking-tight text-paper-900 md:text-5xl">
+              Welcome back, <span className="gradient-text">{displayName}.</span>
             </h1>
             <p className="mt-2 text-sm text-paper-600">
               Signed in as {email || phone || "your account"}.
@@ -107,6 +110,7 @@ export default async function AccountPage() {
           </div>
           <LogoutButton />
         </div>
+        <div aria-hidden className="mt-8 h-px max-w-3xl bg-paper-200" />
       </section>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_300px]">

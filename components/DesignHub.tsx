@@ -40,20 +40,22 @@ export default function DesignHub({ products }: { products: Product[] }) {
 
   return (
     <div className="relative mx-auto max-w-7xl px-5 pb-16 pt-8 lg:px-8 lg:pt-12">
-      {/* Hero */}
-      <section className="relative mb-10 overflow-hidden rounded-3xl border border-paper-200 bg-white px-6 py-12 text-center md:mb-14 md:px-10 md:py-16">
-        <div className="relative">
-          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-coral">
-            // Design
+      <section className="relative mb-10 pb-10 pt-2 text-center md:mb-14 md:pb-14">
+        <div className="flex items-center justify-center gap-3">
+          <span aria-hidden className="h-px w-8 bg-paper-400" />
+          <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-500">
+            Design
           </div>
-          <h1 className="mt-3 font-display text-4xl font-bold tracking-tight text-paper-900 md:text-6xl">
-            Print your idea <span className="text-signal-coral">on anything.</span>
-          </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-paper-700">
-            Two paths — print one for yourself, or kit out the whole team. Same
-            premium fabric, same DTG print, same 5–7 day turnaround.
-          </p>
+          <span aria-hidden className="h-px w-8 bg-paper-400" />
         </div>
+        <h1 className="mt-5 font-display text-4xl font-bold leading-[1.05] tracking-tight text-paper-900 md:text-6xl">
+          Print your idea <span className="gradient-text">on anything.</span>
+        </h1>
+        <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-paper-600 md:text-lg">
+          Two paths — print one for yourself, or kit out the whole team. Same
+          premium fabric, same DTG print, same 5–7 day turnaround.
+        </p>
+        <div aria-hidden className="mx-auto mt-10 h-px max-w-md bg-paper-200" />
       </section>
 
       {/* Tabs */}
@@ -131,7 +133,7 @@ function TabButton({
       onClick={onClick}
       className={`relative rounded-full px-5 py-2.5 text-sm font-semibold transition md:px-6 md:py-3 ${
         active
-          ? "bg-signal-coral text-white shadow-[0_6px_20px_-6px_rgba(225,29,46,0.45)]"
+          ? "bg-paper-900 text-paper-50 shadow-[0_6px_20px_-6px_rgba(20,17,14,0.35)]"
           : "text-paper-700 hover:text-paper-900"
       }`}
     >

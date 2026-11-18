@@ -47,7 +47,7 @@ export default function ProductBuyPanel({ product }: { product: Product }) {
             {product.customizable && (
               <Link
                 href={`/design?product=${product.slug}`}
-                className="rounded-full border border-signal-coral/40 bg-signal-coral/15 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-signal-coral backdrop-blur"
+                className="rounded-full border border-white/20 bg-white/10 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-paper-50 backdrop-blur"
               >
                 Customize
               </Link>

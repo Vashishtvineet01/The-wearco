@@ -4,33 +4,26 @@ import { ANDROID_APP_URL } from "@/lib/android-app";
 
 export default function Footer() {
   return (
-    <footer className="band-violet relative mt-32 overflow-hidden border-t border-paper-200">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -top-40 left-1/2 h-[380px] w-[720px] -translate-x-1/2 rounded-full bg-signal-violet/20 blur-3xl"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -top-20 right-10 h-[260px] w-[260px] rounded-full bg-signal-coral/18 blur-3xl"
-      />
-      <div className="relative mx-auto grid max-w-7xl gap-10 px-5 py-16 lg:grid-cols-4 lg:px-8">
+    <footer className="relative mt-32 border-t border-paper-200 bg-paper-100/80">
+      <div className="relative mx-auto grid max-w-7xl gap-12 px-5 py-16 lg:grid-cols-4 lg:gap-10 lg:px-8">
         <div>
-          <div className="font-display text-2xl font-bold tracking-tight">
-            The<span className="gradient-text">Wear</span>Co
+          <div className="font-display text-2xl font-bold tracking-tight text-paper-900">
+            TheWearCo
           </div>
           <p className="mt-2 max-w-xs text-sm text-paper-600">
-            Internet uniform for founders, creators and builders. Wear what you’re shipping.
+            Internet uniform for founders, creators and builders. Wear what
+            you&apos;re shipping.
           </p>
-          <div className="mt-6 flex flex-wrap items-center gap-2">
-            <span className="tag-aurora">
-              <span className="h-1.5 w-1.5 animate-glow rounded-full bg-signal-lime" />
+          <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-paper-300 bg-paper-50 px-3 py-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-paper-700" />
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-paper-700">
               Drop 03 — Live
             </span>
           </div>
           <a
             href={ANDROID_APP_URL}
             download="thewearco-android.apk"
-            className="btn-primary mt-5 inline-flex items-center gap-2"
+            className="mt-5 inline-flex items-center gap-2 rounded-full border border-paper-900 bg-paper-900 px-5 py-2.5 text-sm font-semibold text-paper-50 transition hover:bg-paper-800"
             aria-label="Download TheWearCo Android app"
           >
             <AndroidIcon />
@@ -42,49 +35,129 @@ export default function Footer() {
         </div>
 
         <div>
-          <div className="mb-3 font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
+          <div className="mb-3 font-mono text-[11px] uppercase tracking-[0.22em] text-paper-500">
             Shop
           </div>
           <ul className="space-y-2 text-sm text-paper-800">
-            <li><Link href="/shop?cat=tee" className="transition hover:text-signal-violetInk">Tees</Link></li>
-            <li><Link href="/shop?cat=hoodie" className="transition hover:text-signal-violetInk">Hoodies</Link></li>
-            <li><Link href="/shop?cat=sweatshirt" className="transition hover:text-signal-violetInk">Sweatshirts</Link></li>
-            <li><Link href="/shop?cat=cap" className="transition hover:text-signal-violetInk">Caps</Link></li>
-            <li><Link href="/shop?cat=mug" className="transition hover:text-signal-violetInk">Mugs</Link></li>
-            <li><Link href="/shop?cat=badge" className="transition hover:text-signal-violetInk">Badges</Link></li>
-            <li><Link href="/shop?cat=poster" className="transition hover:text-signal-violetInk">Posters</Link></li>
-            <li><Link href="/design?view=me" className="transition hover:text-signal-violetInk">Print your own</Link></li>
-            <li><Link href="/design?view=team" className="transition hover:text-signal-violetInk">Bulk orders</Link></li>
+            <li>
+              <Link href="/shop?cat=tee" className="transition hover:text-paper-900">
+                Tees
+              </Link>
+            </li>
+            <li>
+              <Link href="/shop?cat=hoodie" className="transition hover:text-paper-900">
+                Hoodies
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/shop?cat=sweatshirt"
+                className="transition hover:text-paper-900"
+              >
+                Sweatshirts
+              </Link>
+            </li>
+            <li>
+              <Link href="/shop?cat=cap" className="transition hover:text-paper-900">
+                Caps
+              </Link>
+            </li>
+            <li>
+              <Link href="/shop?cat=mug" className="transition hover:text-paper-900">
+                Mugs
+              </Link>
+            </li>
+            <li>
+              <Link href="/shop?cat=badge" className="transition hover:text-paper-900">
+                Badges
+              </Link>
+            </li>
+            <li>
+              <Link href="/shop?cat=poster" className="transition hover:text-paper-900">
+                Posters
+              </Link>
+            </li>
+            <li>
+              <Link href="/design?view=me" className="transition hover:text-paper-900">
+                Print your own
+              </Link>
+            </li>
+            <li>
+              <Link href="/design?view=team" className="transition hover:text-paper-900">
+                Bulk orders
+              </Link>
+            </li>
           </ul>
         </div>
 
         <div>
-          <div className="mb-3 font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
+          <div className="mb-3 font-mono text-[11px] uppercase tracking-[0.22em] text-paper-500">
             Company
           </div>
           <ul className="space-y-2 text-sm text-paper-800">
-            <li><Link href="/about" className="transition hover:text-signal-violetInk">Manifesto</Link></li>
-            <li><Link href="/community" className="transition hover:text-signal-violetInk">Community</Link></li>
-            <li><Link href="/contact" className="transition hover:text-signal-violetInk">Contact</Link></li>
-            <li><Link href="/track" className="transition hover:text-signal-violetInk">Track an order</Link></li>
-            <li><Link href="/account" className="transition hover:text-signal-violetInk">Your account</Link></li>
-            <li><Link href="/login" className="transition hover:text-signal-violetInk">Sign in</Link></li>
             <li>
-              <a href={ANDROID_APP_URL} download="thewearco-android.apk" className="transition hover:text-signal-violetInk">
+              <Link href="/about" className="transition hover:text-paper-900">
+                Manifesto
+              </Link>
+            </li>
+            <li>
+              <Link href="/community" className="transition hover:text-paper-900">
+                Community
+              </Link>
+            </li>
+            <li>
+              <Link href="/contact" className="transition hover:text-paper-900">
+                Contact
+              </Link>
+            </li>
+            <li>
+              <Link href="/track" className="transition hover:text-paper-900">
+                Track an order
+              </Link>
+            </li>
+            <li>
+              <Link href="/account" className="transition hover:text-paper-900">
+                Your account
+              </Link>
+            </li>
+            <li>
+              <Link href="/login" className="transition hover:text-paper-900">
+                Sign in
+              </Link>
+            </li>
+            <li>
+              <a
+                href={ANDROID_APP_URL}
+                download="thewearco-android.apk"
+                className="transition hover:text-paper-900"
+              >
                 Android app
               </a>
             </li>
           </ul>
         </div>
 
-        <div className="card-lime p-5">
-          <div className="mb-3 font-mono text-[11px] uppercase tracking-[0.22em] text-signal-limeInk">
-            Drop alerts
+        {/* Last column — soft cream panel, no red accents */}
+        <div className="rounded-2xl border border-paper-200 bg-paper-50 p-5">
+          <div className="mb-2 font-mono text-[11px] uppercase tracking-[0.22em] text-paper-500">
+            Stay close
           </div>
-          <p className="mb-3 text-sm text-paper-700">
-            New drops + community invites. No spam, ever.
+          <h3 className="font-display text-lg font-semibold tracking-tight text-paper-900">
+            Early access to every drop.
+          </h3>
+          <p className="mt-2 text-sm text-paper-600">
+            One email when a drop goes live. Plus office-hours invites — no spam.
           </p>
-          <NewsletterForm />
+          <div className="mt-4">
+            <NewsletterForm variant="stacked" buttonLabel="Join list" />
+          </div>
+          <Link
+            href="/community"
+            className="mt-4 inline-flex items-center gap-1.5 text-sm text-paper-700 transition hover:text-paper-900"
+          >
+            Explore the community
+            <span aria-hidden>→</span>
+          </Link>
         </div>
       </div>
 
@@ -92,11 +165,21 @@ export default function Footer() {
         <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-3 px-5 py-6 text-xs text-paper-500 md:flex-row md:items-center lg:px-8">
           <div>© {new Date().getFullYear()} TheWearCo. Made by builders.</div>
           <nav className="flex flex-wrap items-center gap-4" aria-label="Policies">
-            <Link href="/privacy" className="hover:text-paper-800">Privacy</Link>
-            <Link href="/terms" className="hover:text-paper-800">Terms</Link>
-            <Link href="/refund" className="hover:text-paper-800">Refunds</Link>
-            <Link href="/shipping" className="hover:text-paper-800">Shipping</Link>
-            <Link href="/contact" className="hover:text-paper-800">Contact</Link>
+            <Link href="/privacy" className="hover:text-paper-800">
+              Privacy
+            </Link>
+            <Link href="/terms" className="hover:text-paper-800">
+              Terms
+            </Link>
+            <Link href="/refund" className="hover:text-paper-800">
+              Refunds
+            </Link>
+            <Link href="/shipping" className="hover:text-paper-800">
+              Shipping
+            </Link>
+            <Link href="/contact" className="hover:text-paper-800">
+              Contact
+            </Link>
           </nav>
           <div className="font-mono uppercase tracking-[0.2em]">
             v1.0 / shipping daily

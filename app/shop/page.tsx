@@ -51,7 +51,7 @@ export default async function ShopPage() {
         >
           <div className="relative min-h-[280px] overflow-hidden bg-[#0a0b0f] p-8 md:min-h-[340px]">
             <div className="absolute left-6 top-6 z-10 flex gap-2">
-              <span className="rounded-full border border-signal-coral/40 bg-signal-coral/15 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-signal-coral">
+              <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-paper-50">
                 Live now
               </span>
               <span className="rounded-full border border-white/15 bg-black/35 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-white/75">

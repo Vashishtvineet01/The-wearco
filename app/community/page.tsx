@@ -17,21 +17,22 @@ export const metadata: Metadata = {
 export default function CommunityPage() {
   return (
     <div className="relative mx-auto max-w-6xl px-5 pb-20 pt-12 lg:px-8 lg:pt-16">
-      {/* Flat hero — cream card, no mesh gradient */}
-      <section className="relative overflow-hidden rounded-3xl border border-paper-200 bg-white px-6 py-12 text-center md:px-10 md:py-16">
-        <div className="relative">
-          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-coral">
-            // Community
+      <section className="relative pb-10 pt-2 text-center md:pb-14">
+        <div className="flex items-center justify-center gap-3">
+          <span aria-hidden className="h-px w-8 bg-paper-400" />
+          <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-500">
+            Community
           </div>
-          <h1 className="mt-3 font-display text-4xl font-bold tracking-tight text-paper-900 md:text-6xl">
-            Every piece is a <span className="text-signal-coral">key.</span>
-          </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-paper-700">
-            A hidden QR on every hoodie, cap and badge. Scan it to unlock the
-            founder Discord, monthly office hours and early access to every
-            drop.
-          </p>
+          <span aria-hidden className="h-px w-8 bg-paper-400" />
         </div>
+        <h1 className="mt-5 font-display text-4xl font-bold leading-[1.05] tracking-tight text-paper-900 md:text-6xl">
+          Every piece is a <span className="gradient-text">key.</span>
+        </h1>
+        <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-paper-600 md:text-lg">
+          A hidden QR on every hoodie, cap and badge. Scan it to unlock the
+          founder Discord, monthly office hours and early access to every drop.
+        </p>
+        <div aria-hidden className="mx-auto mt-10 h-px max-w-md bg-paper-200" />
       </section>
 
       {/* QR unlock steps */}
@@ -52,12 +53,12 @@ export default function CommunityPage() {
         <div className="grid gap-6 md:grid-cols-2 md:items-center">
           <ScrollReveal>
             <div>
-              <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-coral">
-                // Office hours
+              <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-500">
+                Office hours
               </div>
               <h2 className="mt-3 font-display text-3xl font-bold tracking-tight md:text-4xl">
                 First Thursday <br />
-                <span className="text-signal-coral">of every month.</span>
+                <span className="gradient-text">of every month.</span>
               </h2>
               <p className="mt-3 max-w-md text-sm text-paper-600 md:text-base">
                 Open call at 7pm IST. Hosted by the TheWearCo team. Bring one
@@ -73,7 +74,7 @@ export default function CommunityPage() {
                   <div
                     className={`flex items-center gap-3 rounded-xl px-4 py-3 ${t.surface}`}
                   >
-                    <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-signal-coral">
+                    <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-paper-500">
                       {t.k}
                     </span>
                     <span className="text-sm text-paper-800">{t.v}</span>
@@ -89,8 +90,8 @@ export default function CommunityPage() {
       <div className="mt-14">
         <div className="mb-6 flex items-end justify-between gap-4">
           <div>
-            <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-coral">
-              // Members
+            <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-500">
+              Members
             </div>
             <h2 className="mt-2 font-display text-2xl font-bold tracking-tight md:text-3xl">
               Shipping, live.

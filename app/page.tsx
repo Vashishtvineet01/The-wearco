@@ -36,31 +36,27 @@ export default async function HomePage() {
 
 function Hero() {
   return (
-    <section className="relative overflow-hidden bg-paper-50">
-      <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 py-20 lg:grid-cols-12 lg:px-8 lg:py-28">
+    <section className="relative overflow-hidden">
+      <div className="relative mx-auto grid max-w-7xl items-center gap-14 px-5 py-16 lg:grid-cols-12 lg:gap-10 lg:px-8 lg:py-24">
         <div className="lg:col-span-7">
-          <div className="mb-5 inline-flex animate-fade-in-up items-center gap-2 rounded-full border border-paper-200 bg-white px-3 py-1.5">
-            <span className="dot-live" />
-            <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-paper-700">
-              Drop 03 — QR Layer is live
-            </span>
-            <span className="h-3 w-px bg-paper-300" />
-            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-signal-coral">
-              Guest checkout · email or OTP later
+          <div className="mb-6 flex animate-fade-in-up items-center gap-3">
+            <span aria-hidden className="h-px w-8 bg-paper-400" />
+            <span className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-500">
+              Drop 03 — live
             </span>
           </div>
 
           <h1
-            className="animate-fade-in-up font-display text-5xl font-bold leading-[0.95] tracking-tight text-paper-900 md:text-7xl lg:text-[88px]"
+            className="animate-fade-in-up font-display text-5xl font-bold leading-[0.92] tracking-tight text-paper-900 md:text-7xl lg:text-[86px]"
             style={{ animationDelay: "120ms" }}
           >
             TheWearCo
             <br />
-            <span className="text-signal-coral">Internet uniform.</span>
+            <span className="gradient-text">Internet uniform.</span>
           </h1>
 
           <p
-            className="mt-6 max-w-xl animate-fade-in-up text-base text-paper-700 md:text-lg"
+            className="mt-6 max-w-xl animate-fade-in-up text-base leading-relaxed text-paper-600 md:text-lg"
             style={{ animationDelay: "240ms" }}
           >
             Premium tees, hoodies and caps for founders and builders — or open
@@ -75,7 +71,7 @@ function Hero() {
           </p>
 
           <div
-            className="mt-8 flex animate-fade-in-up flex-wrap items-center gap-3"
+            className="mt-9 flex animate-fade-in-up flex-wrap items-center gap-3"
             style={{ animationDelay: "360ms" }}
           >
             <Link href="/shop" className="btn-primary">
@@ -85,18 +81,12 @@ function Hero() {
               </svg>
             </Link>
             <Link href="/design" className="btn-ghost">
-              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M12 19l7-7 3 3-7 7-3-3z" />
-                <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
-                <path d="M2 2l7.586 7.586" />
-                <circle cx="11" cy="11" r="2" />
-              </svg>
               Design your own
             </Link>
           </div>
 
           <div
-            className="mt-10 flex animate-fade-in-up items-center gap-8 text-xs text-paper-600"
+            className="mt-12 flex animate-fade-in-up items-center gap-8 border-t border-paper-200 pt-8 text-xs text-paper-600"
             style={{ animationDelay: "480ms" }}
           >
             <Stat label="Founders wearing" value="2,400+" />
@@ -106,15 +96,12 @@ function Hero() {
         </div>
 
         <div className="relative lg:col-span-5">
-          {/* Floating accent sparkles behind the tiles for extra depth. */}
-          <span aria-hidden className="pointer-events-none absolute -top-6 left-6 text-3xl text-signal-coral/60 animate-float">✦</span>
-          <span aria-hidden className="pointer-events-none absolute top-8 -right-2 text-2xl text-signal-violet/70 animate-float" style={{ animationDelay: "800ms" }}>✦</span>
-          <span aria-hidden className="pointer-events-none absolute bottom-10 left-0 text-2xl text-signal-limeInk/80 animate-float" style={{ animationDelay: "1600ms" }}>✦</span>
-          <div className="relative grid grid-cols-2 gap-3">
-            <HeroCard fabric="#0e0e10" tagline="Building…" badge="Tee" tilt="-rotate-2" cat="tee" delay={200} />
-            <HeroCard fabric="#ece7dd" tagline="v1.0" badge="Hoodie" tilt="rotate-3 mt-10" cat="hoodie" delay={320} />
-            <HeroCard fabric="#0e0e10" tagline="Ship It" badge="Mug" tilt="rotate-1 -mt-4" cat="mug" shape="cylinder" delay={440} />
-            <HeroCard fabric="#d8ff36" tagline="v1" badge="Badge" tilt="-rotate-3" cat="badge" shape="circle" delay={560} />
+          <div className="absolute -inset-4 rounded-[2rem] bg-paper-100/70 md:-inset-6" aria-hidden />
+          <div className="relative grid grid-cols-2 gap-4">
+            <HeroCard fabric="#0e0e10" tagline="Building…" badge="Tee" tilt="-rotate-1" cat="tee" delay={200} />
+            <HeroCard fabric="#ece7dd" tagline="v1.0" badge="Hoodie" tilt="rotate-2 mt-8" cat="hoodie" delay={320} />
+            <HeroCard fabric="#0e0e10" tagline="Ship It" badge="Mug" tilt="rotate-1" cat="mug" shape="cylinder" delay={440} />
+            <HeroCard fabric="#cfc0ab" tagline="v1" badge="Badge" tilt="-rotate-2" cat="badge" shape="circle" delay={560} />
           </div>
         </div>
       </div>
@@ -141,10 +128,12 @@ function HeroCard({
 }) {
   return (
     <div
-      className={`card-feature aurora-border animate-fade-in-up p-4 transition-transform duration-500 ${tilt} hover:rotate-0 hover:-translate-y-2 hover:scale-[1.02]`}
+      className={`relative animate-fade-in-up rounded-2xl border border-paper-200/80 bg-paper-50/90 p-3 transition-transform duration-500 ${tilt} hover:rotate-0 hover:-translate-y-2 hover:scale-[1.02]`}
       style={{ animationDelay: `${delay}ms` }}
     >
-      <div className="tag-aurora absolute left-3 top-3 z-10">{badge}</div>
+      <div className="absolute left-3 top-3 z-10 rounded-full border border-paper-300 bg-paper-50 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-paper-700">
+        {badge}
+      </div>
       <div
         className="w-full animate-float-soft"
         style={{ animationDelay: `${delay % 600}ms` }}
@@ -190,11 +179,11 @@ function FeaturedProducts({ featured }: { featured: Product[] }) {
         <ScrollReveal>
           <div className="mb-10 flex items-end justify-between gap-6">
             <div>
-              <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-coral">
-                // Featured
+              <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-500">
+                Featured
               </div>
               <h2 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-5xl">
-                The current <span className="text-signal-coral">uniform</span>
+                The current <span className="gradient-text">uniform</span>
               </h2>
             </div>
             <Link
@@ -223,11 +212,11 @@ function PrintYourOwnSection() {
     <section className="relative overflow-hidden border-y border-paper-200 bg-white/40">
       <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 py-20 lg:grid-cols-2 lg:px-8">
         <ScrollReveal>
-          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-coral">
-            // The Design Studio
+          <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-500">
+            The Design Studio
           </div>
           <h2 className="mt-2 font-display text-4xl font-bold leading-tight tracking-tight md:text-6xl">
-            Print your <span className="text-signal-coral">own</span> design.
+            Print your <span className="gradient-text">own</span> design.
             <br />
             Made in 5 minutes.
           </h2>

@@ -5,16 +5,18 @@ import ScrollReveal from "@/components/ScrollReveal";
 export default function AboutPage() {
   return (
     <div className="relative mx-auto max-w-4xl px-5 py-12 lg:px-8 lg:py-16">
-      <section className="relative mb-12 overflow-hidden rounded-3xl border border-paper-200 bg-white px-6 py-12 md:px-10 md:py-16">
-        <div className="relative">
-          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-coral">
-            // Manifesto
+      <section className="relative mb-12 pb-10 pt-2">
+        <div className="flex items-center gap-3">
+          <span aria-hidden className="hidden h-px w-8 bg-paper-400 sm:block" />
+          <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-paper-500">
+            Manifesto
           </div>
-          <h1 className="mt-3 font-display text-4xl font-bold leading-tight tracking-tight text-paper-900 md:text-6xl">
-            Clothing for the people <br />
-            <span className="text-signal-coral">building it themselves.</span>
-          </h1>
         </div>
+        <h1 className="mt-5 font-display text-4xl font-bold leading-[1.05] tracking-tight text-paper-900 md:text-6xl">
+          Clothing for the people <br />
+          <span className="gradient-text">building it themselves.</span>
+        </h1>
+        <div aria-hidden className="mt-10 h-px max-w-3xl bg-paper-200" />
       </section>
 
       <ScrollReveal>

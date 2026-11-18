@@ -62,8 +62,8 @@ export default function Navbar() {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
         <Link href="/" className="group flex items-center gap-2.5">
-          <span className="relative grid h-9 w-9 place-items-center overflow-hidden rounded-xl bg-signal-coral text-white shadow-[0_6px_24px_-6px_rgba(225,29,46,0.55)] transition-transform duration-300 group-hover:scale-105">
-            <span className="absolute inset-0 bg-signal-coral" />
+          <span className="relative grid h-9 w-9 place-items-center overflow-hidden rounded-xl bg-paper-900 text-paper-50 shadow-[0_6px_24px_-6px_rgba(20,17,14,0.4)] transition-transform duration-300 group-hover:scale-105">
+            <span className="absolute inset-0 bg-paper-900" />
             <svg viewBox="0 0 24 24" className="relative h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.2">
               <path d="M3 7l9-5 9 5-9 5-9-5zM3 12l9 5 9-5M3 17l9 5 9-5" />
             </svg>
@@ -92,11 +92,11 @@ export default function Navbar() {
           {accountLabel ? (
             <Link
               href="/account"
-              className="relative grid h-9 w-9 place-items-center overflow-hidden rounded-full bg-signal-coral text-sm font-bold text-white shadow-[0_4px_16px_-4px_rgba(225,29,46,0.55)]"
+              className="relative grid h-9 w-9 place-items-center overflow-hidden rounded-full bg-paper-900 text-sm font-bold text-paper-50 shadow-[0_4px_16px_-4px_rgba(20,17,14,0.4)]"
               aria-label={`Account · ${accountLabel}`}
               title={accountLabel}
             >
-              <span className="absolute inset-0 bg-signal-coral" />
+              <span className="absolute inset-0 bg-paper-900" />
               <span className="relative uppercase">
                 {accountLabel.charAt(0)}
               </span>
@@ -182,7 +182,7 @@ function NavLink({
       aria-current={active ? "page" : undefined}
       className={`rounded-full px-4 py-2 text-sm transition ${
         active
-          ? "bg-signal-coral/10 text-signal-coral"
+          ? "bg-paper-200/80 text-paper-900"
           : "text-paper-800 hover:bg-paper-100/60"
       }`}
     >
@@ -208,7 +208,7 @@ function MobileLink({
       onClick={onClick}
       aria-current={active ? "page" : undefined}
       className={`border-b border-paper-200 py-3 text-sm last:border-b-0 ${
-        active ? "font-semibold text-signal-coral" : "text-paper-800"
+        active ? "font-semibold text-paper-900" : "text-paper-800"
       }`}
     >
       {children}
